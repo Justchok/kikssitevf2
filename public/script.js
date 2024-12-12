@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = {
                     name: document.getElementById('name').value,
                     email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
                     flightDetails: {
                         departure: document.getElementById('departure').value,
                         destination: document.getElementById('destination').value,
@@ -699,6 +700,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = {
                     name: document.getElementById('name').value,
                     email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
                     flightDetails: {
                         departure: document.getElementById('departure').value,
                         destination: document.getElementById('destination').value,

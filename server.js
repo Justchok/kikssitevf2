@@ -3,9 +3,21 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { Resend } = require('resend');
+const fs = require('fs').promises;
+const fileUpload = require('express-fileupload');
+const mongoose = require('mongoose');
+
+// Import des modèles
+const Offer = require('./server/models/Offer');
+const Gallery = require('./server/models/Gallery');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Connexion à MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('Connecté à MongoDB'))
+    .catch(err => console.error('Erreur de connexion MongoDB:', err));
 
 // Configuration de Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -22,9 +34,22 @@ app.use((req, res, next) => {
 // Middleware CORS et JSON
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Middleware pour gérer les fichiers uploadés
+app.use(fileUpload({
+    createParentPath: true,
+    limits: { 
+        fileSize: 50 * 1024 * 1024 // 50MB max
+    },
+    abortOnLimit: true
+}));
+
+// Middleware pour servir les fichiers statiques
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Servir les fichiers statiques
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // Routes API
 app.get('/api/destinations', (req, res) => {
@@ -37,9 +62,9 @@ app.get('/api/destinations', (req, res) => {
     }
 });
 
-app.get('/api/offres-speciales', (req, res) => {
+app.get('/api/offres-speciales', async (req, res) => {
     try {
-        const offres = require('./server/data/offres.json');
+        const offres = await Offer.find().sort('-createdAt');
         res.json(offres);
     } catch (error) {
         console.error('Erreur lors du chargement des offres:', error);
@@ -61,7 +86,7 @@ app.get('/api/groupes', (req, res) => {
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Email templates
-const adminEmailTemplate = (name, email, flightDetails) => `
+const adminEmailTemplate = (name, email, phone, flightDetails) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -80,6 +105,7 @@ const adminEmailTemplate = (name, email, flightDetails) => `
     <div class="details">
         <p><span class="highlight">Nom:</span> ${name}</p>
         <p><span class="highlight">Email:</span> ${email}</p>
+        <p><span class="highlight">Téléphone:</span> ${phone}</p>
         
         <h2>Détails du vol:</h2>
         <p><span class="highlight">Départ:</span> ${flightDetails.departure}</p>
@@ -94,7 +120,7 @@ const adminEmailTemplate = (name, email, flightDetails) => `
 </html>
 `;
 
-const clientEmailTemplate = (name, flightDetails) => `
+const clientEmailTemplate = (name, phone, flightDetails) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -123,7 +149,7 @@ const clientEmailTemplate = (name, flightDetails) => `
         <p><span class="highlight">Nombre de passagers :</span> ${flightDetails.passengers}</p>
     </div>
     
-    <p>Un membre de notre équipe vous contactera prochainement pour finaliser votre réservation.</p>
+    <p>Un membre de notre équipe vous contactera prochainement au ${phone} pour finaliser votre réservation.</p>
     
     <div class="footer">
         <p>Cordialement,<br>
@@ -195,11 +221,21 @@ const offerClientEmailTemplate = (name, phone, offerTitle) => `
 </html>
 `;
 
+// Middleware d'authentification admin
+const adminAuth = (req, res, next) => {
+    const adminKey = req.headers['admin-key'];
+    if (adminKey === process.env.ADMIN_KEY) {
+        next();
+    } else {
+        res.status(401).json({ error: 'Non autorisé' });
+    }
+};
+
 // Route pour les réservations de vols
 app.post('/api/public/book-flight', async (req, res) => {
     try {
         console.log('Réception d\'une réservation de vol:', req.body);
-        const { name, email, flightDetails } = req.body;
+        const { name, email, phone, flightDetails } = req.body;
         
         if (!process.env.RESEND_API_KEY) {
             throw new Error('RESEND_API_KEY non configurée');
@@ -216,7 +252,7 @@ app.post('/api/public/book-flight', async (req, res) => {
                 from: VERIFIED_EMAIL,
                 to: process.env.EMAIL_TO,
                 subject: 'Nouvelle réservation de vol',
-                html: adminEmailTemplate(name, email, flightDetails)
+                html: adminEmailTemplate(name, email, phone, flightDetails)
             });
             console.log('Résultat email admin:', adminEmailResult);
         } catch (adminError) {
@@ -235,7 +271,7 @@ app.post('/api/public/book-flight', async (req, res) => {
                 from: VERIFIED_EMAIL,
                 to: email,
                 subject: 'Confirmation de votre réservation - Kiks Travel',
-                html: clientEmailTemplate(name, flightDetails)
+                html: clientEmailTemplate(name, phone, flightDetails)
             });
             console.log('Résultat email client:', clientEmailResult);
         } catch (clientError) {
@@ -306,6 +342,84 @@ app.post('/api/public/book-offer', async (req, res) => {
             message: 'Erreur lors de l\'envoi de la réservation',
             error: error.message 
         });
+    }
+});
+
+// Routes d'administration
+app.post('/api/offers', adminAuth, async (req, res) => {
+    try {
+        const { title, description, price } = req.body;
+        const image = req.files?.image;
+
+        // Gérer l'upload de l'image si présente
+        let imagePath = '';
+        if (image) {
+            const uploadDir = './public/uploads/offers';
+            if (!fs.existsSync(uploadDir)) {
+                await fs.promises.mkdir(uploadDir, { recursive: true });
+            }
+            imagePath = `/uploads/offers/${Date.now()}-${image.name}`;
+            await image.mv(`.${imagePath}`);
+        }
+
+        // Créer la nouvelle offre dans MongoDB
+        const newOffer = new Offer({
+            title,
+            description,
+            price,
+            image: imagePath
+        });
+
+        await newOffer.save();
+        res.json(newOffer);
+    } catch (error) {
+        console.error('Erreur lors de la création de l\'offre:', error);
+        res.status(500).json({ error: 'Erreur lors de la création de l\'offre' });
+    }
+});
+
+app.post('/api/gallery', adminAuth, async (req, res) => {
+    try {
+        const { title } = req.body;
+        const images = req.files?.images;
+
+        if (!images) {
+            return res.status(400).json({ error: 'Aucune image fournie' });
+        }
+
+        // Créer le dossier d'upload s'il n'existe pas
+        const uploadDir = './public/uploads/gallery';
+        if (!fs.existsSync(uploadDir)) {
+            await fs.promises.mkdir(uploadDir, { recursive: true });
+        }
+
+        // Gérer les images
+        let imagePaths = [];
+        if (Array.isArray(images)) {
+            // Plusieurs images
+            for (const image of images) {
+                const imagePath = `/uploads/gallery/${Date.now()}-${image.name}`;
+                await image.mv(`.${imagePath}`);
+                imagePaths.push(imagePath);
+            }
+        } else {
+            // Une seule image
+            const imagePath = `/uploads/gallery/${Date.now()}-${images.name}`;
+            await images.mv(`.${imagePath}`);
+            imagePaths.push(imagePath);
+        }
+
+        // Créer la nouvelle galerie dans MongoDB
+        const newGallery = new Gallery({
+            title,
+            images: imagePaths
+        });
+
+        await newGallery.save();
+        res.json(newGallery);
+    } catch (error) {
+        console.error('Erreur lors de la création de la galerie:', error);
+        res.status(500).json({ error: 'Erreur lors de la création de la galerie' });
     }
 });
 
