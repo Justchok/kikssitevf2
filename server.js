@@ -133,6 +133,68 @@ const clientEmailTemplate = (name, flightDetails) => `
 </html>
 `;
 
+const offerAdminEmailTemplate = (name, email, phone, offerTitle) => `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 20px; }
+        p { margin: 10px 0; }
+        .details { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .highlight { color: #2c3e50; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Nouvelle réservation d'offre spéciale</h1>
+    <div class="details">
+        <h2>Détails de la réservation</h2>
+        <p><span class="highlight">Offre:</span> ${offerTitle}</p>
+        <p><span class="highlight">Nom:</span> ${name}</p>
+        <p><span class="highlight">Email:</span> ${email}</p>
+        <p><span class="highlight">Téléphone:</span> ${phone}</p>
+    </div>
+</body>
+</html>
+`;
+
+const offerClientEmailTemplate = (name, phone, offerTitle) => `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 20px; }
+        p { margin: 10px 0; }
+        .details { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .highlight { color: #2c3e50; font-weight: bold; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Confirmation de votre réservation</h1>
+    <p>Cher(e) ${name},</p>
+    <p>Nous avons bien reçu votre demande de réservation pour l'offre "${offerTitle}". Notre équipe la traitera dans les plus brefs délais.</p>
+    
+    <div class="details">
+        <h2>Récapitulatif de votre réservation :</h2>
+        <p><span class="highlight">Offre sélectionnée :</span> ${offerTitle}</p>
+    </div>
+    
+    <p>Un membre de notre équipe vous contactera prochainement au ${phone} pour finaliser votre réservation.</p>
+    
+    <div class="footer">
+        <p>Cordialement,<br>
+        L'équipe Kiks Travel</p>
+    </div>
+</body>
+</html>
+`;
+
 // Route pour les réservations de vols
 app.post('/api/public/book-flight', async (req, res) => {
     try {
@@ -202,43 +264,43 @@ app.post('/api/public/book-offer', async (req, res) => {
             throw new Error('RESEND_API_KEY non configurée');
         }
 
-        // Email pour l'administrateur
-        await resend.emails.send({
-            from: VERIFIED_EMAIL,
-            to: process.env.EMAIL_TO,
-            subject: 'Nouvelle réservation d\'offre spéciale',
-            html: `
-                <h1>Nouvelle réservation d'offre spéciale</h1>
-                <p><strong>Offre:</strong> ${offerTitle}</p>
-                <p><strong>Nom:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Téléphone:</strong> ${phone}</p>
-            `
-        });
+        try {
+            console.log('Envoi de l\'email à l\'administrateur...');
+            // Email pour l'administrateur
+            const adminEmailResult = await resend.emails.send({
+                from: VERIFIED_EMAIL,
+                to: process.env.EMAIL_TO,
+                subject: 'Nouvelle réservation d\'offre spéciale',
+                html: offerAdminEmailTemplate(name, email, phone, offerTitle)
+            });
+            console.log('Résultat email admin:', adminEmailResult);
+        } catch (adminError) {
+            console.error('Erreur lors de l\'envoi de l\'email admin:', adminError);
+            throw adminError;
+        }
 
-        // Email de confirmation pour le client
-        await resend.emails.send({
-            from: VERIFIED_EMAIL,
-            to: email,
-            subject: 'Confirmation de votre réservation - Kiks Travel',
-            html: `
-                <h1>Confirmation de votre réservation</h1>
-                <p>Cher(e) ${name},</p>
-                <p>Nous avons bien reçu votre demande de réservation pour l'offre "${offerTitle}". Notre équipe la traitera dans les plus brefs délais.</p>
-                
-                <h2>Récapitulatif de votre réservation :</h2>
-                <p><strong>Offre sélectionnée :</strong> ${offerTitle}</p>
-                
-                <p>Un membre de notre équipe vous contactera prochainement au ${phone} pour finaliser votre réservation.</p>
-                
-                <p>Cordialement,<br>
-                L'équipe Kiks Travel</p>
-            `
-        });
+        // Attendre 1 seconde entre les envois pour respecter la limite de taux
+        console.log('Attente de 1 seconde avant d\'envoyer l\'email client...');
+        await wait(1000);
+
+        try {
+            console.log('Envoi de l\'email de confirmation au client:', email);
+            // Email de confirmation pour le client
+            const clientEmailResult = await resend.emails.send({
+                from: VERIFIED_EMAIL,
+                to: email,
+                subject: 'Confirmation de votre réservation - Kiks Travel',
+                html: offerClientEmailTemplate(name, phone, offerTitle)
+            });
+            console.log('Résultat email client:', clientEmailResult);
+        } catch (clientError) {
+            console.error('Erreur lors de l\'envoi de l\'email client:', clientError);
+            throw clientError;
+        }
 
         res.json({ success: true, message: 'Réservation d\'offre envoyée avec succès' });
     } catch (error) {
-        console.error('Erreur lors de la réservation d\'offre:', error);
+        console.error('Erreur détaillée lors de la réservation d\'offre:', error);
         res.status(500).json({ 
             success: false, 
             message: 'Erreur lors de l\'envoi de la réservation',
