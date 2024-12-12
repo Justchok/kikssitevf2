@@ -1,8 +1,8 @@
 [
     {
         "id": 1,
-        "titre": "Escapade à Paris",
-        "description": "Découvrez la ville lumière avec notre offre spéciale incluant vol + hôtel",
+        "titre": "Paris en Amoureux 💑",
+        "description": "Week-end romantique à Paris : vol + hôtel 4★ + dîner sur la Seine",
         "prix": 450000,
         "devise": "XOF",
         "image": "/assets/images/paris.jpg"
