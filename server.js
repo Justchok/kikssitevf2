@@ -237,6 +237,17 @@ app.post('/api/public/book-flight', async (req, res) => {
         console.log('Réception d\'une réservation de vol:', req.body);
         const { name, email, phone, flightDetails } = req.body;
         
+        // Logs détaillés
+        console.log('Données reçues:');
+        console.log('- Nom:', name);
+        console.log('- Email:', email);
+        console.log('- Téléphone:', phone);
+        console.log('- Détails du vol:', JSON.stringify(flightDetails, null, 2));
+        
+        if (!name || !email || !phone || !flightDetails) {
+            throw new Error('Données de réservation incomplètes');
+        }
+
         if (!process.env.RESEND_API_KEY) {
             throw new Error('RESEND_API_KEY non configurée');
         }
