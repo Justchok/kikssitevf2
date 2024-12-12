@@ -10,6 +10,9 @@ const PORT = process.env.PORT || 3000;
 // Configuration de Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Configuration de l'email vérifié
+const VERIFIED_EMAIL = 'chok.kane@gmail.com'; // Email vérifié sur Resend
+
 // Middleware pour le logging
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
@@ -64,9 +67,11 @@ app.post('/api/public/book-flight', async (req, res) => {
             throw new Error('RESEND_API_KEY non configurée');
         }
 
+        console.log('Envoi de l\'email à l\'administrateur...');
+        // Email pour l'administrateur
         await resend.emails.send({
-            from: 'Kiks Travel <onboarding@resend.dev>',
-            to: process.env.EMAIL_TO || 'votre-email@example.com',
+            from: VERIFIED_EMAIL,
+            to: process.env.EMAIL_TO,
             subject: 'Nouvelle réservation de vol',
             html: `
                 <h1>Nouvelle réservation de vol</h1>
@@ -82,10 +87,37 @@ app.post('/api/public/book-flight', async (req, res) => {
                 <p><strong>Nombre de passagers:</strong> ${flightDetails.passengers}</p>
             `
         });
+        console.log('Email admin envoyé avec succès');
+
+        console.log('Envoi de l\'email de confirmation au client:', email);
+        // Email de confirmation pour le client
+        await resend.emails.send({
+            from: VERIFIED_EMAIL,
+            to: email,
+            subject: 'Confirmation de votre réservation - Kiks Travel',
+            html: `
+                <h1>Confirmation de votre réservation</h1>
+                <p>Cher(e) ${name},</p>
+                <p>Nous avons bien reçu votre demande de réservation. Notre équipe la traitera dans les plus brefs délais.</p>
+                
+                <h2>Récapitulatif de votre réservation :</h2>
+                <p><strong>Vol :</strong> ${flightDetails.departure} → ${flightDetails.destination}</p>
+                <p><strong>Date de départ :</strong> ${flightDetails.departureDate}</p>
+                <p><strong>Date de retour :</strong> ${flightDetails.returnDate}</p>
+                <p><strong>Classe :</strong> ${flightDetails.travelClass}</p>
+                <p><strong>Nombre de passagers :</strong> ${flightDetails.passengers}</p>
+                
+                <p>Un membre de notre équipe vous contactera prochainement pour finaliser votre réservation.</p>
+                
+                <p>Cordialement,<br>
+                L'équipe Kiks Travel</p>
+            `
+        });
+        console.log('Email client envoyé avec succès');
 
         res.json({ success: true, message: 'Réservation envoyée avec succès' });
     } catch (error) {
-        console.error('Erreur lors de la réservation:', error);
+        console.error('Erreur détaillée lors de la réservation:', error);
         res.status(500).json({ 
             success: false, 
             message: 'Erreur lors de l\'envoi de la réservation',
@@ -104,9 +136,10 @@ app.post('/api/public/book-offer', async (req, res) => {
             throw new Error('RESEND_API_KEY non configurée');
         }
 
+        // Email pour l'administrateur
         await resend.emails.send({
-            from: 'Kiks Travel <onboarding@resend.dev>',
-            to: process.env.EMAIL_TO || 'votre-email@example.com',
+            from: VERIFIED_EMAIL,
+            to: process.env.EMAIL_TO,
             subject: 'Nouvelle réservation d\'offre spéciale',
             html: `
                 <h1>Nouvelle réservation d'offre spéciale</h1>
@@ -114,6 +147,26 @@ app.post('/api/public/book-offer', async (req, res) => {
                 <p><strong>Nom:</strong> ${name}</p>
                 <p><strong>Email:</strong> ${email}</p>
                 <p><strong>Téléphone:</strong> ${phone}</p>
+            `
+        });
+
+        // Email de confirmation pour le client
+        await resend.emails.send({
+            from: VERIFIED_EMAIL,
+            to: email,
+            subject: 'Confirmation de votre réservation - Kiks Travel',
+            html: `
+                <h1>Confirmation de votre réservation</h1>
+                <p>Cher(e) ${name},</p>
+                <p>Nous avons bien reçu votre demande de réservation pour l'offre "${offerTitle}". Notre équipe la traitera dans les plus brefs délais.</p>
+                
+                <h2>Récapitulatif de votre réservation :</h2>
+                <p><strong>Offre sélectionnée :</strong> ${offerTitle}</p>
+                
+                <p>Un membre de notre équipe vous contactera prochainement au ${phone} pour finaliser votre réservation.</p>
+                
+                <p>Cordialement,<br>
+                L'équipe Kiks Travel</p>
             `
         });
 
