@@ -127,7 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 console.log('Envoi des données:', formData);
 
-                const response = await fetch('/api/send-email', {
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+                const response = await fetch(`${API_URL}/api/send-email`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -188,7 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 console.log('Données du formulaire:', formData);
 
-                const response = await fetch('http://localhost:5002/api/public/book-flight', {
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+                const response = await fetch(`${API_URL}/api/public/book-flight`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -271,7 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (formValues) {
             try {
                 console.log('Envoi de la réservation:', { ...formValues, offerTitle: titre, offerId });
-                const response = await fetch('http://localhost:3000/api/public/book-offer', {
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+                const response = await fetch(`${API_URL}/api/public/book-offer`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -345,7 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadOffresSpeciales() {
         try {
             console.log('Chargement des offres spéciales...');
-            const response = await fetch('http://localhost:3000/api/offres-speciales');
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/offres-speciales`);
             const offres = await response.json();
             console.log('Offres reçues:', offres);
             
@@ -411,7 +415,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Charger les destinations populaires
     async function loadDestinations() {
         try {
-            const response = await fetch('/api/destinations');
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+            const response = await fetch(`${API_URL}/api/destinations`);
             const destinations = await response.json();
             
             const destinationsContainer = document.querySelector('#destinations-populaires .destinations-container');
@@ -446,7 +451,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Charger les voyages de groupe
     async function loadVoyagesGroupe() {
         try {
-            const response = await fetch('/api/groupes');
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+            const response = await fetch(`${API_URL}/api/voyages-groupe`);
             const groupes = await response.json();
             
             const groupesContainer = document.querySelector('#voyages-groupe .groupes-container');
@@ -483,7 +489,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fonction pour charger les voyages de groupe
     async function loadGroupes() {
         try {
-            const response = await fetch('/api/groupes');
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+            const response = await fetch(`${API_URL}/api/groupes`);
             const groupes = await response.json();
             const container = document.getElementById('groupes-container');
             
@@ -510,7 +517,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deviseOrigine === deviseDestination) return;
 
         try {
-            const response = await fetch(`/api/convert-currency?amount=${montant}&from=${deviseOrigine}&to=${deviseDestination}`);
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+            const response = await fetch(`${API_URL}/api/convert-currency?amount=${montant}&from=${deviseOrigine}&to=${deviseDestination}`);
             const data = await response.json();
             
             const prixElement = selectElement.parentElement.querySelector('.prix');
@@ -701,7 +709,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 console.log('Données du formulaire:', formData);
 
-                const response = await fetch('http://localhost:5002/api/public/book-flight', {
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002';
+                const response = await fetch(`${API_URL}/api/public/book-flight`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -784,7 +793,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (formValues) {
             try {
                 console.log('Envoi de la réservation:', { ...formValues, offerTitle: titre, offerId });
-                const response = await fetch('http://localhost:3000/api/public/book-offer', {
+                const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+                const response = await fetch(`${API_URL}/api/public/book-offer`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -828,7 +838,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadOffresSpeciales() {
         try {
             console.log('Chargement des offres spéciales...');
-            const response = await fetch('http://localhost:3000/api/offres-speciales');
+            const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/offres-speciales`);
             const offres = await response.json();
             console.log('Offres reçues:', offres);
             

@@ -11,8 +11,20 @@ const port = process.env.PORT || 3000;
 // Configuration de Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Configuration CORS
+const corsOptions = {
+    origin: [
+        'http://localhost:3000',
+        'http://localhost:5002',
+        'https://kikssitevf2.vercel.app'
+    ],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Accept'],
+    credentials: true
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Servir les fichiers statiques
