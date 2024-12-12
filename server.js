@@ -439,6 +439,87 @@ app.post('/api/gallery', adminAuth, async (req, res) => {
     }
 });
 
+// Route pour modifier une offre
+app.put('/api/offers/:id', adminAuth, async (req, res) => {
+    try {
+        const { title, description, price } = req.body;
+        const image = req.files?.image;
+        const offerId = parseInt(req.params.id);
+
+        // Lecture des offres existantes
+        let offres = JSON.parse(fs.readFileSync('./server/data/offres.json', 'utf8'));
+        
+        // Recherche de l'offre à modifier
+        const offerIndex = offres.findIndex(offer => offer.id === offerId);
+        if (offerIndex === -1) {
+            return res.status(404).json({ error: 'Offre non trouvée' });
+        }
+
+        // Gestion de l'image si une nouvelle est fournie
+        let imagePath = offres[offerIndex].image;
+        if (image) {
+            const uploadDir = path.join(__dirname, 'public', 'uploads');
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
+            const fileName = Date.now() + '-' + image.name;
+            const uploadPath = path.join(uploadDir, fileName);
+            await image.mv(uploadPath);
+            imagePath = '/uploads/' + fileName;
+        }
+
+        // Mise à jour de l'offre
+        offres[offerIndex] = {
+            ...offres[offerIndex],
+            titre: title || offres[offerIndex].titre,
+            description: description || offres[offerIndex].description,
+            prix: price || offres[offerIndex].prix,
+            image: imagePath
+        };
+
+        // Sauvegarde dans le fichier
+        fs.writeFileSync('./server/data/offres.json', JSON.stringify(offres, null, 4));
+
+        res.json(offres[offerIndex]);
+    } catch (error) {
+        console.error('Erreur lors de la modification de l\'offre:', error);
+        res.status(500).json({ error: 'Erreur lors de la modification de l\'offre' });
+    }
+});
+
+// Route pour supprimer une offre
+app.delete('/api/offers/:id', adminAuth, async (req, res) => {
+    try {
+        const offerId = parseInt(req.params.id);
+
+        // Lecture des offres existantes
+        let offres = JSON.parse(fs.readFileSync('./server/data/offres.json', 'utf8'));
+        
+        // Recherche de l'offre à supprimer
+        const offerIndex = offres.findIndex(offer => offer.id === offerId);
+        if (offerIndex === -1) {
+            return res.status(404).json({ error: 'Offre non trouvée' });
+        }
+
+        // Suppression de l'offre
+        offres.splice(offerIndex, 1);
+
+        // Mise à jour des IDs
+        offres = offres.map((offer, index) => ({
+            ...offer,
+            id: index + 1
+        }));
+
+        // Sauvegarde dans le fichier
+        fs.writeFileSync('./server/data/offres.json', JSON.stringify(offres, null, 4));
+
+        res.json({ message: 'Offre supprimée avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de la suppression de l\'offre:', error);
+        res.status(500).json({ error: 'Erreur lors de la suppression de l\'offre' });
+    }
+});
+
 // Route de migration
 app.post('/api/admin/migrate', adminAuth, async (req, res) => {
     try {
