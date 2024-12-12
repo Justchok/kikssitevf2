@@ -431,56 +431,27 @@ app.post('/api/gallery', adminAuth, async (req, res) => {
     }
 });
 
-// Route de migration des données
+// Route de migration
 app.post('/api/admin/migrate', adminAuth, async (req, res) => {
     try {
-        console.log('Début de la migration des données...');
-
+        console.log('Début de la migration...');
+        
         // Migration des offres
-        console.log('Migration des offres...');
-        const offresJson = JSON.parse(fs.readFileSync('./server/data/offres.json', 'utf8'));
-        console.log('Offres trouvées:', offresJson.length);
-
-        for (const offre of offresJson) {
-            console.log('Migration de l\'offre:', offre.title);
-            const existingOffer = await Offer.findOne({ title: offre.title });
-            if (!existingOffer) {
-                await new Offer({
-                    title: offre.title,
-                    description: offre.description,
-                    price: offre.price,
-                    image: offre.image
-                }).save();
-                console.log('Offre migrée avec succès');
-            } else {
-                console.log('Offre déjà existante');
-            }
-        }
-
+        const offres = JSON.parse(fs.readFileSync('./server/data/offres.json', 'utf8'));
+        await Offer.deleteMany({}); // Nettoyage des anciennes données
+        await Offer.insertMany(offres);
+        console.log('Migration des offres terminée');
+        
         // Migration de la galerie
-        console.log('Migration de la galerie...');
-        const galleryJson = JSON.parse(fs.readFileSync('./server/data/gallery.json', 'utf8'));
-        console.log('Images de galerie trouvées:', galleryJson.length);
-
-        for (const gallery of galleryJson) {
-            console.log('Migration de la galerie:', gallery.title);
-            const existingGallery = await Gallery.findOne({ title: gallery.title });
-            if (!existingGallery) {
-                await new Gallery({
-                    title: gallery.title,
-                    images: gallery.images
-                }).save();
-                console.log('Galerie migrée avec succès');
-            } else {
-                console.log('Galerie déjà existante');
-            }
-        }
-
-        console.log('Migration terminée avec succès');
-        res.json({ success: true, message: 'Migration terminée avec succès' });
+        const galerie = JSON.parse(fs.readFileSync('./server/data/galerie.json', 'utf8'));
+        await Gallery.deleteMany({}); // Nettoyage des anciennes données
+        await Gallery.insertMany(galerie);
+        console.log('Migration de la galerie terminée');
+        
+        res.json({ message: 'Migration réussie' });
     } catch (error) {
-        console.error('Erreur détaillée lors de la migration:', error);
-        res.status(500).json({ error: error.message });
+        console.error('Erreur lors de la migration:', error);
+        res.status(500).json({ error: 'Erreur lors de la migration' });
     }
 });
 

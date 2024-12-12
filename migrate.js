@@ -16,13 +16,14 @@ async function migrateData() {
             }
         });
 
-        const result = await response.json();
-        
-        if (response.ok) {
-            console.log('Migration réussie :', result.message);
-        } else {
-            console.error('Erreur lors de la migration :', result.error);
+        if (!response.ok) {
+            const text = await response.text();
+            console.error('Réponse du serveur:', text);
+            throw new Error(`Erreur HTTP: ${response.status}`);
         }
+
+        const result = await response.json();
+        console.log('Migration réussie :', result.message);
     } catch (error) {
         console.error('Erreur :', error.message);
     }
