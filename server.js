@@ -305,7 +305,7 @@ app.post('/api/public/book-flight', async (req, res) => {
 app.post('/api/public/book-offer', async (req, res) => {
     try {
         console.log('Réception d\'une réservation d\'offre:', req.body);
-        const { name, email, phone, offerTitle } = req.body;
+        const { nom: name, email, telephone: phone, offerTitle } = req.body;
         
         if (!process.env.RESEND_API_KEY) {
             throw new Error('RESEND_API_KEY non configurée');
