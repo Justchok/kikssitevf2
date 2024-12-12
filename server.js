@@ -10,39 +10,60 @@ const PORT = process.env.PORT || 3000;
 // Configuration de Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Middleware
+// Middleware pour le logging
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    next();
+});
+
+// Middleware CORS et JSON
 app.use(cors());
 app.use(express.json());
 
 // Servir les fichiers statiques
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes API
 app.get('/api/destinations', (req, res) => {
-    const destinations = require('./server/data/destinations.json');
-    res.json(destinations);
+    try {
+        const destinations = require('./server/data/destinations.json');
+        res.json(destinations);
+    } catch (error) {
+        console.error('Erreur lors du chargement des destinations:', error);
+        res.status(500).json({ error: 'Erreur lors du chargement des destinations' });
+    }
 });
 
 app.get('/api/offres-speciales', (req, res) => {
-    const offres = require('./server/data/offres.json');
-    res.json(offres);
+    try {
+        const offres = require('./server/data/offres.json');
+        res.json(offres);
+    } catch (error) {
+        console.error('Erreur lors du chargement des offres:', error);
+        res.status(500).json({ error: 'Erreur lors du chargement des offres' });
+    }
 });
 
 app.get('/api/groupes', (req, res) => {
-    const groupes = require('./server/data/groupes.json');
-    res.json(groupes);
+    try {
+        const groupes = require('./server/data/groupes.json');
+        res.json(groupes);
+    } catch (error) {
+        console.error('Erreur lors du chargement des groupes:', error);
+        res.status(500).json({ error: 'Erreur lors du chargement des groupes' });
+    }
 });
 
-app.get('/api/vols', (req, res) => {
-    const vols = require('./server/data/vols.json');
-    res.json(vols);
-});
-
-// Route pour les réservations
+// Route pour les réservations de vols
 app.post('/api/public/book-flight', async (req, res) => {
     try {
+        console.log('Réception d\'une réservation de vol:', req.body);
         const { name, email, flightDetails } = req.body;
         
+        if (!process.env.RESEND_API_KEY) {
+            throw new Error('RESEND_API_KEY non configurée');
+        }
+
         await resend.emails.send({
             from: 'Kiks Travel <onboarding@resend.dev>',
             to: process.env.EMAIL_TO || 'votre-email@example.com',
@@ -65,15 +86,24 @@ app.post('/api/public/book-flight', async (req, res) => {
         res.json({ success: true, message: 'Réservation envoyée avec succès' });
     } catch (error) {
         console.error('Erreur lors de la réservation:', error);
-        res.status(500).json({ success: false, message: 'Erreur lors de l\'envoi de la réservation' });
+        res.status(500).json({ 
+            success: false, 
+            message: 'Erreur lors de l\'envoi de la réservation',
+            error: error.message 
+        });
     }
 });
 
-// Route pour les réservations d'offres spéciales
+// Route pour les réservations d'offres
 app.post('/api/public/book-offer', async (req, res) => {
     try {
+        console.log('Réception d\'une réservation d\'offre:', req.body);
         const { name, email, phone, offerTitle } = req.body;
         
+        if (!process.env.RESEND_API_KEY) {
+            throw new Error('RESEND_API_KEY non configurée');
+        }
+
         await resend.emails.send({
             from: 'Kiks Travel <onboarding@resend.dev>',
             to: process.env.EMAIL_TO || 'votre-email@example.com',
@@ -89,8 +119,12 @@ app.post('/api/public/book-offer', async (req, res) => {
 
         res.json({ success: true, message: 'Réservation d\'offre envoyée avec succès' });
     } catch (error) {
-        console.error('Erreur lors de la réservation:', error);
-        res.status(500).json({ success: false, message: 'Erreur lors de l\'envoi de la réservation' });
+        console.error('Erreur lors de la réservation d\'offre:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Erreur lors de l\'envoi de la réservation',
+            error: error.message 
+        });
     }
 });
 
@@ -101,4 +135,7 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);
+    console.log('Variables d\'environnement:');
+    console.log('- RESEND_API_KEY configurée:', !!process.env.RESEND_API_KEY);
+    console.log('- EMAIL_TO configuré:', !!process.env.EMAIL_TO);
 });
