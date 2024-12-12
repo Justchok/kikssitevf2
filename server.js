@@ -52,6 +52,12 @@ fs.mkdirSync(GALLERY_PATH, { recursive: true });
 
 // Middleware pour protéger le dossier admin
 app.use('/admin', (req, res, next) => {
+  // Permettre l'accès à la page gallery.html
+  if (req.path === '/gallery.html') {
+    return next();
+  }
+  
+  // Pour les autres routes admin, vérifier l'authentification
   const referer = req.headers.referer;
   if (!referer || !referer.includes(req.headers.host)) {
     return res.status(403).send('Accès non autorisé');
