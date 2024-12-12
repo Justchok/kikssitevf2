@@ -21,7 +21,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connexion à MongoDB
-mongoose.connect(process.env.MONGODB_URI)
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://chokdev:ZXasqw12@cluster0.kcwzxfy.mongodb.net/kiksdb?retryWrites=true&w=majority';
+
+mongoose.connect(MONGODB_URI)
     .then(() => console.log('Connecté à MongoDB'))
     .catch(err => console.error('Erreur de connexion MongoDB:', err));
 
@@ -229,10 +231,12 @@ const offerClientEmailTemplate = (name, phone, offerTitle) => `
 
 // Middleware d'authentification admin
 const adminAuth = (req, res, next) => {
+    console.log('Headers reçus:', req.headers);
     const adminKey = req.headers['admin-key'];
+    const expectedKey = process.env.ADMIN_KEY || '6f55675189faca1b946baa26439ca7c6da1600da02c14e54ef560647fc46f8ff';
     console.log('Admin key reçue:', adminKey);
-    console.log('Admin key attendue:', process.env.ADMIN_KEY);
-    if (adminKey === process.env.ADMIN_KEY) {
+    console.log('Admin key attendue:', expectedKey);
+    if (adminKey === expectedKey) {
         next();
     } else {
         res.status(401).json({ error: 'Non autorisé' });
