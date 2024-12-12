@@ -8,16 +8,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .gallery-item {
-            position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
-        .gallery-item img {
+        .gallery-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .image-container {
+            position: relative;
+            aspect-ratio: 1;
+        }
+        .image-container img {
             width: 100%;
-            height: 200px;
+            height: 100%;
             object-fit: cover;
             border-radius: 8px;
         }
-        .gallery-item .delete-btn {
+        .delete-btn {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -32,23 +41,17 @@
             align-items: center;
             justify-content: center;
         }
-        .gallery-item .info {
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
         #uploadPreview {
-            max-width: 300px;
-            max-height: 200px;
-            object-fit: contain;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
             margin-top: 10px;
-            display: none;
+        }
+        #uploadPreview img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -57,7 +60,7 @@
         <div class="row mb-4">
             <div class="col">
                 <h1>Administration de la Galerie</h1>
-                <p>Gérez les images de la galerie Kiks Travel</p>
+                <p>Gérez les galeries Kiks Travel</p>
             </div>
         </div>
 
@@ -84,10 +87,10 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Ajouter une image</h5>
+                            <h5 class="card-title">Ajouter une galerie</h5>
                             <form id="uploadForm" onsubmit="return false;">
                                 <div class="mb-3">
-                                    <label for="title" class="form-label">Titre</label>
+                                    <label for="title" class="form-label">Titre de la galerie</label>
                                     <input type="text" class="form-control" id="title" required>
                                 </div>
                                 <div class="mb-3">
@@ -95,20 +98,20 @@
                                     <textarea class="form-control" id="description" rows="3" required></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="image" class="form-label">Image</label>
-                                    <input type="file" class="form-control" id="image" accept="image/*" required onchange="previewImage(event)">
+                                    <label for="images" class="form-label">Images</label>
+                                    <input type="file" class="form-control" id="images" accept="image/*" multiple required onchange="previewImages(event)">
                                 </div>
-                                <img id="uploadPreview" class="img-fluid" alt="Aperçu">
-                                <button class="btn btn-primary" onclick="uploadImage()">Ajouter à la galerie</button>
+                                <div id="uploadPreview" class="mb-3"></div>
+                                <button class="btn btn-primary" onclick="uploadGallery()">Créer la galerie</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Galerie -->
-            <div class="row" id="galleryContainer">
-                <!-- Les images seront ajoutées ici dynamiquement -->
+            <!-- Galeries -->
+            <div id="galleryContainer">
+                <!-- Les galeries seront ajoutées ici dynamiquement -->
             </div>
         </div>
     </div>
@@ -123,8 +126,6 @@
                 alert('Veuillez entrer une clé d\'administration');
                 return;
             }
-
-            // Tester la clé en essayant de charger la galerie
             loadGallery();
         }
 
@@ -133,29 +134,39 @@
                 const response = await fetch('/api/gallery');
                 if (!response.ok) throw new Error('Erreur lors du chargement de la galerie');
                 
-                const gallery = await response.json();
+                const galleries = await response.json();
                 document.getElementById('authForm').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
                 
                 const container = document.getElementById('galleryContainer');
                 container.innerHTML = '';
                 
-                gallery.forEach(item => {
-                    const col = document.createElement('div');
-                    col.className = 'col-md-4 gallery-item';
-                    col.innerHTML = `
-                        <div class="position-relative">
-                            <img src="${item.image}" alt="${item.title}" class="img-fluid">
-                            <button class="delete-btn" onclick="deleteImage(${item.id})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <div class="info">
-                                <h5>${item.title}</h5>
-                                <p>${item.description}</p>
+                galleries.forEach(gallery => {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-item card mb-4';
+                    div.innerHTML = `
+                        <div class="card-body">
+                            <h3 class="card-title">${gallery.title}</h3>
+                            <p class="card-text">${gallery.description}</p>
+                            <div class="gallery-images">
+                                ${gallery.images.map((image, index) => `
+                                    <div class="image-container">
+                                        <img src="${image}" alt="${gallery.title} - Image ${index + 1}">
+                                        <button class="delete-btn" onclick="deleteImage(${gallery.id}, ${index})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="mt-3">
+                                <input type="file" class="form-control" id="addImages_${gallery.id}" multiple accept="image/*">
+                                <button class="btn btn-secondary mt-2" onclick="addImagesToGallery(${gallery.id})">
+                                    Ajouter des images
+                                </button>
                             </div>
                         </div>
                     `;
-                    container.appendChild(col);
+                    container.appendChild(div);
                 });
             } catch (error) {
                 console.error('Erreur:', error);
@@ -163,29 +174,38 @@
             }
         }
 
-        function previewImage(event) {
+        function previewImages(event) {
             const preview = document.getElementById('uploadPreview');
-            const file = event.target.files[0];
-            if (file) {
-                preview.style.display = 'block';
-                preview.src = URL.createObjectURL(file);
+            preview.innerHTML = '';
+            const files = event.target.files;
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    preview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
             }
         }
 
-        async function uploadImage() {
+        async function uploadGallery() {
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
-            const imageFile = document.getElementById('image').files[0];
+            const imageFiles = document.getElementById('images').files;
 
-            if (!title || !description || !imageFile) {
-                alert('Veuillez remplir tous les champs');
+            if (!title || !description || imageFiles.length === 0) {
+                alert('Veuillez remplir tous les champs et sélectionner au moins une image');
                 return;
             }
 
             const formData = new FormData();
             formData.append('title', title);
             formData.append('description', description);
-            formData.append('image', imageFile);
+            for (const file of imageFiles) {
+                formData.append('images', file);
+            }
 
             try {
                 const response = await fetch('/api/gallery', {
@@ -198,21 +218,55 @@
 
                 if (!response.ok) throw new Error('Erreur lors de l\'upload');
 
-                alert('Image ajoutée avec succès');
+                alert('Galerie créée avec succès');
                 document.getElementById('uploadForm').reset();
-                document.getElementById('uploadPreview').style.display = 'none';
+                document.getElementById('uploadPreview').innerHTML = '';
                 loadGallery();
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Erreur lors de l\'ajout de l\'image');
+                alert('Erreur lors de la création de la galerie');
             }
         }
 
-        async function deleteImage(id) {
+        async function addImagesToGallery(galleryId) {
+            const input = document.getElementById(`addImages_${galleryId}`);
+            const files = input.files;
+
+            if (files.length === 0) {
+                alert('Veuillez sélectionner des images à ajouter');
+                return;
+            }
+
+            const formData = new FormData();
+            for (const file of files) {
+                formData.append('images', file);
+            }
+
+            try {
+                const response = await fetch(`/api/gallery/${galleryId}/images`, {
+                    method: 'POST',
+                    headers: {
+                        'admin-key': adminKey
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Erreur lors de l\'ajout des images');
+
+                alert('Images ajoutées avec succès');
+                input.value = '';
+                loadGallery();
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'ajout des images');
+            }
+        }
+
+        async function deleteImage(galleryId, imageIndex) {
             if (!confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) return;
 
             try {
-                const response = await fetch(`/api/gallery/${id}`, {
+                const response = await fetch(`/api/gallery/${galleryId}/images/${imageIndex}`, {
                     method: 'DELETE',
                     headers: {
                         'admin-key': adminKey

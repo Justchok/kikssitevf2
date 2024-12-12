@@ -572,88 +572,139 @@ app.get('/api/gallery', (req, res) => {
     }
 });
 
-// Route pour ajouter une image à la galerie
-app.post('/api/gallery', adminAuth, async (req, res) => {
+// Route pour ajouter des images à une galerie existante
+app.post('/api/gallery/:id/images', adminAuth, fileUpload(), async (req, res) => {
     try {
-        const { title, description } = req.body;
-        const image = req.files?.image;
-
-        if (!image) {
+        if (!req.files || !req.files.images) {
             return res.status(400).json({ error: 'Aucune image fournie' });
         }
 
+        const galleryId = parseInt(req.params.id);
+        const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
+        
+        // Lire le fichier gallery.json
+        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
+        let gallery = [];
+        try {
+            gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
+        } catch (error) {
+            return res.status(500).json({ error: 'Erreur lors de la lecture de la galerie' });
+        }
+
+        // Trouver la galerie à mettre à jour
+        const galleryEntry = gallery.find(entry => entry.id === galleryId);
+        if (!galleryEntry) {
+            return res.status(404).json({ error: 'Galerie non trouvée' });
+        }
+
+        // Sauvegarder chaque image
+        const uploadedImages = [];
+        for (const image of images) {
+            const fileName = `${Date.now()}-${image.name}`;
+            const filePath = path.join(GALLERY_PATH, fileName);
+            await image.mv(filePath);
+            uploadedImages.push(`/uploads/gallery/${fileName}`);
+        }
+
+        // Ajouter les nouvelles images à la galerie
+        if (!galleryEntry.images) galleryEntry.images = [];
+        galleryEntry.images.push(...uploadedImages);
+
+        // Sauvegarder les changements
+        fs.writeFileSync(galleryJsonPath, JSON.stringify(gallery, null, 2));
+
+        res.json({ success: true, images: uploadedImages });
+    } catch (error) {
+        console.error('Erreur lors de l\'upload:', error);
+        res.status(500).json({ error: 'Erreur lors de l\'upload des images' });
+    }
+});
+
+// Route pour créer une nouvelle galerie
+app.post('/api/gallery', adminAuth, fileUpload(), async (req, res) => {
+    try {
+        if (!req.files || !req.files.images) {
+            return res.status(400).json({ error: 'Aucune image fournie' });
+        }
+
+        const { title, description } = req.body;
         if (!title || !description) {
             return res.status(400).json({ error: 'Titre et description requis' });
         }
 
-        // Créer le dossier d'upload s'il n'existe pas
-        const uploadDir = './public/uploads/gallery';
-        if (!fs.existsSync(uploadDir)) {
-            await fs.promises.mkdir(uploadDir, { recursive: true });
+        const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
+        
+        // Sauvegarder les images
+        const uploadedImages = [];
+        for (const image of images) {
+            const fileName = `${Date.now()}-${image.name}`;
+            const filePath = path.join(GALLERY_PATH, fileName);
+            await image.mv(filePath);
+            uploadedImages.push(`/uploads/gallery/${fileName}`);
         }
 
-        // Gérer l'image
-        const imagePath = `/uploads/gallery/${Date.now()}-${image.name}`;
-        await image.mv(`.${imagePath}`);
-
-        // Lire les données existantes
-        let galleryData = [];
-        try {
-            galleryData = JSON.parse(fs.readFileSync('./server/data/gallery.json', 'utf8'));
-        } catch (error) {
-            console.log('Aucun fichier gallery.json existant, création d\'un nouveau fichier');
-        }
-
-        // Créer la nouvelle entrée
-        const newEntry = {
-            id: galleryData.length + 1,
+        // Créer la nouvelle entrée de galerie
+        const newGallery = {
+            id: Date.now(),
             title,
             description,
-            image: imagePath
+            images: uploadedImages
         };
 
-        // Ajouter la nouvelle entrée
-        galleryData.push(newEntry);
+        // Lire et mettre à jour le fichier gallery.json
+        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
+        let gallery = [];
+        try {
+            gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
+        } catch (error) {
+            // Si le fichier n'existe pas, on commence avec un tableau vide
+        }
 
-        // Sauvegarder dans le fichier
-        fs.writeFileSync('./server/data/gallery.json', JSON.stringify(galleryData, null, 4));
+        gallery.push(newGallery);
+        fs.writeFileSync(galleryJsonPath, JSON.stringify(gallery, null, 2));
 
-        res.json(newEntry);
+        res.json(newGallery);
     } catch (error) {
-        console.error('Erreur lors de l\'ajout à la galerie:', error);
-        res.status(500).json({ error: 'Erreur lors de l\'ajout à la galerie' });
+        console.error('Erreur lors de la création de la galerie:', error);
+        res.status(500).json({ error: 'Erreur lors de la création de la galerie' });
     }
 });
 
-// Route pour supprimer une image de la galerie
-app.delete('/api/gallery/:id', adminAuth, async (req, res) => {
+// Route pour supprimer une image d'une galerie
+app.delete('/api/gallery/:galleryId/images/:imageIndex', adminAuth, (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const galleryId = parseInt(req.params.galleryId);
+        const imageIndex = parseInt(req.params.imageIndex);
 
-        // Lire les données existantes
-        let galleryData = JSON.parse(fs.readFileSync('./server/data/gallery.json', 'utf8'));
+        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
+        let gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
 
-        // Trouver l'image à supprimer
-        const imageToDelete = galleryData.find(item => item.id === id);
-        if (!imageToDelete) {
+        const galleryEntry = gallery.find(entry => entry.id === galleryId);
+        if (!galleryEntry) {
+            return res.status(404).json({ error: 'Galerie non trouvée' });
+        }
+
+        if (!galleryEntry.images || imageIndex >= galleryEntry.images.length) {
             return res.status(404).json({ error: 'Image non trouvée' });
         }
 
-        // Supprimer le fichier physique si c'est une image uploadée
-        if (imageToDelete.image.startsWith('/uploads/')) {
-            const filePath = `.${imageToDelete.image}`;
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-            }
+        // Supprimer l'image du système de fichiers
+        const imagePath = galleryEntry.images[imageIndex];
+        const fullPath = path.join(__dirname, 'public', imagePath);
+        if (fs.existsSync(fullPath)) {
+            fs.unlinkSync(fullPath);
         }
 
-        // Filtrer l'image du tableau
-        galleryData = galleryData.filter(item => item.id !== id);
+        // Supprimer l'image de la galerie
+        galleryEntry.images.splice(imageIndex, 1);
 
-        // Sauvegarder dans le fichier
-        fs.writeFileSync('./server/data/gallery.json', JSON.stringify(galleryData, null, 4));
+        // Si la galerie n'a plus d'images, la supprimer complètement
+        if (galleryEntry.images.length === 0) {
+            gallery = gallery.filter(entry => entry.id !== galleryId);
+        }
 
-        res.json({ success: true, message: 'Image supprimée avec succès' });
+        fs.writeFileSync(galleryJsonPath, JSON.stringify(gallery, null, 2));
+        res.json({ success: true });
     } catch (error) {
         console.error('Erreur lors de la suppression de l\'image:', error);
         res.status(500).json({ error: 'Erreur lors de la suppression de l\'image' });

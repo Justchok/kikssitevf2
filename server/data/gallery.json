@@ -2,25 +2,25 @@
     {
         "id": 1,
         "title": "Voyage à Paris",
-        "image": "/assets/images/voyage1.jpg",
-        "description": "Vue magnifique de la Tour Eiffel"
+        "description": "Vue magnifique de la Tour Eiffel",
+        "images": [
+            "/assets/images/voyage1.jpg"
+        ]
     },
     {
         "id": 2,
         "title": "Safari au Kenya",
-        "image": "/assets/images/voyage2.jpg",
-        "description": "Observation des animaux sauvages"
+        "description": "Observation des animaux sauvages",
+        "images": [
+            "/assets/images/voyage2.jpg"
+        ]
     },
     {
         "id": 3,
         "title": "Plages de Dubai",
-        "image": "/assets/images/voyage3.jpg",
-        "description": "Détente sur les plages de luxe"
-    },
-    {
-        "id": 4,
-        "title": "Aventure en Montagne",
-        "image": "/assets/images/voyage4.jpg",
-        "description": "Randonnée dans les Alpes"
+        "description": "Détente sur les plages de luxe",
+        "images": [
+            "/assets/images/voyage3.jpg"
+        ]
     }
 ]
