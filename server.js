@@ -224,6 +224,8 @@ const offerClientEmailTemplate = (name, phone, offerTitle) => `
 // Middleware d'authentification admin
 const adminAuth = (req, res, next) => {
     const adminKey = req.headers['admin-key'];
+    console.log('Admin key reçue:', adminKey);
+    console.log('Admin key attendue:', process.env.ADMIN_KEY);
     if (adminKey === process.env.ADMIN_KEY) {
         next();
     } else {

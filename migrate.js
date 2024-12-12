@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 // Configuration
 const ADMIN_KEY = '6f55675189faca1b946baa26439ca7c6da1600da02c14e54ef560647fc46f8ff'; 
