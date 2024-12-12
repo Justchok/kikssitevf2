@@ -423,6 +423,42 @@ app.post('/api/gallery', adminAuth, async (req, res) => {
     }
 });
 
+// Route de migration des données
+app.post('/api/admin/migrate', adminAuth, async (req, res) => {
+    try {
+        // Migration des offres
+        const offresJson = require('./server/data/offres.json');
+        for (const offre of offresJson) {
+            const existingOffer = await Offer.findOne({ title: offre.title });
+            if (!existingOffer) {
+                await new Offer({
+                    title: offre.title,
+                    description: offre.description,
+                    price: offre.price,
+                    image: offre.image
+                }).save();
+            }
+        }
+
+        // Migration de la galerie
+        const galleryJson = require('./server/data/gallery.json');
+        for (const gallery of galleryJson) {
+            const existingGallery = await Gallery.findOne({ title: gallery.title });
+            if (!existingGallery) {
+                await new Gallery({
+                    title: gallery.title,
+                    images: gallery.images
+                }).save();
+            }
+        }
+
+        res.json({ success: true, message: 'Migration terminée avec succès' });
+    } catch (error) {
+        console.error('Erreur lors de la migration:', error);
+        res.status(500).json({ error: 'Erreur lors de la migration' });
+    }
+});
+
 // Route par défaut pour le frontend
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
