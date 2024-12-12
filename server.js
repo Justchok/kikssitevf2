@@ -1,15 +1,21 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const { Resend } = require('resend');
-const fs = require('fs').promises;
-const fileUpload = require('express-fileupload');
-const mongoose = require('mongoose');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import path from 'path';
+import { Resend } from 'resend';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fs from 'fs';
+import fileUpload from 'express-fileupload';
+import mongoose from 'mongoose';
 
 // Import des modèles
-const Offer = require('./server/models/Offer');
-const Gallery = require('./server/models/Gallery');
+import Offer from './server/models/Offer.js';
+import Gallery from './server/models/Gallery.js';
+
+// Configuration des chemins pour ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -54,7 +60,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 // Routes API
 app.get('/api/destinations', (req, res) => {
     try {
-        const destinations = require('./server/data/destinations.json');
+        const destinations = JSON.parse(fs.readFileSync('./server/data/destinations.json', 'utf8'));
         res.json(destinations);
     } catch (error) {
         console.error('Erreur lors du chargement des destinations:', error);
@@ -74,7 +80,7 @@ app.get('/api/offres-speciales', async (req, res) => {
 
 app.get('/api/groupes', (req, res) => {
     try {
-        const groupes = require('./server/data/groupes.json');
+        const groupes = JSON.parse(fs.readFileSync('./server/data/groupes.json', 'utf8'));
         res.json(groupes);
     } catch (error) {
         console.error('Erreur lors du chargement des groupes:', error);
@@ -428,9 +434,15 @@ app.post('/api/gallery', adminAuth, async (req, res) => {
 // Route de migration des données
 app.post('/api/admin/migrate', adminAuth, async (req, res) => {
     try {
+        console.log('Début de la migration des données...');
+
         // Migration des offres
-        const offresJson = require('./server/data/offres.json');
+        console.log('Migration des offres...');
+        const offresJson = JSON.parse(fs.readFileSync('./server/data/offres.json', 'utf8'));
+        console.log('Offres trouvées:', offresJson.length);
+
         for (const offre of offresJson) {
+            console.log('Migration de l\'offre:', offre.title);
             const existingOffer = await Offer.findOne({ title: offre.title });
             if (!existingOffer) {
                 await new Offer({
@@ -439,25 +451,36 @@ app.post('/api/admin/migrate', adminAuth, async (req, res) => {
                     price: offre.price,
                     image: offre.image
                 }).save();
+                console.log('Offre migrée avec succès');
+            } else {
+                console.log('Offre déjà existante');
             }
         }
 
         // Migration de la galerie
-        const galleryJson = require('./server/data/gallery.json');
+        console.log('Migration de la galerie...');
+        const galleryJson = JSON.parse(fs.readFileSync('./server/data/gallery.json', 'utf8'));
+        console.log('Images de galerie trouvées:', galleryJson.length);
+
         for (const gallery of galleryJson) {
+            console.log('Migration de la galerie:', gallery.title);
             const existingGallery = await Gallery.findOne({ title: gallery.title });
             if (!existingGallery) {
                 await new Gallery({
                     title: gallery.title,
                     images: gallery.images
                 }).save();
+                console.log('Galerie migrée avec succès');
+            } else {
+                console.log('Galerie déjà existante');
             }
         }
 
+        console.log('Migration terminée avec succès');
         res.json({ success: true, message: 'Migration terminée avec succès' });
     } catch (error) {
-        console.error('Erreur lors de la migration:', error);
-        res.status(500).json({ error: 'Erreur lors de la migration' });
+        console.error('Erreur détaillée lors de la migration:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 
