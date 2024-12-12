@@ -41,11 +41,35 @@ app.use(fileUpload({
     abortOnLimit: true
 }));
 
+// Configuration pour Railway
+const UPLOAD_PATH = process.env.RAILWAY_ENVIRONMENT 
+  ? path.join('/tmp', 'uploads')
+  : path.join(__dirname, 'public', 'uploads');
+
+// Créer les dossiers nécessaires s'ils n'existent pas
+const GALLERY_PATH = path.join(UPLOAD_PATH, 'gallery');
+fs.mkdirSync(GALLERY_PATH, { recursive: true });
+
+// Servir les fichiers statiques avec le bon chemin
+app.use('/uploads', express.static(UPLOAD_PATH));
+
 // Middleware pour servir les fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Servir les fichiers statiques
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+
+// Middleware pour protéger le dossier admin
+app.use('/admin', (req, res, next) => {
+  // Autoriser l'accès aux fichiers statiques dans /admin seulement depuis le domaine du site
+  const referer = req.headers.referer;
+  if (!referer || !referer.includes(req.headers.host)) {
+    return res.status(403).send('Accès non autorisé');
+  }
+  next();
+});
+
+app.use('/admin', express.static('public/admin'));
 
 // Routes API
 app.get('/api/destinations', (req, res) => {
@@ -406,47 +430,54 @@ app.post('/api/offers', adminAuth, async (req, res) => {
     }
 });
 
-app.post('/api/gallery', adminAuth, async (req, res) => {
+app.post('/api/gallery', adminAuth, fileUpload(), async (req, res) => {
     try {
-        const { title } = req.body;
-        const images = req.files?.images;
-
-        if (!images) {
+        if (!req.files || !req.files.image) {
             return res.status(400).json({ error: 'Aucune image fournie' });
         }
 
-        // Créer le dossier d'upload s'il n'existe pas
-        const uploadDir = './public/uploads/gallery';
-        if (!fs.existsSync(uploadDir)) {
-            await fs.promises.mkdir(uploadDir, { recursive: true });
+        const image = req.files.image;
+        const title = req.body.title;
+        const description = req.body.description;
+
+        if (!title || !description) {
+            return res.status(400).json({ error: 'Titre et description requis' });
         }
 
-        // Gérer les images
-        let imagePaths = [];
-        if (Array.isArray(images)) {
-            // Plusieurs images
-            for (const image of images) {
-                const imagePath = `/uploads/gallery/${Date.now()}-${image.name}`;
-                await image.mv(`.${imagePath}`);
-                imagePaths.push(imagePath);
-            }
-        } else {
-            // Une seule image
-            const imagePath = `/uploads/gallery/${Date.now()}-${images.name}`;
-            await images.mv(`.${imagePath}`);
-            imagePaths.push(imagePath);
+        // Générer un nom de fichier unique
+        const fileName = `${Date.now()}-${image.name}`;
+        const filePath = path.join(GALLERY_PATH, fileName);
+
+        // Déplacer l'image
+        await image.mv(filePath);
+
+        // Lire le fichier gallery.json
+        let gallery = [];
+        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
+        
+        try {
+            gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
+        } catch (error) {
+            // Si le fichier n'existe pas, on commence avec un tableau vide
         }
 
-        // Créer la nouvelle galerie dans MongoDB
-        const newGallery = {
+        // Ajouter la nouvelle image
+        const newImage = {
+            id: Date.now(),
             title,
-            images: imagePaths
+            description,
+            image: `/uploads/gallery/${fileName}`
         };
 
-        res.json(newGallery);
+        gallery.push(newImage);
+
+        // Sauvegarder le fichier gallery.json
+        fs.writeFileSync(galleryJsonPath, JSON.stringify(gallery, null, 2));
+
+        res.json(newImage);
     } catch (error) {
-        console.error('Erreur lors de la création de la galerie:', error);
-        res.status(500).json({ error: 'Erreur lors de la création de la galerie' });
+        console.error('Erreur lors de l\'upload:', error);
+        res.status(500).json({ error: 'Erreur lors de l\'upload de l\'image' });
     }
 });
 
