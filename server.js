@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Configuration de l'email vérifié
-const VERIFIED_EMAIL = 'chok.kane@gmail.com'; // Email vérifié sur Resend
+const VERIFIED_EMAIL = 'onboarding@resend.dev'; // Email de test Resend
 
 // Middleware pour le logging
 app.use((req, res, next) => {
