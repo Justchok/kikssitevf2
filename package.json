@@ -5,13 +5,18 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "npm install"
   },
   "dependencies": {
+    "@selderee/plugin-htmlparser2": "0.11.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "resend": "^2.0.0"
+    "resend": "^2.0.0",
+    "selderee": "0.11.0",
+    "parseley": "0.12.1",
+    "peberminta": "0.9.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
