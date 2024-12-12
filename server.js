@@ -57,6 +57,9 @@ app.get('/api/groupes', (req, res) => {
     }
 });
 
+// Fonction pour attendre un certain temps
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Route pour les réservations de vols
 app.post('/api/public/book-flight', async (req, res) => {
     try {
@@ -97,6 +100,10 @@ app.post('/api/public/book-flight', async (req, res) => {
             console.error('Erreur lors de l\'envoi de l\'email admin:', adminError);
             throw adminError;
         }
+
+        // Attendre 1 seconde entre les envois pour respecter la limite de taux
+        console.log('Attente de 1 seconde avant d\'envoyer l\'email client...');
+        await wait(1000);
 
         try {
             console.log('Envoi de l\'email de confirmation au client:', email);
