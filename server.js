@@ -67,53 +67,67 @@ app.post('/api/public/book-flight', async (req, res) => {
             throw new Error('RESEND_API_KEY non configurée');
         }
 
-        console.log('Envoi de l\'email à l\'administrateur...');
-        // Email pour l'administrateur
-        await resend.emails.send({
-            from: VERIFIED_EMAIL,
-            to: process.env.EMAIL_TO,
-            subject: 'Nouvelle réservation de vol',
-            html: `
-                <h1>Nouvelle réservation de vol</h1>
-                <p><strong>Nom:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <h2>Détails du vol:</h2>
-                <p><strong>Départ:</strong> ${flightDetails.departure}</p>
-                <p><strong>Destination:</strong> ${flightDetails.destination}</p>
-                <p><strong>Escale:</strong> ${flightDetails.layover || 'Aucune'}</p>
-                <p><strong>Classe:</strong> ${flightDetails.travelClass}</p>
-                <p><strong>Date de départ:</strong> ${flightDetails.departureDate}</p>
-                <p><strong>Date de retour:</strong> ${flightDetails.returnDate}</p>
-                <p><strong>Nombre de passagers:</strong> ${flightDetails.passengers}</p>
-            `
-        });
-        console.log('Email admin envoyé avec succès');
+        console.log('Clé API Resend:', process.env.RESEND_API_KEY);
+        console.log('Email admin:', process.env.EMAIL_TO);
+        console.log('Email client:', email);
 
-        console.log('Envoi de l\'email de confirmation au client:', email);
-        // Email de confirmation pour le client
-        await resend.emails.send({
-            from: VERIFIED_EMAIL,
-            to: email,
-            subject: 'Confirmation de votre réservation - Kiks Travel',
-            html: `
-                <h1>Confirmation de votre réservation</h1>
-                <p>Cher(e) ${name},</p>
-                <p>Nous avons bien reçu votre demande de réservation. Notre équipe la traitera dans les plus brefs délais.</p>
-                
-                <h2>Récapitulatif de votre réservation :</h2>
-                <p><strong>Vol :</strong> ${flightDetails.departure} → ${flightDetails.destination}</p>
-                <p><strong>Date de départ :</strong> ${flightDetails.departureDate}</p>
-                <p><strong>Date de retour :</strong> ${flightDetails.returnDate}</p>
-                <p><strong>Classe :</strong> ${flightDetails.travelClass}</p>
-                <p><strong>Nombre de passagers :</strong> ${flightDetails.passengers}</p>
-                
-                <p>Un membre de notre équipe vous contactera prochainement pour finaliser votre réservation.</p>
-                
-                <p>Cordialement,<br>
-                L'équipe Kiks Travel</p>
-            `
-        });
-        console.log('Email client envoyé avec succès');
+        try {
+            console.log('Envoi de l\'email à l\'administrateur...');
+            // Email pour l'administrateur
+            const adminEmailResult = await resend.emails.send({
+                from: VERIFIED_EMAIL,
+                to: process.env.EMAIL_TO,
+                subject: 'Nouvelle réservation de vol',
+                html: `
+                    <h1>Nouvelle réservation de vol</h1>
+                    <p><strong>Nom:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <h2>Détails du vol:</h2>
+                    <p><strong>Départ:</strong> ${flightDetails.departure}</p>
+                    <p><strong>Destination:</strong> ${flightDetails.destination}</p>
+                    <p><strong>Escale:</strong> ${flightDetails.layover || 'Aucune'}</p>
+                    <p><strong>Classe:</strong> ${flightDetails.travelClass}</p>
+                    <p><strong>Date de départ:</strong> ${flightDetails.departureDate}</p>
+                    <p><strong>Date de retour:</strong> ${flightDetails.returnDate}</p>
+                    <p><strong>Nombre de passagers:</strong> ${flightDetails.passengers}</p>
+                `
+            });
+            console.log('Résultat email admin:', adminEmailResult);
+        } catch (adminError) {
+            console.error('Erreur lors de l\'envoi de l\'email admin:', adminError);
+            throw adminError;
+        }
+
+        try {
+            console.log('Envoi de l\'email de confirmation au client:', email);
+            // Email de confirmation pour le client
+            const clientEmailResult = await resend.emails.send({
+                from: VERIFIED_EMAIL,
+                to: email,
+                subject: 'Confirmation de votre réservation - Kiks Travel',
+                html: `
+                    <h1>Confirmation de votre réservation</h1>
+                    <p>Cher(e) ${name},</p>
+                    <p>Nous avons bien reçu votre demande de réservation. Notre équipe la traitera dans les plus brefs délais.</p>
+                    
+                    <h2>Récapitulatif de votre réservation :</h2>
+                    <p><strong>Vol :</strong> ${flightDetails.departure} → ${flightDetails.destination}</p>
+                    <p><strong>Date de départ :</strong> ${flightDetails.departureDate}</p>
+                    <p><strong>Date de retour :</strong> ${flightDetails.returnDate}</p>
+                    <p><strong>Classe :</strong> ${flightDetails.travelClass}</p>
+                    <p><strong>Nombre de passagers :</strong> ${flightDetails.passengers}</p>
+                    
+                    <p>Un membre de notre équipe vous contactera prochainement pour finaliser votre réservation.</p>
+                    
+                    <p>Cordialement,<br>
+                    L'équipe Kiks Travel</p>
+                `
+            });
+            console.log('Résultat email client:', clientEmailResult);
+        } catch (clientError) {
+            console.error('Erreur lors de l\'envoi de l\'email client:', clientError);
+            throw clientError;
+        }
 
         res.json({ success: true, message: 'Réservation envoyée avec succès' });
     } catch (error) {
