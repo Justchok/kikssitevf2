@@ -10,17 +10,12 @@
     "build": "npm install"
   },
   "dependencies": {
-    "@selderee/plugin-htmlparser2": "0.11.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "express-fileupload": "^1.5.1",
-    "mongoose": "^8.8.4",
+    "express-fileupload": "^1.4.3",
     "node-fetch": "^3.3.2",
-    "parseley": "0.12.1",
-    "peberminta": "0.9.0",
-    "resend": "^2.0.0",
-    "selderee": "0.11.0"
+    "resend": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

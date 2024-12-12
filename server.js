@@ -7,11 +7,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import fs from 'fs';
 import fileUpload from 'express-fileupload';
-import mongoose from 'mongoose';
-
-// Import des modèles
-import Offer from './server/models/Offer.js';
-import Gallery from './server/models/Gallery.js';
 
 // Configuration des chemins pour ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -19,13 +14,6 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Connexion à MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://mongo:4Ek2FHECeE-f2GBh3h6f5FcBg-gEa4aF@monorail.proxy.rlwy.net:38456';
-
-mongoose.connect(MONGODB_URI)
-    .then(() => console.log('Connecté à MongoDB'))
-    .catch(err => console.error('Erreur de connexion MongoDB:', err));
 
 // Configuration de Resend
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -70,9 +58,9 @@ app.get('/api/destinations', (req, res) => {
     }
 });
 
-app.get('/api/offres-speciales', async (req, res) => {
+app.get('/api/offres-speciales', (req, res) => {
     try {
-        const offres = await Offer.find().sort('-createdAt');
+        const offres = JSON.parse(fs.readFileSync('./server/data/offres.json', 'utf8'));
         res.json(offres);
     } catch (error) {
         console.error('Erreur lors du chargement des offres:', error);
@@ -363,30 +351,47 @@ app.post('/api/offers', adminAuth, async (req, res) => {
         const { title, description, price } = req.body;
         const image = req.files?.image;
 
-        // Gérer l'upload de l'image si présente
-        let imagePath = '';
-        if (image) {
-            const uploadDir = './public/uploads/offers';
-            if (!fs.existsSync(uploadDir)) {
-                await fs.promises.mkdir(uploadDir, { recursive: true });
-            }
-            imagePath = `/uploads/offers/${Date.now()}-${image.name}`;
-            await image.mv(`.${imagePath}`);
+        // Lecture des offres existantes
+        let offres = [];
+        try {
+            offres = JSON.parse(fs.readFileSync('./server/data/offres.json', 'utf8'));
+        } catch (error) {
+            console.log('Aucun fichier offres.json existant, création d\'un nouveau fichier');
         }
 
-        // Créer la nouvelle offre dans MongoDB
-        const newOffer = new Offer({
-            title,
-            description,
-            price,
-            image: imagePath
-        });
+        // Gestion de l'image
+        let imagePath = '';
+        if (image) {
+            const uploadDir = path.join(__dirname, 'public', 'uploads');
+            if (!fs.existsSync(uploadDir)) {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            }
+            const fileName = Date.now() + '-' + image.name;
+            const uploadPath = path.join(uploadDir, fileName);
+            await image.mv(uploadPath);
+            imagePath = '/uploads/' + fileName;
+        }
 
-        await newOffer.save();
+        // Création de la nouvelle offre
+        const newOffer = {
+            id: offres.length + 1,
+            titre: title,
+            description,
+            prix: price,
+            devise: 'XOF',
+            image: imagePath || '/assets/images/default.jpg'
+        };
+
+        // Ajout de la nouvelle offre
+        offres.push(newOffer);
+
+        // Sauvegarde dans le fichier
+        fs.writeFileSync('./server/data/offres.json', JSON.stringify(offres, null, 4));
+
         res.json(newOffer);
     } catch (error) {
-        console.error('Erreur lors de la création de l\'offre:', error);
-        res.status(500).json({ error: 'Erreur lors de la création de l\'offre' });
+        console.error('Erreur lors de l\'ajout de l\'offre:', error);
+        res.status(500).json({ error: 'Erreur lors de l\'ajout de l\'offre' });
     }
 });
 
@@ -422,12 +427,11 @@ app.post('/api/gallery', adminAuth, async (req, res) => {
         }
 
         // Créer la nouvelle galerie dans MongoDB
-        const newGallery = new Gallery({
+        const newGallery = {
             title,
             images: imagePaths
-        });
+        };
 
-        await newGallery.save();
         res.json(newGallery);
     } catch (error) {
         console.error('Erreur lors de la création de la galerie:', error);
@@ -442,14 +446,10 @@ app.post('/api/admin/migrate', adminAuth, async (req, res) => {
         
         // Migration des offres
         const offres = JSON.parse(fs.readFileSync('./server/data/offres.json', 'utf8'));
-        await Offer.deleteMany({}); // Nettoyage des anciennes données
-        await Offer.insertMany(offres);
         console.log('Migration des offres terminée');
         
         // Migration de la galerie
         const galerie = JSON.parse(fs.readFileSync('./server/data/galerie.json', 'utf8'));
-        await Gallery.deleteMany({}); // Nettoyage des anciennes données
-        await Gallery.insertMany(galerie);
         console.log('Migration de la galerie terminée');
         
         res.json({ message: 'Migration réussie' });
