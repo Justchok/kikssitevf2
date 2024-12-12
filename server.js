@@ -50,18 +50,8 @@ const UPLOAD_PATH = process.env.RAILWAY_ENVIRONMENT
 const GALLERY_PATH = path.join(UPLOAD_PATH, 'gallery');
 fs.mkdirSync(GALLERY_PATH, { recursive: true });
 
-// Servir les fichiers statiques avec le bon chemin
-app.use('/uploads', express.static(UPLOAD_PATH));
-
-// Middleware pour servir les fichiers statiques
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Servir les fichiers statiques
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
-
 // Middleware pour protéger le dossier admin
 app.use('/admin', (req, res, next) => {
-  // Autoriser l'accès aux fichiers statiques dans /admin seulement depuis le domaine du site
   const referer = req.headers.referer;
   if (!referer || !referer.includes(req.headers.host)) {
     return res.status(403).send('Accès non autorisé');
@@ -69,7 +59,10 @@ app.use('/admin', (req, res, next) => {
   next();
 });
 
-app.use('/admin', express.static('public/admin'));
+// Servir les fichiers statiques dans l'ordre correct
+app.use('/uploads', express.static(UPLOAD_PATH));
+app.use('/admin', express.static(path.join(__dirname, 'public', 'admin')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes API
 app.get('/api/destinations', (req, res) => {
