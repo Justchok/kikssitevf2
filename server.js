@@ -60,6 +60,79 @@ app.get('/api/groupes', (req, res) => {
 // Fonction pour attendre un certain temps
 const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+// Email templates
+const adminEmailTemplate = (name, email, flightDetails) => `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 20px; }
+        p { margin: 10px 0; }
+        .details { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .highlight { color: #2c3e50; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Nouvelle réservation de vol</h1>
+    <div class="details">
+        <p><span class="highlight">Nom:</span> ${name}</p>
+        <p><span class="highlight">Email:</span> ${email}</p>
+        
+        <h2>Détails du vol:</h2>
+        <p><span class="highlight">Départ:</span> ${flightDetails.departure}</p>
+        <p><span class="highlight">Destination:</span> ${flightDetails.destination}</p>
+        <p><span class="highlight">Escale:</span> ${flightDetails.layover || 'Aucune'}</p>
+        <p><span class="highlight">Classe:</span> ${flightDetails.travelClass}</p>
+        <p><span class="highlight">Date de départ:</span> ${flightDetails.departureDate}</p>
+        <p><span class="highlight">Date de retour:</span> ${flightDetails.returnDate}</p>
+        <p><span class="highlight">Nombre de passagers:</span> ${flightDetails.passengers}</p>
+    </div>
+</body>
+</html>
+`;
+
+const clientEmailTemplate = (name, flightDetails) => `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 20px; }
+        p { margin: 10px 0; }
+        .details { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .highlight { color: #2c3e50; font-weight: bold; }
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Confirmation de votre réservation</h1>
+    <p>Cher(e) ${name},</p>
+    <p>Nous avons bien reçu votre demande de réservation. Notre équipe la traitera dans les plus brefs délais.</p>
+    
+    <div class="details">
+        <h2>Récapitulatif de votre réservation :</h2>
+        <p><span class="highlight">Vol :</span> ${flightDetails.departure} → ${flightDetails.destination}</p>
+        <p><span class="highlight">Date de départ :</span> ${flightDetails.departureDate}</p>
+        <p><span class="highlight">Date de retour :</span> ${flightDetails.returnDate}</p>
+        <p><span class="highlight">Classe :</span> ${flightDetails.travelClass}</p>
+        <p><span class="highlight">Nombre de passagers :</span> ${flightDetails.passengers}</p>
+    </div>
+    
+    <p>Un membre de notre équipe vous contactera prochainement pour finaliser votre réservation.</p>
+    
+    <div class="footer">
+        <p>Cordialement,<br>
+        L'équipe Kiks Travel</p>
+    </div>
+</body>
+</html>
+`;
+
 // Route pour les réservations de vols
 app.post('/api/public/book-flight', async (req, res) => {
     try {
@@ -81,19 +154,7 @@ app.post('/api/public/book-flight', async (req, res) => {
                 from: VERIFIED_EMAIL,
                 to: process.env.EMAIL_TO,
                 subject: 'Nouvelle réservation de vol',
-                html: `
-                    <h1>Nouvelle réservation de vol</h1>
-                    <p><strong>Nom:</strong> ${name}</p>
-                    <p><strong>Email:</strong> ${email}</p>
-                    <h2>Détails du vol:</h2>
-                    <p><strong>Départ:</strong> ${flightDetails.departure}</p>
-                    <p><strong>Destination:</strong> ${flightDetails.destination}</p>
-                    <p><strong>Escale:</strong> ${flightDetails.layover || 'Aucune'}</p>
-                    <p><strong>Classe:</strong> ${flightDetails.travelClass}</p>
-                    <p><strong>Date de départ:</strong> ${flightDetails.departureDate}</p>
-                    <p><strong>Date de retour:</strong> ${flightDetails.returnDate}</p>
-                    <p><strong>Nombre de passagers:</strong> ${flightDetails.passengers}</p>
-                `
+                html: adminEmailTemplate(name, email, flightDetails)
             });
             console.log('Résultat email admin:', adminEmailResult);
         } catch (adminError) {
@@ -112,23 +173,7 @@ app.post('/api/public/book-flight', async (req, res) => {
                 from: VERIFIED_EMAIL,
                 to: email,
                 subject: 'Confirmation de votre réservation - Kiks Travel',
-                html: `
-                    <h1>Confirmation de votre réservation</h1>
-                    <p>Cher(e) ${name},</p>
-                    <p>Nous avons bien reçu votre demande de réservation. Notre équipe la traitera dans les plus brefs délais.</p>
-                    
-                    <h2>Récapitulatif de votre réservation :</h2>
-                    <p><strong>Vol :</strong> ${flightDetails.departure} → ${flightDetails.destination}</p>
-                    <p><strong>Date de départ :</strong> ${flightDetails.departureDate}</p>
-                    <p><strong>Date de retour :</strong> ${flightDetails.returnDate}</p>
-                    <p><strong>Classe :</strong> ${flightDetails.travelClass}</p>
-                    <p><strong>Nombre de passagers :</strong> ${flightDetails.passengers}</p>
-                    
-                    <p>Un membre de notre équipe vous contactera prochainement pour finaliser votre réservation.</p>
-                    
-                    <p>Cordialement,<br>
-                    L'équipe Kiks Travel</p>
-                `
+                html: clientEmailTemplate(name, flightDetails)
             });
             console.log('Résultat email client:', clientEmailResult);
         } catch (clientError) {
