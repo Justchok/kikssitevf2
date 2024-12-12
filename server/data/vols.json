@@ -1,0 +1,31 @@
+{
+  "vols": [
+    {
+      "id": "vol1",
+      "depart": "Paris",
+      "destination": "New York",
+      "prix": 450,
+      "duree": "8h30",
+      "compagnie": "Air France",
+      "escales": []
+    },
+    {
+      "id": "vol2",
+      "depart": "Paris",
+      "destination": "Tokyo",
+      "prix": 750,
+      "duree": "12h",
+      "compagnie": "Japan Airlines",
+      "escales": ["Seoul"]
+    },
+    {
+      "id": "vol3",
+      "depart": "Paris",
+      "destination": "Dubai",
+      "prix": 380,
+      "duree": "6h45",
+      "compagnie": "Emirates",
+      "escales": []
+    }
+  ]
+}

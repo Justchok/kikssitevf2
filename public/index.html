@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiks Travel Tours</title>
+    <link rel="icon" type="image/png" href="./assets/images/kikslogo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="globe.js"></script>
+    <script src="flight-map.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="./assets/images/kikslogo.png" alt="Kiks Travel Tours Logo">
+            </div>
+            <div class="nav-links">
+                <a href="#accueil" class="nav-link">Accueil</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#reservation" class="nav-link">Réservation</a>
+                <a href="#offres" class="nav-link">Offres</a>
+                <a href="#galerie" class="nav-link">Galerie</a>
+                <a href="#partenaires" class="nav-link">Partenaires</a>
+            </div>
+            <div class="burger-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="accueil" class="hero">
+            <div id="globe-container"></div>
+            <div class="hero-content">
+                <h1>Découvrez le monde avec Kiks Travel Tours</h1>
+                <p>Votre partenaire de confiance pour des voyages inoubliables</p>
+                <a href="#reservation" class="cta-button">Réserver maintenant</a>
+            </div>
+        </section>
+
+        <section id="services" class="services">
+            <h2>Nos services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-plane"></i>
+                    <h3>Vols</h3>
+                    <p>Les meilleures offres de vols</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-hotel"></i>
+                    <h3>Hébergements</h3>
+                    <p>Des hôtels soigneusement sélectionnés</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Circuits</h3>
+                    <p>Des itinéraires sur mesure</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="reservation" class="reservation-section">
+            <div class="container">
+                <h2>Réservation de Vol</h2>
+                <form id="booking-form" class="booking-form" action="javascript:void(0);">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Nom complet</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="departure">Départ</label>
+                            <input type="text" id="departure" name="departure" placeholder="Ville ou pays de départ" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" id="destination" name="destination" placeholder="Ville ou pays de destination" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="layover">Escale (optionnel)</label>
+                            <input type="text" id="layover" name="layover" placeholder="Ville d'escale (optionnel)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="travel-class">Classe</label>
+                            <select id="travel-class" name="travelClass" required>
+                                <option value="economy">Économique</option>
+                                <option value="business">Affaires</option>
+                                <option value="first">Première</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="departure-date">Date de départ</label>
+                            <input type="date" id="departure-date" name="departureDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="return-date">Date de retour</label>
+                            <input type="date" id="return-date" name="returnDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passengers">Nombre de passagers</label>
+                            <input type="number" id="passengers" name="passengers" min="1" max="9" value="1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group submit-group">
+                        <button type="submit" class="submit-button">Réserver maintenant</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="offres" class="offres">
+            <h2>Nos Offres Spéciales</h2>
+            <div class="offres-grid">
+                <div class="offre-card">
+                    <img src="./assets/images/paris.jpg" alt="Paris">
+                    <div class="offre-content">
+                        <h3>Week-end à Paris</h3>
+                        <p class="prix">À partir de 299€</p>
+                        <ul class="offre-details">
+                            <li>3 jours / 2 nuits</li>
+                            <li>Hôtel 4 étoiles</li>
+                            <li>Petit-déjeuner inclus</li>
+                            <li>Visite guidée</li>
+                        </ul>
+                        <button class="reserver-button">Réserver</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="galerie" class="galerie">
+            <h2>Nos Voyages de Groupe</h2>
+            <div class="galerie-grid">
+                <!-- Les images seront ajoutées dynamiquement via JavaScript -->
+            </div>
+        </section>
+
+        <section id="partenaires" class="partenaires">
+            <h2>Nos Partenaires</h2>
+            <div class="logos">
+                <div class="logos-slide">
+                    <img src="./assets/images/iata.svg" alt="IATA">
+                    <img src="./assets/images/amadeus.png" alt="Amadeus">
+                    <img src="./assets/images/sabre.svg" alt="Sabre">
+                    <img src="./assets/images/TBO.jpg" alt="TBO.com">
+                    <img src="./assets/images/iata.svg" alt="IATA">
+                    <img src="./assets/images/amadeus.png" alt="Amadeus">
+                    <img src="./assets/images/sabre.svg" alt="Sabre">
+                    <img src="./assets/images/TBO.jpg" alt="TBO.com">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <img src="assets/images/logos/kikslogo.png" alt="Kiks Travel Logo" class="footer-logo">
+                <div class="contact-info">
+                    <p class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+221 338244246</span>
+                        <span>+221 338242845</span>
+                    </p>
+                    <p class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:info@kikstravel.com">info@kikstravel.com</a>
+                    </p>
+                    <p class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Dakar, Sénégal</span>
+                    </p>
+                </div>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/share/15rzLoocrS/?mibextid=LQQJ4d" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Suivez-nous sur Facebook">
+                        <img src="assets/images/logos/facebook.svg" alt="Facebook" class="social-icon">
+                    </a>
+                    <a href="https://www.instagram.com/kikstours?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Suivez-nous sur Instagram">
+                        <img src="assets/images/logos/instagram.svg" alt="Instagram" class="social-icon">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Kiks Travel Tours. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Données des aéroports
+            const airports = {
+                'DSS': { name: 'Dakar' },
+                'CDG': { name: 'Paris' },
+                'JFK': { name: 'New York' },
+                'DXB': { name: 'Dubai' },
+                'LHR': { name: 'Londres' },
+                'MAD': { name: 'Madrid' }
+            };
+
+            // Validation du formulaire
+            const form = document.getElementById('booking-form');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const bookingData = Object.fromEntries(formData.entries());
+
+                try {
+                    const response = await fetch('/api/booking', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(bookingData)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        let message = 'Notre équipe va étudier votre demande et vous contactera rapidement avec nos meilleures offres.';
+                        if (result.dev) {
+                            message += '\n\n(Mode développement : l\'email n\'a pas été envoyé car la clé API n\'est pas configurée)';
+                        }
+
+                        Swal.fire({
+                            title: 'Réservation reçue!',
+                            text: message,
+                            icon: 'success',
+                            confirmButtonText: 'Parfait!',
+                            confirmButtonColor: '#4CAF50'
+                        });
+                        this.reset();
+                    } else {
+                        throw new Error(result.message || 'Erreur lors de la réservation');
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: error.message || 'Une erreur est survenue. Veuillez réessayer plus tard.',
+                        icon: 'error',
+                        confirmButtonColor: '#f44336'
+                    });
+                }
+            });
+
+            // Menu burger
+            const burgerMenu = document.querySelector('.burger-menu');
+            const navLinks = document.querySelector('.nav-links');
+
+            burgerMenu.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                burgerMenu.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
