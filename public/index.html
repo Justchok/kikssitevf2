@@ -10,12 +10,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="globe.js"></script>
     <script src="flight-map.js"></script>
+    <script src="map.js"></script>
     <script src="script.js"></script>
 </head>
 <body>
@@ -29,7 +32,6 @@
                 <a href="#services" class="nav-link">Services</a>
                 <a href="#reservation" class="nav-link">Réservation</a>
                 <a href="#offres" class="nav-link">Offres</a>
-                <a href="#galerie" class="nav-link">Galerie</a>
                 <a href="#partenaires" class="nav-link">Partenaires</a>
             </div>
             <div class="burger-menu">
@@ -138,6 +140,19 @@
             </div>
         </section>
 
+        <section id="carte-interactive" class="carte-section">
+            <h2>Explorez Nos Destinations</h2>
+            <div class="carte-container">
+                <div id="map"></div>
+                <div class="destinations-list">
+                    <h3>Destinations Populaires</h3>
+                    <div class="destinations-grid" id="destinations-grid">
+                        <!-- Les destinations seront ajoutées dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="offres" class="offres">
             <h2>Nos Offres Spéciales</h2>
             <div class="offres-grid">
@@ -155,13 +170,6 @@
                         <button class="reserver-button">Réserver</button>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section id="galerie" class="galerie">
-            <h2>Nos Voyages de Groupe</h2>
-            <div class="galerie-grid">
-                <!-- Les images seront ajoutées dynamiquement via JavaScript -->
             </div>
         </section>
 

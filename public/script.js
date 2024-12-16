@@ -128,25 +128,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Envoi des données:', formData);
 
                 const API_URL = window.location.origin;
-                const response = await fetch(`${API_URL}/api/send-email`, {
+                const response = await fetch(`${API_URL}/api/booking`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(formData)
                 });
 
-                const responseData = await response.json();
-                console.log('Réponse du serveur:', responseData);
+                let responseData;
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    responseData = await response.json();
+                } else {
+                    throw new Error('Le serveur n\'a pas renvoyé de JSON valide');
+                }
 
                 if (!response.ok) {
-                    throw new Error(responseData.message || 'Erreur lors de l\'envoi de la réservation');
+                    throw new Error(responseData.message || 'Erreur lors de la réservation');
                 }
+
+                console.log('Réponse du serveur:', responseData);
 
                 // Afficher le pop-up de confirmation
                 const popup = document.getElementById('confirmation-popup');
                 if (popup) {
                     popup.style.display = 'flex';
+                    // Cacher le popup après 5 secondes
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 5000);
                 }
 
                 // Réinitialiser le formulaire
@@ -191,27 +203,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Données du formulaire:', formData);
 
                 const API_URL = window.location.origin;
-                const response = await fetch(`${API_URL}/api/public/book-flight`, {
+                const response = await fetch(`${API_URL}/api/booking`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(formData)
                 });
 
-                console.log('Statut de la réponse:', response.status);
-                const contentType = response.headers.get('content-type');
-                console.log('Type de contenu:', contentType);
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Réponse du serveur non-ok:', response.status, errorText);
-                    throw new Error(`Erreur lors de l'envoi de la réservation: ${errorText}`);
-                }
-
                 const result = await response.json();
                 console.log('Réponse de la réservation:', result);
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Erreur lors de la réservation');
+                }
 
                 Swal.fire({
                     title: 'Réservation envoyée !',
@@ -231,8 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-    } else {
-        console.error('Formulaire de réservation non trouvé');
     }
 
     // Fonction pour réserver une offre spéciale
@@ -287,8 +290,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                 });
 
+                let responseData;
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    responseData = await response.json();
+                } else {
+                    throw new Error('Le serveur n\'a pas renvoyé de JSON valide');
+                }
+
                 if (!response.ok) {
-                    throw new Error('Erreur lors de l\'envoi de la réservation');
+                    throw new Error(responseData.message || 'Erreur lors de l\'envoi de la réservation');
                 }
 
                 const result = await response.json();
@@ -718,38 +729,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch(`${API_URL}/api/public/book-flight`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(formData)
                 });
 
-                console.log('Statut de la réponse:', response.status);
-                const contentType = response.headers.get('content-type');
-                console.log('Type de contenu:', contentType);
-
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Réponse du serveur non-ok:', response.status, errorText);
-                    throw new Error(`Erreur lors de l'envoi de la réservation: ${errorText}`);
+                    throw new Error('Erreur lors de la réservation');
                 }
 
                 const result = await response.json();
                 console.log('Réponse de la réservation:', result);
 
                 Swal.fire({
-                    title: 'Réservation envoyée !',
-                    text: 'Vous recevrez bientôt un email de confirmation.',
+                    title: 'Réservation confirmée !',
+                    text: 'Vous allez recevoir un email de confirmation.',
                     icon: 'success',
                     confirmButtonText: 'OK'
                 });
                 
                 bookingForm.reset();
             } catch (error) {
-                console.error('Erreur détaillée:', error);
+                console.error('Erreur lors de la réservation:', error);
                 Swal.fire({
                     title: 'Erreur',
-                    text: 'Une erreur est survenue lors de la réservation. Veuillez réessayer.',
+                    text: error.message || 'Une erreur est survenue lors de la réservation. Veuillez réessayer.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -811,8 +815,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                 });
 
+                let responseData;
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    responseData = await response.json();
+                } else {
+                    throw new Error('Le serveur n\'a pas renvoyé de JSON valide');
+                }
+
                 if (!response.ok) {
-                    throw new Error('Erreur lors de l\'envoi de la réservation');
+                    throw new Error(responseData.message || 'Erreur lors de l\'envoi de la réservation');
                 }
 
                 const result = await response.json();
