@@ -11,9 +11,8 @@ const port = process.env.PORT || 3000;
 // Configuration de Resend et des emails
 const resend = new Resend(process.env.RESEND_API_KEY);
 const EMAIL_CONFIG = {
-    from: 'Kiks Travel <contact@kikstravel.com>', // Remplacez par votre domaine vérifié
-    replyTo: 'support@kikstravel.com', // Optionnel : adresse de réponse
-    agency: process.env.EMAIL_TO
+    from: 'Kiks Travel <onboarding@resend.dev>',
+    to: process.env.EMAIL_TO
 };
 
 // Configuration CORS
@@ -97,8 +96,7 @@ app.post('/api/booking', async (req, res) => {
             console.log('Envoi de l\'email à l\'agence...');
             const agencyEmailResult = await resend.emails.send({
                 from: EMAIL_CONFIG.from,
-                reply_to: EMAIL_CONFIG.replyTo,
-                to: EMAIL_CONFIG.agency,
+                to: EMAIL_CONFIG.to,
                 subject: 'Nouvelle réservation de voyage',
                 html: `
                     <h2>Nouvelle réservation de voyage</h2>
@@ -133,7 +131,6 @@ app.post('/api/booking', async (req, res) => {
             console.log('Envoi de l\'email au client...', email);
             const clientEmailResult = await resend.emails.send({
                 from: EMAIL_CONFIG.from,
-                reply_to: EMAIL_CONFIG.replyTo,
                 to: email,
                 subject: 'Confirmation de votre demande de réservation',
                 html: `
