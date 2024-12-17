@@ -95,9 +95,43 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateRetour = document.getElementById('date-retour');
 
         if (dateDepart && dateRetour) {
+            // Définir la date minimum à aujourd'hui
+            const today = new Date().toISOString().split('T')[0];
+            dateDepart.min = today;
+            
+            // Définir la date maximum à 1 an à partir d'aujourd'hui
+            const maxDate = new Date();
+            maxDate.setFullYear(maxDate.getFullYear() + 1);
+            const maxDateStr = maxDate.toISOString().split('T')[0];
+            dateDepart.max = maxDateStr;
+            dateRetour.max = maxDateStr;
+
             dateDepart.addEventListener('change', () => {
+                // Vérifier si la date de départ est valide
+                if (dateDepart.value < today) {
+                    alert('La date de départ ne peut pas être dans le passé');
+                    dateDepart.value = today;
+                    return;
+                }
+
+                // Mettre à jour la date minimum de retour
                 dateRetour.min = dateDepart.value;
+
+                // Si la date de retour est avant la nouvelle date de départ
                 if (dateRetour.value && dateRetour.value < dateDepart.value) {
+                    dateRetour.value = dateDepart.value;
+                }
+
+                // Calculer la date maximum de retour (15 mois après le départ)
+                const maxRetour = new Date(dateDepart.value);
+                maxRetour.setMonth(maxRetour.getMonth() + 15);
+                const maxRetourStr = maxRetour.toISOString().split('T')[0];
+                dateRetour.max = maxRetourStr > maxDateStr ? maxDateStr : maxRetourStr;
+            });
+
+            dateRetour.addEventListener('change', () => {
+                if (dateRetour.value < dateDepart.value) {
+                    alert('La date de retour doit être égale ou postérieure à la date de départ');
                     dateRetour.value = dateDepart.value;
                 }
             });
@@ -431,6 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const API_URL = window.location.origin;
             const response = await fetch(`${API_URL}/api/destinations`);
             const destinations = await response.json();
+            console.log('Destinations reçues:', destinations);
             
             const destinationsContainer = document.querySelector('#destinations-populaires .destinations-container');
             if (!destinationsContainer) return;
