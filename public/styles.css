@@ -108,14 +108,14 @@ body {
     justify-content: center;
     overflow: hidden;
     background: radial-gradient(circle at center, 
-                              rgba(210, 232, 240, 0.3) 0%,
-                              rgba(62, 160, 198, 0.4) 30%,
-                              rgba(26, 43, 60, 0.95) 70%,
-                              rgba(20, 30, 40, 0.98) 100%),
+                              rgba(210, 232, 240, 0.5) 0%,
+                              rgba(62, 160, 198, 0.3) 30%,
+                              rgba(26, 43, 60, 0.7) 70%,
+                              rgba(20, 30, 40, 0.8) 100%),
                 linear-gradient(135deg, 
-                              rgba(210, 232, 240, 0.4) 0%,
-                              rgba(62, 160, 198, 0.5) 50%,
-                              rgba(58, 107, 156, 0.6) 100%);
+                              rgba(210, 232, 240, 0.6) 0%,
+                              rgba(62, 160, 198, 0.4) 50%,
+                              rgba(58, 107, 156, 0.5) 100%);
     background-size: 200% 200%, 400% 400%;
     animation: gradientShift 20s ease infinite;
 }
