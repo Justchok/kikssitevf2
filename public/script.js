@@ -772,230 +772,159 @@ document.addEventListener('DOMContentLoaded', () => {
     // Charger les offres au démarrage
     loadOffresSpeciales();
 
-    // Charger les destinations populaires
-    async function loadDestinations() {
-        try {
-            console.log('Chargement des destinations...');
-            const API_URL = window.location.origin;
-            const response = await fetch(`${API_URL}/api/destinations`);
-            const destinations = await response.json();
-            console.log('Destinations reçues:', destinations);
-            
-            const destinationsContainer = document.querySelector('#destinations-populaires .destinations-container');
-            if (!destinationsContainer) return;
+    console.log('Initialisation terminée');
+});
 
-            const destinationsHTML = destinations.map(destination => `
-                <div class="destination-card">
-                    <img src="${destination.image}" alt="${destination.titre}">
-                    <div class="destination-content">
-                        <h3>${destination.titre}</h3>
-                        <p>${destination.description}</p>
-                        <div class="prix-container">
-                            <span class="prix">${destination.prix.toLocaleString('fr-FR')} ${destination.devise}</span>
-                            <select class="devise-select" onchange="convertirPrix(this, ${destination.prix}, '${destination.devise}')">
-                                <option value="${destination.devise}" selected>${destination.devise}</option>
-                                <option value="XOF" ${destination.devise === 'XOF' ? 'hidden' : ''}>XOF</option>
-                                <option value="EUR" ${destination.devise === 'EUR' ? 'hidden' : ''}>EUR</option>
-                                <option value="USD" ${destination.devise === 'USD' ? 'hidden' : ''}>USD</option>
-                            </select>
-                        </div>
-                        <button class="btn-reserver" onclick="ouvrirFormulaire('${destination.titre}')">Réserver</button>
-                    </div>
-                </div>
-            `).join('');
-            
-            destinationsContainer.innerHTML = destinationsHTML;
-        } catch (error) {
-            console.error('Erreur lors du chargement des destinations:', error);
-        }
-    }
+// Animation du globe
+function initGlobe() {
+    const canvas = document.getElementById('globe-canvas');
+    if (!canvas) return;
 
-    // Charger les voyages de groupe
-    async function loadVoyagesGroupe() {
-        try {
-            console.log('Chargement des voyages de groupe...');
-            const API_URL = window.location.origin;
-            const response = await fetch(`${API_URL}/api/voyages-groupe`);
-            const groupes = await response.json();
-            
-            const groupesContainer = document.querySelector('#voyages-groupe .groupes-container');
-            if (!groupesContainer) return;
+    // Configuration de base
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ 
+        canvas, 
+        antialias: true,
+        alpha: true 
+    });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
 
-            const groupesHTML = groupes.map(groupe => `
-                <div class="groupe-card">
-                    <img src="${groupe.image}" alt="${groupe.titre}">
-                    <div class="groupe-content">
-                        <h3>${groupe.titre}</h3>
-                        <p>${groupe.description}</p>
-                        <p><strong>Date de départ:</strong> ${new Date(groupe.dateDepart).toLocaleDateString('fr-FR')}</p>
-                        <p><strong>Durée:</strong> ${groupe.duree}</p>
-                        <div class="prix-container">
-                            <span class="prix">${groupe.prix.toLocaleString('fr-FR')} ${groupe.devise}</span>
-                            <select class="devise-select" onchange="convertirPrix(this, ${groupe.prix}, '${groupe.devise}')">
-                                <option value="${groupe.devise}" selected>${groupe.devise}</option>
-                                <option value="XOF" ${groupe.devise === 'XOF' ? 'hidden' : ''}>XOF</option>
-                                <option value="EUR" ${groupe.devise === 'EUR' ? 'hidden' : ''}>EUR</option>
-                                <option value="USD" ${groupe.devise === 'USD' ? 'hidden' : ''}>USD</option>
-                            </select>
-                        </div>
-                        <button class="btn-reserver" onclick="ouvrirFormulaire('${groupe.titre}')">Réserver</button>
-                    </div>
-                </div>
-            `).join('');
-            
-            groupesContainer.innerHTML = groupesHTML;
-        } catch (error) {
-            console.error('Erreur lors du chargement des voyages de groupe:', error);
-        }
-    }
-
-    // Fonction pour charger les voyages de groupe
-    async function loadGroupes() {
-        try {
-            console.log('Chargement des voyages de groupe...');
-            const API_URL = window.location.origin;
-            const response = await fetch(`${API_URL}/api/groupes`);
-            const groupes = await response.json();
-            const container = document.getElementById('groupes-container');
-            
-            if (container) {
-                container.innerHTML = groupes.map(groupe => `
-                    <div class="col-lg-3 col-md-4 col-sm-6 gallery-item">
-                        <div class="gallery-wrap">
-                            <img src="${groupe.image}" class="img-fluid" alt="${groupe.titre}">
-                            <div class="gallery-info">
-                                <h4>${groupe.titre}</h4>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-        } catch (error) {
-            console.error('Erreur lors du chargement des voyages de groupe:', error);
-        }
-    }
-
-    // Fonction de conversion des prix
-    async function convertirPrix(selectElement, montant, deviseOrigine) {
-        const deviseDestination = selectElement.value;
-        if (deviseOrigine === deviseDestination) return;
-
-        try {
-            const API_URL = window.location.origin;
-            const response = await fetch(`${API_URL}/api/convert-currency?amount=${montant}&from=${deviseOrigine}&to=${deviseDestination}`);
-            const data = await response.json();
-            
-            const prixElement = selectElement.parentElement.querySelector('.prix');
-            prixElement.textContent = `${data.amount.toLocaleString('fr-FR')} ${deviseDestination}`;
-        } catch (error) {
-            console.error('Erreur de conversion:', error);
-            alert('Erreur lors de la conversion de la devise');
-        }
-    }
-
-    // Charger tout le contenu au chargement de la page
-    loadDestinations();
-    loadVoyagesGroupe();
-    loadGroupes();
-
-    // Animation des cartes de service
-    const observerOptions = {
-        threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate');
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.service-card').forEach(card => {
-        observer.observe(card);
+    // Création du globe
+    const radius = 5;
+    const segments = 128;
+    const geometry = new THREE.SphereGeometry(radius, segments, segments);
+    
+    // Matériau principal du globe
+    const material = new THREE.MeshPhongMaterial({
+        map: new THREE.TextureLoader().load('./assets/images/earth-blue-marble.jpg'),
+        bumpMap: new THREE.TextureLoader().load('./assets/images/earth-topology.jpg'),
+        bumpScale: 0.15,
+        specularMap: new THREE.TextureLoader().load('./assets/images/earth-specular.jpg'),
+        specular: new THREE.Color('#909090'),
+        shininess: 25,
+        transparent: false,
+        opacity: 1
     });
 
-    // Données de la galerie
-    const galerieImages = [
-        { 
-            src: 'assets/images/voyage1.jpg',
-            titre: 'Voyage à Paris',
-            date: 'Juin 2023'
+    const globe = new THREE.Mesh(geometry, material);
+    scene.add(globe);
+
+    // Atmosphère
+    const atmosphereGeometry = new THREE.SphereGeometry(radius * 1.1, segments, segments);
+    const atmosphereMaterial = new THREE.ShaderMaterial({
+        transparent: true,
+        side: THREE.BackSide,
+        uniforms: {
+            time: { value: 0 },
+            color: { value: new THREE.Color('#3ea0c6') }
         },
-        { 
-            src: 'assets/images/voyage2.jpg',
-            titre: 'Escapade à Londres',
-            date: 'Août 2023'
-        },
-        { 
-            src: 'assets/images/voyage3.jpg',
-            titre: 'Tour de Tokyo',
-            date: 'Octobre 2023'
-        },
-        { 
-            src: 'assets/images/voyage4.jpg',
-            titre: 'Découverte de New York',
-            date: 'Décembre 2023'
-        }
+        vertexShader: `
+            varying vec3 vNormal;
+            void main() {
+                vNormal = normalize(normalMatrix * normal);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform vec3 color;
+            uniform float time;
+            varying vec3 vNormal;
+            void main() {
+                float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+                gl_FragColor = vec4(color, intensity * 0.3);
+            }
+        `
+    });
+
+    const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+    scene.add(atmosphere);
+
+    // Points de destination
+    const destinations = [
+        { lat: 48.8566, lon: 2.3522 },    // Paris
+        { lat: 14.6937, lon: -17.4441 },  // Dakar
+        { lat: 35.6762, lon: 139.6503 },  // Tokyo
+        { lat: 40.7128, lon: -74.0060 },  // New York
+        { lat: -33.8688, lon: 151.2093 }, // Sydney
     ];
 
-    // Création de la galerie
-    function creerGalerie() {
-        const galerieGrid = document.querySelector('.galerie-grid');
-        if (!galerieGrid) return;
+    const pointsGroup = new THREE.Group();
+    destinations.forEach(dest => {
+        const phi = (90 - dest.lat) * (Math.PI / 180);
+        const theta = (dest.lon + 180) * (Math.PI / 180);
+        
+        const pointGeometry = new THREE.SphereGeometry(0.05, 16, 16);
+        const pointMaterial = new THREE.MeshBasicMaterial({ 
+            color: '#d75534',
+            transparent: true,
+            opacity: 0.8
+        });
+        
+        const point = new THREE.Mesh(pointGeometry, pointMaterial);
+        point.position.x = radius * Math.sin(phi) * Math.cos(theta);
+        point.position.y = radius * Math.cos(phi);
+        point.position.z = radius * Math.sin(phi) * Math.sin(theta);
+        
+        pointsGroup.add(point);
+    });
+    scene.add(pointsGroup);
 
-        // Créer le modal une seule fois
-        const modal = document.createElement('div');
-        modal.className = 'modal';
-        document.body.appendChild(modal);
+    // Éclairage
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    scene.add(ambientLight);
 
-        galerieImages.forEach(img => {
-            const item = document.createElement('div');
-            item.className = 'galerie-item';
-            
-            item.innerHTML = `
-                <img src="${img.src}" alt="${img.titre}">
-                <div class="overlay">
-                    <h3>${img.titre}</h3>
-                    <p>${img.date}</p>
-                </div>
-            `;
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 3, 5);
+    scene.add(directionalLight);
 
-            // Ajouter l'événement pour ouvrir le modal
-            item.addEventListener('click', () => {
-                modal.innerHTML = `<img src="${img.src}" alt="${img.titre}">`;
-                modal.classList.add('active');
-            });
+    camera.position.z = 15;
 
-            galerieGrid.appendChild(item);
+    // Rotation automatique
+    let rotationSpeed = 0.001;
+    let mouseX = 0;
+    let targetRotationY = 0;
+
+    // Interaction à la souris
+    document.addEventListener('mousemove', (event) => {
+        mouseX = (event.clientX - window.innerWidth / 2) * 0.0005;
+        targetRotationY = mouseX;
+    });
+
+    // Animation
+    function animate(time) {
+        requestAnimationFrame(animate);
+
+        // Rotation fluide
+        globe.rotation.y += (targetRotationY - globe.rotation.y) * 0.05 + rotationSpeed;
+        atmosphere.rotation.y = globe.rotation.y;
+        pointsGroup.rotation.y = globe.rotation.y;
+
+        // Animation de l'atmosphère
+        atmosphereMaterial.uniforms.time.value = time * 0.001;
+
+        // Animation des points
+        pointsGroup.children.forEach((point, i) => {
+            point.scale.setScalar(1 + 0.1 * Math.sin(time * 0.001 + i));
         });
 
-        // Fermer le modal en cliquant dessus
-        modal.addEventListener('click', () => {
-            modal.classList.remove('active');
-        });
+        renderer.render(scene, camera);
     }
 
-    // Initialiser la galerie au chargement de la page
-    creerGalerie();
-
-    // Animation au scroll pour la galerie
-    const observerOptions2 = {
-        threshold: 0.1
-    };
-
-    const observer2 = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, observerOptions2);
-
-    document.querySelectorAll('.galerie-item').forEach(el => {
-        observer2.observe(el);
+    // Responsive
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
     });
-});
+
+    animate(0);
+}
+
+// Initialiser le globe au chargement de la page
+document.addEventListener('DOMContentLoaded', initGlobe);
 
 // Menu mobile
 document.addEventListener('DOMContentLoaded', function() {
