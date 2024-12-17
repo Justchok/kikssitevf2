@@ -262,27 +262,275 @@ document.addEventListener('DOMContentLoaded', () => {
     const bookingForm = document.getElementById('booking-form');
     if (bookingForm) {
         console.log('Formulaire de réservation trouvé');
+
+        // Fonction de validation d'email
+        const isValidEmail = (email) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        };
+
+        // Fonction de validation de numéro de téléphone
+        const isValidPhone = (phone) => {
+            const phoneRegex = /^(\+\d{1,3}[- ]?)?\d{9,}$/;
+            return phoneRegex.test(phone.replace(/\s/g, ''));
+        };
+
+        // Fonction de validation des champs texte
+        const isValidText = (text, minLength = 2) => {
+            return text && text.trim().length >= minLength;
+        };
+
+        // Validation en temps réel des champs
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const departureInput = document.getElementById('departure');
+        const destinationInput = document.getElementById('destination');
+        const departureDateInput = document.getElementById('departure-date');
+        const returnDateInput = document.getElementById('return-date');
+        const passengersInput = document.getElementById('passengers');
+        const travelClassInput = document.getElementById('travel-class');
+
+        // Fonction pour afficher les erreurs
+        const showError = (input, message) => {
+            const errorDiv = input.nextElementSibling;
+            if (errorDiv && errorDiv.classList.contains('error-message')) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            } else {
+                const div = document.createElement('div');
+                div.className = 'error-message';
+                div.style.color = '#d75534';
+                div.style.fontSize = '0.8rem';
+                div.style.marginTop = '4px';
+                div.textContent = message;
+                input.parentNode.insertBefore(div, input.nextSibling);
+            }
+            input.style.borderColor = '#d75534';
+        };
+
+        // Fonction pour cacher les erreurs
+        const hideError = (input) => {
+            const errorDiv = input.nextElementSibling;
+            if (errorDiv && errorDiv.classList.contains('error-message')) {
+                errorDiv.style.display = 'none';
+            }
+            input.style.borderColor = '';
+        };
+
+        // Validation du nom
+        nameInput.addEventListener('input', () => {
+            if (!isValidText(nameInput.value)) {
+                showError(nameInput, 'Le nom doit contenir au moins 2 caractères');
+            } else {
+                hideError(nameInput);
+            }
+        });
+
+        // Validation de l'email
+        emailInput.addEventListener('input', () => {
+            if (!isValidEmail(emailInput.value)) {
+                showError(emailInput, 'Veuillez entrer une adresse email valide');
+            } else {
+                hideError(emailInput);
+            }
+        });
+
+        // Validation du téléphone
+        phoneInput.addEventListener('input', () => {
+            if (!isValidPhone(phoneInput.value)) {
+                showError(phoneInput, 'Veuillez entrer un numéro de téléphone valide');
+            } else {
+                hideError(phoneInput);
+            }
+        });
+
+        // Validation du nombre de passagers
+        passengersInput.addEventListener('input', () => {
+            const value = parseInt(passengersInput.value);
+            if (isNaN(value) || value < 1 || value > 9) {
+                showError(passengersInput, 'Le nombre de passagers doit être entre 1 et 9');
+                passengersInput.value = Math.min(Math.max(1, value), 9);
+            } else {
+                hideError(passengersInput);
+            }
+        });
+
+        // Empêcher la sélection de la même ville pour le départ et la destination
+        destinationInput.addEventListener('change', () => {
+            if (destinationInput.value === departureInput.value) {
+                showError(destinationInput, 'La destination ne peut pas être identique au départ');
+                destinationInput.value = '';
+            } else {
+                hideError(destinationInput);
+            }
+        });
+
+        departureInput.addEventListener('change', () => {
+            if (departureInput.value === destinationInput.value) {
+                showError(departureInput, 'Le départ ne peut pas être identique à la destination');
+                departureInput.value = '';
+            } else {
+                hideError(departureInput);
+            }
+        });
+
+        // Configuration des dates
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const todayStr = today.toISOString().split('T')[0];
+        
+        // Date maximum (1 an à partir d'aujourd'hui)
+        const maxDate = new Date(today);
+        maxDate.setFullYear(maxDate.getFullYear() + 1);
+        const maxDateStr = maxDate.toISOString().split('T')[0];
+
+        // Configuration des champs de date
+        departureDateInput.min = todayStr;
+        departureDateInput.max = maxDateStr;
+        returnDateInput.max = maxDateStr;
+
+        // Fonction pour formater la date en français
+        const formatDate = (date) => {
+            return new Date(date).toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        };
+
+        // Validation de la date de départ
+        departureDateInput.addEventListener('input', () => {
+            const selectedDate = new Date(departureDateInput.value);
+            selectedDate.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                showError(departureDateInput, `La date de départ ne peut pas être dans le passé. Minimum: ${formatDate(today)}`);
+                departureDateInput.value = todayStr;
+            } else if (selectedDate > maxDate) {
+                showError(departureDateInput, `La date de départ ne peut pas être après le ${formatDate(maxDate)}`);
+                departureDateInput.value = maxDateStr;
+            } else {
+                hideError(departureDateInput);
+
+                // Mettre à jour la date minimum de retour
+                returnDateInput.min = departureDateInput.value;
+
+                // Calculer la date maximum de retour (15 mois après le départ)
+                const maxRetour = new Date(departureDateInput.value);
+                maxRetour.setMonth(maxRetour.getMonth() + 15);
+                const effectiveMaxRetour = new Date(Math.min(maxRetour.getTime(), maxDate.getTime()));
+                returnDateInput.max = effectiveMaxRetour.toISOString().split('T')[0];
+
+                // Ajuster la date de retour si nécessaire
+                if (returnDateInput.value) {
+                    const returnDate = new Date(returnDateInput.value);
+                    if (returnDate < selectedDate) {
+                        showError(returnDateInput, `La date de retour a été ajustée au ${formatDate(selectedDate)}`);
+                        returnDateInput.value = departureDateInput.value;
+                    } else if (returnDate > effectiveMaxRetour) {
+                        showError(returnDateInput, `La date de retour a été ajustée au ${formatDate(effectiveMaxRetour)}`);
+                        returnDateInput.value = effectiveMaxRetour.toISOString().split('T')[0];
+                    }
+                }
+            }
+        });
+
+        // Validation de la date de retour
+        returnDateInput.addEventListener('input', () => {
+            const returnDate = new Date(returnDateInput.value);
+            const departDate = new Date(departureDateInput.value);
+            const maxRetour = new Date(departureDateInput.value);
+            maxRetour.setMonth(maxRetour.getMonth() + 15);
+            const effectiveMaxRetour = new Date(Math.min(maxRetour.getTime(), maxDate.getTime()));
+
+            if (returnDate < departDate) {
+                showError(returnDateInput, `La date de retour doit être égale ou postérieure à la date de départ (${formatDate(departDate)})`);
+                returnDateInput.value = departureDateInput.value;
+            } else if (returnDate > effectiveMaxRetour) {
+                showError(returnDateInput, `La date de retour ne peut pas être après le ${formatDate(effectiveMaxRetour)}`);
+                returnDateInput.value = effectiveMaxRetour.toISOString().split('T')[0];
+            } else {
+                hideError(returnDateInput);
+            }
+        });
+
+        // Validation du formulaire avant soumission
         bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            console.log('Soumission du formulaire de réservation de vol...');
             
+            // Vérifier tous les champs obligatoires
+            let hasError = false;
+
+            if (!isValidText(nameInput.value)) {
+                showError(nameInput, 'Le nom est requis (minimum 2 caractères)');
+                hasError = true;
+            }
+
+            if (!isValidEmail(emailInput.value)) {
+                showError(emailInput, 'Une adresse email valide est requise');
+                hasError = true;
+            }
+
+            if (phoneInput.value && !isValidPhone(phoneInput.value)) {
+                showError(phoneInput, 'Le numéro de téléphone n\'est pas valide');
+                hasError = true;
+            }
+
+            if (!departureInput.value) {
+                showError(departureInput, 'Veuillez sélectionner une ville de départ');
+                hasError = true;
+            }
+
+            if (!destinationInput.value) {
+                showError(destinationInput, 'Veuillez sélectionner une destination');
+                hasError = true;
+            }
+
+            if (!departureDateInput.value) {
+                showError(departureDateInput, 'La date de départ est requise');
+                hasError = true;
+            }
+
+            const passengers = parseInt(passengersInput.value);
+            if (isNaN(passengers) || passengers < 1 || passengers > 9) {
+                showError(passengersInput, 'Le nombre de passagers doit être entre 1 et 9');
+                hasError = true;
+            }
+
+            if (!travelClassInput.value) {
+                showError(travelClassInput, 'Veuillez sélectionner une classe de voyage');
+                hasError = true;
+            }
+
+            if (hasError) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur de saisie',
+                    text: 'Veuillez corriger les erreurs dans le formulaire',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3ea0c6'
+                });
+                return;
+            }
+
             try {
                 const formData = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
+                    name: nameInput.value,
+                    email: emailInput.value,
+                    phone: phoneInput.value,
                     flightDetails: {
-                        departure: document.getElementById('departure').value,
-                        destination: document.getElementById('destination').value,
-                        layover: document.getElementById('layover').value,
-                        travelClass: document.getElementById('travel-class').value,
-                        departureDate: document.getElementById('departure-date').value,
-                        returnDate: document.getElementById('return-date').value,
-                        passengers: document.getElementById('passengers').value
+                        departure: departureInput.value,
+                        destination: destinationInput.value,
+                        layover: document.getElementById('layover').value || '',
+                        travelClass: travelClassInput.value,
+                        departureDate: departureDateInput.value,
+                        returnDate: returnDateInput.value || '',
+                        passengers: passengersInput.value
                     }
                 };
 
-                console.log('Données du formulaire:', formData);
+                console.log('Envoi des données:', formData);
 
                 const API_URL = window.location.origin;
                 const response = await fetch(`${API_URL}/api/booking`, {
@@ -293,31 +541,49 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(formData)
                 });
 
-                const result = await response.json();
-                console.log('Réponse de la réservation:', result);
-
                 if (!response.ok) {
-                    throw new Error(result.message || 'Erreur lors de la réservation');
+                    const errorData = await response.json().catch(() => ({
+                        message: 'Erreur lors de la réservation'
+                    }));
+                    throw new Error(errorData.message || 'Erreur lors de la réservation');
                 }
 
+                const responseData = await response.json().catch(() => ({
+                    message: 'Réservation enregistrée avec succès'
+                }));
+
+                // Afficher le message de succès
                 Swal.fire({
-                    title: 'Réservation envoyée !',
-                    text: 'Vous recevrez bientôt un email de confirmation.',
                     icon: 'success',
-                    confirmButtonText: 'OK'
+                    title: 'Réservation envoyée !',
+                    text: 'Nous avons bien reçu votre demande de réservation. Vous recevrez bientôt un email de confirmation.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3ea0c6'
                 });
-                
+
+                // Réinitialiser le formulaire
                 bookingForm.reset();
+                // Nettoyer tous les messages d'erreur
+                document.querySelectorAll('.error-message').forEach(error => {
+                    error.style.display = 'none';
+                });
+                document.querySelectorAll('input, select').forEach(input => {
+                    input.style.borderColor = '';
+                });
+
             } catch (error) {
                 console.error('Erreur détaillée:', error);
                 Swal.fire({
-                    title: 'Erreur',
-                    text: 'Une erreur est survenue lors de la réservation. Veuillez réessayer.',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    title: 'Erreur',
+                    text: error.message || 'Une erreur est survenue lors de l\'envoi de votre réservation. Veuillez réessayer plus tard.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3ea0c6'
                 });
             }
         });
+    } else {
+        console.error('Formulaire de réservation non trouvé');
     }
 
     // Fonction pour réserver une offre spéciale
@@ -865,7 +1131,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Erreur lors de la réservation:', error);
                 Swal.fire({
                     title: 'Erreur',
-                    text: error.message || 'Une erreur est survenue lors de la réservation. Veuillez réessayer.',
+                    text: 'Une erreur est survenue lors de la réservation. Veuillez réessayer.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
