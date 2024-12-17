@@ -95,46 +95,94 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateRetour = document.getElementById('date-retour');
 
         if (dateDepart && dateRetour) {
+            // Fonction pour formater la date en format français
+            const formatDate = (date) => {
+                return new Date(date).toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            };
+
             // Définir la date minimum à aujourd'hui
-            const today = new Date().toISOString().split('T')[0];
-            dateDepart.min = today;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const todayStr = today.toISOString().split('T')[0];
+            dateDepart.min = todayStr;
             
             // Définir la date maximum à 1 an à partir d'aujourd'hui
-            const maxDate = new Date();
+            const maxDate = new Date(today);
             maxDate.setFullYear(maxDate.getFullYear() + 1);
             const maxDateStr = maxDate.toISOString().split('T')[0];
             dateDepart.max = maxDateStr;
             dateRetour.max = maxDateStr;
 
+            // Fonction de validation de date
+            const validateDate = (date, minDate, maxDate) => {
+                const d = new Date(date);
+                return d >= minDate && d <= maxDate;
+            };
+
             dateDepart.addEventListener('change', () => {
+                const selectedDate = new Date(dateDepart.value);
+                selectedDate.setHours(0, 0, 0, 0);
+
                 // Vérifier si la date de départ est valide
-                if (dateDepart.value < today) {
-                    alert('La date de départ ne peut pas être dans le passé');
-                    dateDepart.value = today;
+                if (!validateDate(selectedDate, today, maxDate)) {
+                    if (selectedDate < today) {
+                        alert(`La date de départ ne peut pas être dans le passé.\nVeuillez choisir une date à partir du ${formatDate(today)}.`);
+                        dateDepart.value = todayStr;
+                    } else if (selectedDate > maxDate) {
+                        alert(`La date de départ ne peut pas être au-delà du ${formatDate(maxDate)}.\nVeuillez choisir une date plus proche.`);
+                        dateDepart.value = maxDateStr;
+                    }
                     return;
                 }
 
                 // Mettre à jour la date minimum de retour
                 dateRetour.min = dateDepart.value;
 
-                // Si la date de retour est avant la nouvelle date de départ
-                if (dateRetour.value && dateRetour.value < dateDepart.value) {
-                    dateRetour.value = dateDepart.value;
-                }
-
                 // Calculer la date maximum de retour (15 mois après le départ)
                 const maxRetour = new Date(dateDepart.value);
                 maxRetour.setMonth(maxRetour.getMonth() + 15);
                 const maxRetourStr = maxRetour.toISOString().split('T')[0];
-                dateRetour.max = maxRetourStr > maxDateStr ? maxDateStr : maxRetourStr;
+                const effectiveMaxRetour = new Date(Math.min(maxRetour.getTime(), maxDate.getTime()));
+                dateRetour.max = effectiveMaxRetour.toISOString().split('T')[0];
+
+                // Ajuster la date de retour si nécessaire
+                if (dateRetour.value) {
+                    const returnDate = new Date(dateRetour.value);
+                    if (returnDate < selectedDate) {
+                        alert(`La date de retour a été ajustée au ${formatDate(selectedDate)} pour correspondre à la date de départ.`);
+                        dateRetour.value = dateDepart.value;
+                    } else if (returnDate > effectiveMaxRetour) {
+                        alert(`La date de retour a été ajustée au ${formatDate(effectiveMaxRetour)}.\nC'est la date maximale possible pour ce voyage.`);
+                        dateRetour.value = effectiveMaxRetour.toISOString().split('T')[0];
+                    }
+                }
             });
 
             dateRetour.addEventListener('change', () => {
-                if (dateRetour.value < dateDepart.value) {
-                    alert('La date de retour doit être égale ou postérieure à la date de départ');
+                const departDate = new Date(dateDepart.value);
+                const returnDate = new Date(dateRetour.value);
+                const maxRetour = new Date(dateDepart.value);
+                maxRetour.setMonth(maxRetour.getMonth() + 15);
+                const effectiveMaxRetour = new Date(Math.min(maxRetour.getTime(), maxDate.getTime()));
+
+                if (returnDate < departDate) {
+                    alert(`La date de retour doit être égale ou postérieure à la date de départ (${formatDate(departDate)}).`);
                     dateRetour.value = dateDepart.value;
+                } else if (returnDate > effectiveMaxRetour) {
+                    alert(`La date de retour ne peut pas être après le ${formatDate(effectiveMaxRetour)}.\nC'est la limite maximale pour ce voyage.`);
+                    dateRetour.value = effectiveMaxRetour.toISOString().split('T')[0];
                 }
             });
+
+            // Initialiser les dates par défaut
+            if (!dateDepart.value) {
+                dateDepart.value = todayStr;
+                dateRetour.min = todayStr;
+            }
         }
 
         // Gestion de la soumission du formulaire
