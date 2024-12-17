@@ -68,26 +68,28 @@ app.get('/api/offres-speciales', async (req, res) => {
 // Route pour la réservation (booking)
 app.post('/api/booking', async (req, res) => {
     console.log('Réception d\'une nouvelle réservation:', req.body);
+    
     try {
+        // Vérification et validation des données reçues
+        if (!req.body || !req.body.name || !req.body.email || !req.body.flightDetails) {
+            return res.status(400).json({
+                message: 'Données de réservation incomplètes',
+                error: 'Veuillez remplir tous les champs obligatoires'
+            });
+        }
+
         const {
-            name: nom,
+            name,
             email,
-            phone: telephone,
-            flightDetails: {
-                departure: depart,
-                destination,
-                layover: escale,
-                travelClass: classe,
-                departureDate: dateDepart,
-                returnDate: dateRetour,
-                passengers: passagers
-            }
+            phone,
+            flightDetails
         } = req.body;
 
-        if (!nom || !email || !depart || !destination || !dateDepart) {
+        // Vérification des détails du vol
+        if (!flightDetails.departure || !flightDetails.destination || !flightDetails.departureDate) {
             return res.status(400).json({
-                message: 'Données de réservation invalides',
-                error: 'Veuillez remplir tous les champs obligatoires'
+                message: 'Détails du vol incomplets',
+                error: 'Les informations de vol sont incomplètes'
             });
         }
 
@@ -103,27 +105,27 @@ app.post('/api/booking', async (req, res) => {
                     
                     <h3>Coordonnées:</h3>
                     <ul>
-                        <li>Nom: ${nom}</li>
+                        <li>Nom: ${name}</li>
                         <li>Email: ${email}</li>
-                        <li>Téléphone: ${telephone || 'Non renseigné'}</li>
+                        <li>Téléphone: ${phone || 'Non renseigné'}</li>
                     </ul>
 
                     <h3>Détails du voyage:</h3>
                     <ul>
-                        <li>Départ: ${depart}</li>
-                        <li>Destination: ${destination}</li>
-                        <li>Escale: ${escale || 'Aucune'}</li>
-                        <li>Classe: ${classe}</li>
-                        <li>Date de départ: ${dateDepart}</li>
-                        <li>Date de retour: ${dateRetour || 'Non renseigné'}</li>
-                        <li>Nombre de passagers: ${passagers}</li>
+                        <li>Départ: ${flightDetails.departure}</li>
+                        <li>Destination: ${flightDetails.destination}</li>
+                        <li>Escale: ${flightDetails.layover || 'Aucune'}</li>
+                        <li>Classe: ${flightDetails.travelClass}</li>
+                        <li>Date de départ: ${flightDetails.departureDate}</li>
+                        <li>Date de retour: ${flightDetails.returnDate || 'Non renseigné'}</li>
+                        <li>Nombre de passagers: ${flightDetails.passengers || '1'}</li>
                     </ul>
                 `
             });
             console.log('Email agence envoyé avec succès:', agencyEmailResult);
         } catch (emailError) {
             console.error('Erreur lors de l\'envoi de l\'email à l\'agence:', emailError);
-            throw emailError;
+            // Ne pas arrêter le processus si l'email à l'agence échoue
         }
 
         // Email pour le client
@@ -134,19 +136,19 @@ app.post('/api/booking', async (req, res) => {
                 to: email,
                 subject: 'Confirmation de votre demande de réservation',
                 html: `
-                    <h2>Cher(e) ${nom},</h2>
+                    <h2>Cher(e) ${name},</h2>
                     
                     <p>Nous avons bien reçu votre demande de réservation de voyage.</p>
                     
                     <h3>Récapitulatif de votre voyage :</h3>
                     <ul>
-                        <li>Départ: ${depart}</li>
-                        <li>Destination: ${destination}</li>
-                        <li>Escale: ${escale || 'Aucune'}</li>
-                        <li>Date de départ: ${dateDepart}</li>
-                        <li>Date de retour: ${dateRetour || 'Non renseigné'}</li>
-                        <li>Classe: ${classe}</li>
-                        <li>Nombre de passagers: ${passagers}</li>
+                        <li>Départ: ${flightDetails.departure}</li>
+                        <li>Destination: ${flightDetails.destination}</li>
+                        <li>Escale: ${flightDetails.layover || 'Aucune'}</li>
+                        <li>Date de départ: ${flightDetails.departureDate}</li>
+                        <li>Date de retour: ${flightDetails.returnDate || 'Non renseigné'}</li>
+                        <li>Classe: ${flightDetails.travelClass}</li>
+                        <li>Nombre de passagers: ${flightDetails.passengers || '1'}</li>
                     </ul>
 
                     <p>Notre équipe va traiter votre demande et vous recontactera dans les plus brefs délais.</p>
@@ -157,13 +159,17 @@ app.post('/api/booking', async (req, res) => {
             console.log('Email client envoyé avec succès:', clientEmailResult);
         } catch (emailError) {
             console.error('Erreur lors de l\'envoi de l\'email au client:', emailError);
-            throw emailError;
+            // Ne pas arrêter le processus si l'email au client échoue
         }
 
-        res.status(200).json({ message: 'Réservation enregistrée avec succès' });
+        res.status(200).json({ 
+            success: true,
+            message: 'Réservation enregistrée avec succès' 
+        });
     } catch (error) {
         console.error('Erreur lors de la réservation:', error);
         res.status(500).json({ 
+            success: false,
             message: 'Erreur lors de la réservation',
             error: error.message 
         });
