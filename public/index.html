@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kiks Travel - Votre agence de voyage à Paris. Réservez vos billets d'avion, hôtels et circuits touristiques. Spécialiste des voyages vers l'Afrique et l'international.">
+    <meta name="keywords" content="agence voyage paris, billet avion, réservation vol, voyage afrique, kiks travel, agence voyage">
+    <meta name="author" content="Kiks Travel">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Kiks Travel - Agence de Voyage à Paris">
+    <meta property="og:description" content="Réservez vos billets d'avion et voyages avec Kiks Travel, votre agence de confiance à Paris. Meilleurs tarifs garantis.">
+    <meta property="og:image" content="/images/logo.png">
+    <meta property="og:url" content="https://www.kikstravel.fr">
+    <link rel="canonical" href="https://www.kikstravel.fr">
+    <title>Kiks Travel Tours</title>
+    <link rel="icon" type="image/png" href="./assets/images/kikslogo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/language-switcher.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="globe.js"></script>
+    <script src="/js/translations.js"></script>
+    <script src="/js/language-switcher.js" defer></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="/" class="active" data-i18n="home">Accueil</a>
+                <a href="/destinations.html" data-i18n="destinations">Destinations</a>
+                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
+                <a href="/offres.html" data-i18n="offers">Offres</a>
+                <a href="/contact.html" data-i18n="contact">Contact</a>
+                <div class="language-switcher">
+                    <button onclick="switchLanguage('fr')" class="active">
+                        <img src="/assets/images/flags/fr.svg" alt="fr" title="Français">
+                    </button>
+                    <button onclick="switchLanguage('en')">
+                        <img src="/assets/images/flags/en.svg" alt="en" title="English">
+                    </button>
+                </div>
+            </div>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="accueil" class="hero">
+            <div class="floating-elements">
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
+            <div id="globe-container">
+                <canvas id="globe-canvas"></canvas>
+            </div>
+            <div class="hero-content">
+                <h1 data-i18n="heroTitle">Voyagez avec Kiks Travel</h1>
+                <p data-i18n="heroDesc">Découvrez le monde avec notre expertise et vivez des expériences uniques et inoubliables</p>
+                <a href="/reservations.html" class="cta-button" data-i18n="bookNow">Réserver maintenant</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Kiks Travel</h3>
+                <p data-i18n="companyDesc">Votre partenaire de confiance pour des voyages inoubliables.</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="contactTitle">Contact</h3>
+                <p><span data-i18n="phone">Tél</span>: +221 338244246</p>
+                <p>Email: info@kikstravel.com</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="address">Adresse</h3>
+                <p>Espace Ataya Keur Damel<br>Batiment 4 Appartement 412</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="followUs">Suivez-nous</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/kikstravel" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/kikstours/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="partners-section">
+            <h3 class="partners-title" data-i18n="ourPartners">Nos Partenaires</h3>
+            <div class="partners-grid">
+                <div class="partner-logo">
+                    <img src="images/partners/amadeus.png" alt="Amadeus">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partners/TBO.jpg" alt="TBO">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partners/iata.svg" alt="IATA">
+                </div>
+                <div class="partner-logo">
+                    <img src="images/partners/sabre.svg" alt="Sabre">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Menu burger
+        const burgerMenu = document.querySelector('.burger');
+        const navLinks = document.querySelector('.nav-links');
+
+        burgerMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burgerMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kiks Travel - Votre agence de voyage à Paris. Réservez vos billets d'avion, hôtels et circuits touristiques.">
+    <meta name="keywords" content="agence voyage paris, billet avion, réservation vol, voyage afrique, kiks travel, agence voyage">
+    <meta name="author" content="Kiks Travel">
+    <meta name="robots" content="index, follow">
+    <title>Kiks Travel Tours - {% PAGE_TITLE %}</title>
+    <link rel="icon" type="image/png" href="/assets/images/kikslogo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/common.js" defer></script>
+    {% EXTRA_HEAD %}
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/">
+                    <img src="/assets/images/kikslogo.png" alt="Kiks Travel Tours Logo">
+                </a>
+            </div>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link">Accueil</a></li>
+                <li><a href="/destinations.html" class="nav-link">Destinations</a></li>
+                <li><a href="/services.html" class="nav-link">Services</a></li>
+                <li><a href="/offres.html" class="nav-link">Offres</a></li>
+                <li><a href="/about.html" class="nav-link">À propos</a></li>
+                <li><a href="/contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% MAIN_CONTENT %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Kiks Travel Tours</h3>
+                <p>Votre partenaire de confiance pour des voyages inoubliables.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: contact@kikstravel.fr</p>
+                <p>Tél: +33 1 XX XX XX XX</p>
+                <p>Adresse: Paris, France</p>
+            </div>
+            <div class="footer-section">
+                <h3>Liens Rapides</h3>
+                <ul>
+                    <li><a href="/destinations.html">Destinations</a></li>
+                    <li><a href="/services.html">Services</a></li>
+                    <li><a href="/offres.html">Offres</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Suivez-nous</h3>
+                <div class="social-links">
+                    <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Kiks Travel Tours. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html>

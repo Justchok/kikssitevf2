@@ -1,0 +1,33 @@
+.language-switcher {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+.language-switcher button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.language-switcher button:hover {
+    transform: translateY(-2px);
+    opacity: 0.8;
+}
+
+.language-switcher button.active {
+    opacity: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.language-switcher img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Réservations de vols et voyages avec Kiks Travel">
+    <meta name="keywords" content="réservation vol, réservation voyage, kiks travel">
+    <title>Réservations - Kiks Travel</title>
+    <link rel="icon" type="image/png" href="./assets/images/kikslogo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="css/language-switcher.css">
+    <script src="/js/translations.js"></script>
+    <script src="/js/language-switcher.js" defer></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
+            </div>
+            <div class="nav-links">
+                <a href="/" data-i18n="home">Accueil</a>
+                <a href="/destinations.html" data-i18n="destinations">Destinations</a>
+                <a href="/reservations.html" class="active" data-i18n="reservations">Réservations</a>
+                <a href="/offres.html" data-i18n="offers">Offres</a>
+                <a href="/contact.html" data-i18n="contact">Contact</a>
+                <div class="language-switcher">
+                    <button onclick="switchLanguage('fr')" class="active">
+                        <img src="/assets/images/flags/fr.svg" alt="fr" title="Français">
+                    </button>
+                    <button onclick="switchLanguage('en')">
+                        <img src="/assets/images/flags/en.svg" alt="en" title="English">
+                    </button>
+                </div>
+            </div>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="reservations-section">
+            <h1 data-i18n="bookingTitle">Réservez Votre Voyage</h1>
+            <p data-i18n="bookingDesc">Planifiez votre prochaine aventure avec nous. Remplissez le formulaire ci-dessous pour commencer votre voyage.</p>
+            
+            <form id="booking-form" class="booking-form" action="javascript:void(0);">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name" data-i18n="formName">Nom complet</label>
+                        <input type="text" id="name" name="name" required data-i18n-placeholder="formNamePlaceholder">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" data-i18n="formEmail">Email</label>
+                        <input type="email" id="email" name="email" required data-i18n-placeholder="formEmailPlaceholder">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" data-i18n="formPhone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" required pattern="[0-9+\s-]+" placeholder="Ex: +221 77 123 45 67">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="departure" data-i18n="formDeparture">Départ</label>
+                        <input type="text" id="departure" name="departure" placeholder="Ville ou pays de départ" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="destination" data-i18n="formDestination">Destination</label>
+                        <input type="text" id="destination" name="destination" placeholder="Ville ou pays de destination" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="layover" data-i18n="formLayover">Escale (optionnel)</label>
+                        <input type="text" id="layover" name="layover" placeholder="Ville d'escale (optionnel)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="travel-class" data-i18n="formTravelClass">Classe</label>
+                        <select id="travel-class" name="travelClass" required>
+                            <option value="economy" data-i18n="formTravelClassEconomy">Économique</option>
+                            <option value="business" data-i18n="formTravelClassBusiness">Affaires</option>
+                            <option value="first" data-i18n="formTravelClassFirst">Première</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="departure-date" data-i18n="formDepartureDate">Date de départ</label>
+                        <input type="date" id="departure-date" name="departure-date" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="return-date" data-i18n="formReturnDate">Date de retour</label>
+                        <input type="date" id="return-date" name="return-date" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passengers" data-i18n="formPassengers">Nombre de passagers</label>
+                        <input type="number" id="passengers" name="passengers" min="1" max="9" value="1" required>
+                    </div>
+                </div>
+
+                <div class="form-group submit-group">
+                    <button type="submit" class="submit-button" data-i18n="bookNow">Réserver maintenant</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Kiks Travel</h3>
+                <p data-i18n="companyDesc">Votre partenaire de confiance pour des voyages inoubliables.</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="contactTitle">Contact</h3>
+                <p><span data-i18n="phone">Tél</span>: +221 338244246</p>
+                <p>Email: info@kikstravel.com</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="address">Adresse</h3>
+                <p>Espace Ataya Keur Damel<br>Batiment 4 Appartement 412</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="followUs">Suivez-nous</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/kikstravel" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/kikstours/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="partners-section">
+            <h3 class="partners-title" data-i18n="ourPartners">Nos Partenaires</h3>
+            <div class="partners-grid">
+                <div class="partner-logo">
+                    <img src="/assets/images/partners/airfrance.png" alt="Air France">
+                </div>
+                <div class="partner-logo">
+                    <img src="/assets/images/partners/turkish.png" alt="Turkish Airlines">
+                </div>
+                <div class="partner-logo">
+                    <img src="/assets/images/partners/royal.png" alt="Royal Air Maroc">
+                </div>
+                <div class="partner-logo">
+                    <img src="/assets/images/partners/tap.png" alt="TAP Air Portugal">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration des dates
+            const today = new Date();
+            const maxDate = new Date();
+            maxDate.setFullYear(maxDate.getFullYear() + 1); // Maximum 1 an à l'avance
+
+            // Formatage des dates pour l'attribut min
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            // Configuration des champs de date
+            const departureDateInput = document.getElementById('departure-date');
+            const returnDateInput = document.getElementById('return-date');
+
+            // Date de départ : aujourd'hui minimum, 1 an maximum
+            departureDateInput.min = formatDate(today);
+            departureDateInput.max = formatDate(maxDate);
+
+            // Mise à jour de la date de retour minimum quand la date de départ change
+            departureDateInput.addEventListener('change', function() {
+                const selectedDeparture = new Date(this.value);
+                returnDateInput.min = this.value;
+                
+                // Si la date de retour est avant la nouvelle date de départ, la réinitialiser
+                if (returnDateInput.value && new Date(returnDateInput.value) < selectedDeparture) {
+                    returnDateInput.value = this.value;
+                }
+            });
+
+            // Date de retour : minimum = date de départ si sélectionnée, sinon aujourd'hui
+            returnDateInput.min = departureDateInput.value || formatDate(today);
+            returnDateInput.max = formatDate(maxDate);
+
+            // Validation du formulaire
+            const form = document.getElementById('booking-form');
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+                const bookingData = Object.fromEntries(formData.entries());
+                const currentLang = localStorage.getItem('selectedLanguage') || 'fr';
+
+                try {
+                    // Préparer les données dans le bon format
+                    const flightData = {
+                        name: bookingData.name,
+                        email: bookingData.email,
+                        phone: bookingData.phone,
+                        departure: bookingData.departure,
+                        destination: bookingData.destination,
+                        layover: bookingData.layover,
+                        travelClass: bookingData['travel-class'],
+                        departureDate: bookingData['departure-date'],
+                        returnDate: bookingData['return-date'],
+                        passengers: parseInt(bookingData.passengers)
+                    };
+
+                    const response = await fetch('/api/public/book-flight', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(flightData)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        let message = translations[currentLang].bookingSuccessMessage || 'Notre équipe va étudier votre demande et vous contactera rapidement avec nos meilleures offres.';
+                        if (result.dev) {
+                            message += '\n\n(Mode développement : l\'email n\'a pas été envoyé car la clé API n\'est pas configurée)';
+                        }
+
+                        Swal.fire({
+                            title: translations[currentLang].bookingReceived || 'Réservation reçue!',
+                            text: message,
+                            icon: 'success',
+                            confirmButtonText: translations[currentLang].ok || 'OK',
+                            confirmButtonColor: '#4CAF50'
+                        });
+                        this.reset();
+                    } else {
+                        throw new Error(result.message || translations[currentLang].bookingError || 'Erreur lors de la réservation');
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    Swal.fire({
+                        title: translations[currentLang].error || 'Erreur',
+                        text: error.message || translations[currentLang].generalError || 'Une erreur est survenue. Veuillez réessayer plus tard.',
+                        icon: 'error',
+                        confirmButtonColor: '#f44336'
+                    });
+                }
+            });
+
+            // Menu burger
+            const burgerMenu = document.querySelector('.burger');
+            const navLinks = document.querySelector('.nav-links');
+
+            burgerMenu.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                burgerMenu.classList.toggle('active');
+            });
+
+            // Mise à jour des placeholders pour les champs de formulaire
+            function updatePlaceholders() {
+                const currentLang = localStorage.getItem('selectedLanguage') || 'fr';
+                const translations = window.translations[currentLang];
+
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    if (translations[key]) {
+                        element.placeholder = translations[key];
+                    }
+                });
+
+                // Mise à jour des placeholders spécifiques
+                const departureInput = document.getElementById('departure');
+                const destinationInput = document.getElementById('destination');
+                const layoverInput = document.getElementById('layover');
+                const phoneInput = document.getElementById('phone');
+
+                if (translations.formDeparturePlaceholder) {
+                    departureInput.placeholder = translations.formDeparturePlaceholder;
+                }
+                if (translations.formDestinationPlaceholder) {
+                    destinationInput.placeholder = translations.formDestinationPlaceholder;
+                }
+                if (translations.formLayoverPlaceholder) {
+                    layoverInput.placeholder = translations.formLayoverPlaceholder;
+                }
+                if (translations.formPhonePlaceholder) {
+                    phoneInput.placeholder = translations.formPhonePlaceholder;
+                }
+            }
+
+            // Mettre à jour les placeholders au chargement
+            updatePlaceholders();
+
+            // Mettre à jour les placeholders quand la langue change
+            document.addEventListener('languageChanged', updatePlaceholders);
+        });
+    </script>
+</body>
+</html>

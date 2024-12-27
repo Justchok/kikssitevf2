@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Découvrez nos destinations de voyage - Kiks Travel">
+    <meta name="keywords" content="destinations voyage, afrique, europe, asie">
+    <title>Kiks Travel Tours - Destinations</title>
+    <link rel="icon" type="image/png" href="./assets/images/kikslogo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/language-switcher.css">
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-popup {
+            padding: 0;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .popup-image {
+            width: 100%;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .popup-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .popup-image img:hover {
+            transform: scale(1.1);
+        }
+
+        .map-popup h3 {
+            color: #3ea0c6;
+            margin: 15px 0 10px;
+            font-size: 1.2em;
+            padding: 0 15px;
+        }
+
+        .map-popup p {
+            margin-bottom: 15px;
+            color: #4b382c;
+            padding: 0 15px;
+            font-size: 0.95em;
+        }
+
+        .popup-button {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: #d75534;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .popup-button:hover {
+            background-color: #e86643;
+            transform: translateY(-2px);
+        }
+
+        /* Style personnalisé pour la popup Leaflet */
+        .custom-popup .leaflet-popup-content-wrapper {
+            padding: 0;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .custom-popup .leaflet-popup-content {
+            margin: 0;
+        }
+
+        .custom-popup .leaflet-popup-tip {
+            background: white;
+        }
+
+        .destinations-section {
+            padding: 4rem 5%;
+        }
+
+        .destinations-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .destinations-intro h1 {
+            color: #4b382c;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .destinations-intro p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
+            </div>
+            <div class="nav-links">
+                <a href="/" data-i18n="home">Accueil</a>
+                <a href="/destinations.html" class="active" data-i18n="destinations">Destinations</a>
+                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
+                <a href="/offres.html" data-i18n="offers">Offres</a>
+                <a href="/contact.html" data-i18n="contact">Contact</a>
+                <div class="language-switcher">
+                    <button onclick="switchLanguage('fr')" class="active">
+                        <img src="/assets/images/flags/fr.svg" alt="fr" title="Français">
+                    </button>
+                    <button onclick="switchLanguage('en')">
+                        <img src="/assets/images/flags/en.svg" alt="en" title="English">
+                    </button>
+                </div>
+            </div>
+            <div class="burger">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="destinations-section">
+            <h1 data-i18n="destinationsTitle">Nos Destinations</h1>
+            <p data-i18n="destinationsDesc">Découvrez nos destinations de rêve et commencez votre prochaine aventure.</p>
+            
+            <div id="map"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Kiks Travel</h3>
+                <p data-i18n="companyDesc">Votre partenaire de confiance pour des voyages inoubliables.</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="contactTitle">Contact</h3>
+                <p><span data-i18n="phone">Tél</span>: +221 338244246</p>
+                <p>Email: info@kikstravel.com</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="address">Adresse</h3>
+                <p>Espace Ataya Keur Damel<br>Batiment 4 Appartement 412</p>
+            </div>
+            <div class="footer-section">
+                <h3 data-i18n="followUs">Suivez-nous</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/kikstravel" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/kikstours/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="partners-section">
+            <h3 class="partners-title" data-i18n="ourPartners">Nos Partenaires</h3>
+            <div class="partners-grid">
+                <div class="partner-logo">
+                    <img src="/assets/images/partners/airfrance.png" alt="Air France">
+                </div>
+                <div class="partner-logo">
+                    <img src="/assets/images/partners/turkish.png" alt="Turkish Airlines">
+                </div>
+                <div class="partner-logo">
+                    <img src="/assets/images/partners/royal.png" alt="Royal Air Maroc">
+                </div>
+                <div class="partner-logo">
+                    <img src="/assets/images/partners/tap.png" alt="TAP Air Portugal">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="/js/translations.js"></script>
+    <script src="/js/language-switcher.js" defer></script>
+    <script src="js/map.js"></script>
+    <script>
+        // Menu burger
+        const burgerMenu = document.querySelector('.burger');
+        const navLinks = document.querySelector('.nav-links');
+
+        burgerMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            burgerMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

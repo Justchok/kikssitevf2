@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "title": "Voyage à Paris",
+        "description": "Vue magnifique de la Tour Eiffel",
+        "images": [
+            "/assets/images/voyage1.jpg"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Safari au Kenya",
+        "description": "Observation des animaux sauvages",
+        "images": [
+            "/assets/images/voyage2.jpg"
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Plages de Dubai",
+        "description": "Détente sur les plages de luxe",
+        "images": [
+            "/assets/images/voyage3.jpg"
+        ]
+    }
+]
