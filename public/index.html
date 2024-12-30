@@ -35,19 +35,16 @@
     <header class="header">
         <nav class="navbar">
             <div class="logo">
-                <img src="images/logo.png" alt="Kiks Travel Logo">
+                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo" width="150"></a>
             </div>
-            <button class="hamburger" aria-label="Menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            <button class="menu-btn">☰</button>
             <div class="nav-links">
-                <a href="#" class="nav-link">Accueil</a>
-                <a href="#services" class="nav-link">Services</a>
-                <a href="#destinations" class="nav-link">Destinations</a>
-                <a href="#contact" class="nav-link">Contact</a>
-                <a href="#reservation" class="nav-link cta-button">Réserver</a>
+                <a href="/">Accueil</a>
+                <a href="/about.html">À propos</a>
+                <a href="/destinations.html">Destinations</a>
+                <a href="/offres.html">Offres</a>
+                <a href="/reservations.html">Réserver</a>
+                <a href="/contact.html">Contact</a>
             </div>
         </nav>
     </header>
@@ -120,7 +117,7 @@
 
     <script>
         // Menu burger
-        const burgerMenu = document.querySelector('.burger');
+        const burgerMenu = document.querySelector('.menu-btn');
         const navLinks = document.querySelector('.nav-links');
 
         burgerMenu.addEventListener('click', () => {

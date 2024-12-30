@@ -30,15 +30,15 @@ body {
 
 /* Navigation moderne */
 .navbar {
-    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    background-color: var(--white-color);
+    padding: 1rem;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     position: fixed;
+    width: 100%;
     top: 0;
-    left: 0;
     z-index: 1000;
 }
 
@@ -47,8 +47,27 @@ body {
 }
 
 .logo img {
-    height: 100%;
+    height: 50px;
     width: auto;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    color: #333;
+    text-decoration: none;
+}
+
+.menu-btn {
+    display: none;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
 }
 
 /* Navigation links pour PC */
