@@ -16,22 +16,26 @@
     <link rel="icon" type="image/png" href="./assets/images/kikslogo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="js/main.js" as="script">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/language-switcher.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="globe.js"></script>
-    <script src="/js/translations.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
+    <script src="globe.js" defer></script>
+    <script src="/js/translations.js" defer></script>
     <script src="/js/language-switcher.js" defer></script>
+    <script src="/js/main.js" defer></script>
 </head>
 <body>
     <header class="header">
         <nav class="navbar">
             <div class="logo">
-                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
+                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo" loading="eager" width="150" height="60"></a>
             </div>
             <button class="hamburger" aria-label="Menu">
                 <span></span>
@@ -137,6 +141,31 @@
             burgerMenu.classList.toggle('active');
         });
     </script>
-    <script src="/js/main.js"></script>
+    <script>
+        // Service Worker pour le cache
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+        
+        // Préchargement des pages au survol
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('mouseover', () => {
+                const href = link.getAttribute('href');
+                if (href && !link.prefetched) {
+                    const prefetchLink = document.createElement('link');
+                    prefetchLink.rel = 'prefetch';
+                    prefetchLink.href = href;
+                    document.head.appendChild(prefetchLink);
+                    link.prefetched = true;
+                }
+            });
+        });
+    </script>
 </body>
 </html>

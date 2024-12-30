@@ -9,8 +9,13 @@ function init() {
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 20;
 
-    // Configuration du rendu
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // Configuration du rendu avec des paramètres optimisés
+    renderer = new THREE.WebGLRenderer({ 
+        antialias: window.devicePixelRatio < 2, // Désactiver l'antialiasing sur les appareils haute résolution
+        alpha: true,
+        powerPreference: "high-performance"
+    });
+    
     const container = document.getElementById('globe-container');
     
     if (container) {
@@ -18,108 +23,84 @@ function init() {
         const containerHeight = container.clientHeight;
         
         renderer.setSize(containerWidth, containerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limiter le pixel ratio pour les performances
         container.appendChild(renderer.domElement);
 
-        // Chargeur de texture
-        const textureLoader = new THREE.TextureLoader();
+        // Gestionnaire de ressources pour le chargement optimisé
+        const loadManager = new THREE.LoadingManager();
+        const textureLoader = new THREE.TextureLoader(loadManager);
 
-        // Création du globe
-        const radius = 8; // Augmenter la taille du globe
-        const geometry = new THREE.SphereGeometry(radius, 64, 64);
-        
-        // Charger les textures
-        const earthTexture = textureLoader.load('assets/images/earth-blue-marble.jpg');
-        const bumpTexture = textureLoader.load('assets/images/earth-topology.jpg');
-        const specularTexture = textureLoader.load('assets/images/earth-specular.jpg');
-        const cloudsTexture = textureLoader.load('assets/images/earth-clouds.png');
+        // Précharger toutes les textures
+        const textures = {
+            earth: 'assets/images/earth-blue-marble.jpg',
+            bump: 'assets/images/earth-topology.jpg',
+            specular: 'assets/images/earth-specular.jpg',
+            clouds: 'assets/images/earth-clouds.png'
+        };
 
-        // Matériau principal du globe
-        const material = new THREE.MeshPhongMaterial({
-            map: earthTexture,
-            bumpMap: bumpTexture,
-            bumpScale: 0.1,
-            specularMap: specularTexture,
-            specular: new THREE.Color('#909090'),
-            shininess: 10,
-            transparent: true
+        const loadedTextures = {};
+
+        // Charger les textures de manière asynchrone
+        Promise.all(
+            Object.entries(textures).map(([key, url]) => 
+                new Promise((resolve) => {
+                    textureLoader.load(url, (texture) => {
+                        loadedTextures[key] = texture;
+                        resolve();
+                    });
+                })
+            )
+        ).then(() => {
+            const radius = 8;
+            const geometry = new THREE.SphereGeometry(radius, 48, 48); // Réduire légèrement la résolution
+
+            const material = new THREE.MeshPhongMaterial({
+                map: loadedTextures.earth,
+                bumpMap: loadedTextures.bump,
+                bumpScale: 0.1,
+                specularMap: loadedTextures.specular,
+                specular: new THREE.Color('#909090'),
+                shininess: 10,
+                transparent: true
+            });
+
+            earth = new THREE.Mesh(geometry, material);
+            earth.rotation.z = Math.PI * 0.1;
+            scene.add(earth);
+
+            // Optimiser les lumières
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(5, 3, 5);
+            scene.add(light);
+
+            animate();
         });
 
-        // Création du globe
-        earth = new THREE.Mesh(geometry, material);
-        earth.rotation.z = Math.PI * 0.1; // Incliner légèrement le globe
-        scene.add(earth);
-
-        // Ajout de la couche de nuages
-        const cloudsGeometry = new THREE.SphereGeometry(radius + 0.1, 64, 64);
-        const cloudsMaterial = new THREE.MeshPhongMaterial({
-            map: cloudsTexture,
-            transparent: true,
-            opacity: 0.4
+        // Gestion optimisée du redimensionnement
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            if (resizeTimeout) clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(width, height);
+            }, 250);
         });
-
-        const clouds = new THREE.Mesh(cloudsGeometry, cloudsMaterial);
-        scene.add(clouds);
-
-        // Ajout d'une atmosphère
-        const atmosphereGeometry = new THREE.SphereGeometry(radius + 0.3, 64, 64);
-        const atmosphereMaterial = new THREE.MeshPhongMaterial({
-            color: '#3ea0c6',
-            transparent: true,
-            opacity: 0.2,
-            side: THREE.BackSide
-        });
-
-        const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-        scene.add(atmosphere);
-
-        // Ajout des lumières
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-
-        const pointLight1 = new THREE.PointLight(0xffffff, 1.5);
-        pointLight1.position.set(20, 20, 20);
-        scene.add(pointLight1);
-
-        const pointLight2 = new THREE.PointLight(0x3ea0c6, 1);
-        pointLight2.position.set(-20, -20, 20);
-        scene.add(pointLight2);
-
-        // Contrôles orbitaux
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.rotateSpeed = 0.3;
-        controls.enableZoom = false;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.3;
-
-        // Animation
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            // Rotation des nuages
-            clouds.rotation.y += 0.0003;
-            
-            // Rotation de la Terre
-            earth.rotation.y += 0.0005;
-            
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
-        // Gestion du redimensionnement
-        window.addEventListener('resize', onWindowResize, false);
-
-        function onWindowResize() {
-            camera.aspect = containerWidth / containerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(containerWidth, containerHeight);
-        }
-
-        animate();
     }
 }
 
-// Initialisation lors du chargement de la page
-document.addEventListener('DOMContentLoaded', init);
+// Fonction d'animation optimisée
+function animate() {
+    requestAnimationFrame(animate);
+    if (earth) {
+        earth.rotation.y += 0.001;
+    }
+    renderer.render(scene, camera);
+}
+
+// Initialiser uniquement si l'élément container existe
+if (document.getElementById('globe-container')) {
+    document.addEventListener('DOMContentLoaded', init);
+}
