@@ -5,34 +5,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (menuBtn && navLinks) {
         // Toggle du menu
-        menuBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        menuBtn.addEventListener('click', function() {
+            console.log('Menu button clicked'); // Pour le débogage
             navLinks.classList.toggle('active');
+            menuBtn.classList.toggle('active');
         });
 
         // Fermer le menu au clic sur un lien
-        navLinks.querySelectorAll('a').forEach(link => {
+        const links = navLinks.querySelectorAll('a');
+        links.forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
+                menuBtn.classList.remove('active');
             });
         });
 
         // Fermer le menu au clic en dehors
-        document.addEventListener('click', (e) => {
-            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+        document.addEventListener('click', function(event) {
+            if (!menuBtn.contains(event.target) && !navLinks.contains(event.target)) {
                 navLinks.classList.remove('active');
+                menuBtn.classList.remove('active');
             }
         });
 
-        // Fermer le menu au scroll
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            if (currentScroll > lastScroll) {
-                navLinks.classList.remove('active');
-            }
-            lastScroll = currentScroll;
+        // Empêcher la propagation du clic dans le menu
+        navLinks.addEventListener('click', function(event) {
+            event.stopPropagation();
         });
     }
 
@@ -60,10 +58,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
             lastScroll = currentScroll;
         }, 100);
-    });
-
-    // Empêcher la fermeture du menu lors du clic à l'intérieur
-    navLinks.addEventListener('click', (event) => {
-        event.stopPropagation();
     });
 });
