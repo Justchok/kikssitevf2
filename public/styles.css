@@ -1,3 +1,131 @@
+/* Styles de base pour la navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 70px;
+    box-sizing: border-box;
+}
+
+/* Logo */
+.logo {
+    height: 50px;
+}
+
+.logo img {
+    height: 100%;
+    width: auto;
+}
+
+/* Navigation links */
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+/* Burger Menu */
+.burger {
+    display: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+}
+
+.burger div {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Styles mobile */
+@media screen and (max-width: 768px) {
+    .burger {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        right: -100%;
+        top: 70px;
+        height: calc(100vh - 70px);
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        transition: right 0.5s ease-in;
+        padding: 1rem;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links a {
+        opacity: 0;
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .nav-links.active a {
+        opacity: 1;
+        animation: navLinkFade 0.5s ease forwards;
+    }
+
+    /* Animation du burger */
+    .burger.active .line1 {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+
+    .burger.active .line2 {
+        opacity: 0;
+    }
+
+    .burger.active .line3 {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+
+    .nav-links a:last-child {
+        border-bottom: none;
+    }
+}
+
+/* Animation des liens */
+@keyframes navLinkFade {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 /* Variables et réinitialisation */
 :root {
     --primary-color: #4b382c;    /* Marron */
@@ -2128,7 +2256,7 @@ section h2 {
         flex-direction: column;
         align-items: center;
         padding: 2rem;
-        transition: var(--transition);
+        transition: left 0.5s ease-in;
         gap: 1.5rem;
     }
 

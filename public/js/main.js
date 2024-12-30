@@ -4,44 +4,54 @@ document.addEventListener('DOMContentLoaded', function() {
     const nav = document.querySelector('.nav-links');
     const navLinks = document.querySelectorAll('.nav-links a');
 
-    if (burger && nav) {
-        burger.addEventListener('click', () => {
-            // Toggle Navigation
-            nav.classList.toggle('active');
-            burger.classList.toggle('active');
+    // Vérifier si les éléments existent
+    if (!burger || !nav) {
+        console.error('Menu elements not found');
+        return;
+    }
 
-            // Animate Links
-            navLinks.forEach((link, index) => {
-                if (link.style.animation) {
-                    link.style.animation = '';
-                } else {
-                    link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
-                }
-            });
-        });
+    // Fonction pour toggle le menu
+    function toggleMenu() {
+        nav.classList.toggle('active');
+        burger.classList.toggle('active');
 
-        // Fermer le menu au clic sur un lien
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                nav.classList.remove('active');
-                burger.classList.remove('active');
-                navLinks.forEach(link => {
-                    link.style.animation = '';
-                });
-            });
-        });
-
-        // Fermer le menu au clic en dehors
-        document.addEventListener('click', (event) => {
-            if (!nav.contains(event.target) && !burger.contains(event.target) && nav.classList.contains('active')) {
-                nav.classList.remove('active');
-                burger.classList.remove('active');
-                navLinks.forEach(link => {
-                    link.style.animation = '';
-                });
+        // Animer les liens
+        navLinks.forEach((link, index) => {
+            if (link.style.animation) {
+                link.style.animation = '';
+            } else {
+                link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
             }
         });
     }
+
+    // Event listener pour le burger
+    burger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMenu();
+    });
+
+    // Fermer le menu au clic sur un lien
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            if (nav.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+    });
+
+    // Fermer le menu au clic en dehors
+    document.addEventListener('click', (e) => {
+        if (nav.classList.contains('active') && !nav.contains(e.target) && !burger.contains(e.target)) {
+            toggleMenu();
+        }
+    });
+
+    // Empêcher la propagation des clics dans le menu
+    nav.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
 
     // Gestion du scroll avec debounce
     let scrollTimeout;
