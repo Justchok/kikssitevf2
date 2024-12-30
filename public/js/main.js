@@ -4,9 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
     
     if (hamburger && navLinks) {
-        hamburger.addEventListener('click', function() {
+        // Toggle du menu au clic sur le hamburger
+        hamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             hamburger.classList.toggle('active');
             navLinks.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
         });
 
         // Fermer le menu quand on clique sur un lien
@@ -14,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navLinks.classList.remove('active');
+                document.body.style.overflow = '';
             });
         });
 
@@ -22,25 +27,49 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!navLinks.contains(event.target) && !hamburger.contains(event.target)) {
                 hamburger.classList.remove('active');
                 navLinks.classList.remove('active');
+                document.body.style.overflow = '';
             }
+        });
+
+        // Empêcher la fermeture du menu lors du clic à l'intérieur
+        navLinks.addEventListener('click', (event) => {
+            event.stopPropagation();
         });
     }
 
-    // Gestion du scroll
+    // Gestion du scroll avec debounce
     let lastScroll = 0;
+    let scrollTimeout;
     const navbar = document.querySelector('.navbar');
 
     window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-
-        if (currentScroll > lastScroll && currentScroll > 80) {
-            // Scroll vers le bas
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            // Scroll vers le haut
-            navbar.style.transform = 'translateY(0)';
+        if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
         }
 
-        lastScroll = currentScroll;
+        scrollTimeout = setTimeout(() => {
+            const currentScroll = window.pageYOffset;
+            
+            if (!navLinks.classList.contains('active')) {
+                if (currentScroll > lastScroll && currentScroll > 80) {
+                    // Scroll vers le bas
+                    navbar.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scroll vers le haut
+                    navbar.style.transform = 'translateY(0)';
+                }
+            }
+
+            lastScroll = currentScroll;
+        }, 100);
     });
+
+    // Gestion de la hauteur sur mobile
+    function updateMobileHeight() {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    updateMobileHeight();
+    window.addEventListener('resize', updateMobileHeight);
 });

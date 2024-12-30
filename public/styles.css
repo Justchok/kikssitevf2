@@ -538,39 +538,137 @@ section h2 {
 }
 
 /* Style du menu mobile */
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    cursor: pointer;
-    padding: 0.5rem;
-}
-
 @media screen and (max-width: 768px) {
-    .menu-toggle {
+    .navbar {
+        padding: 0.5rem 1rem;
+        height: 60px;
+        background-color: var(--white-color);
+        box-shadow: var(--box-shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .logo {
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    .hamburger {
         display: block;
+        background: none;
+        border: none;
+        padding: 10px;
+        z-index: 1002;
+        cursor: pointer;
+    }
+
+    .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        margin: 5px 0;
+        background-color: var(--primary-color);
+        transition: var(--transition);
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
     }
 
     .nav-links {
         display: none;
-        position: absolute;
-        top: 100%;
+        position: fixed;
+        top: 60px;
         left: 0;
-        right: 0;
-        background: var(--white-color);
-        padding: 1rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height: calc(100vh - 60px);
+        background-color: var(--white-color);
+        padding: 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        overflow-y: auto;
+        z-index: 1001;
     }
 
     .nav-links.active {
         display: flex;
-        flex-direction: column;
     }
 
     .nav-links a {
-        padding: 0.5rem 0;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 1.2rem;
+        padding: 10px 20px;
+        width: 100%;
+        text-align: center;
+        border-radius: 5px;
+        transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+        background-color: var(--light-color);
+        color: var(--secondary-color);
+    }
+
+    /* Ajustement des boutons dans le menu mobile */
+    .cta-button,
+    .nav-links .cta-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background: var(--gradient-primary);
+        color: var(--white-color);
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: 500;
+        transition: var(--transition);
+        text-align: center;
+        width: auto;
+        min-width: 200px;
+        margin: 10px 0;
+    }
+
+    .cta-button:hover,
+    .nav-links .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--box-shadow);
+        background: var(--secondary-color);
+        color: var(--white-color);
+    }
+
+    /* Style pour le menu déroulant des langues en mobile */
+    .language-switcher {
+        position: relative;
+        margin: 10px 0;
+    }
+
+    .language-switcher select {
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 2px solid var(--light-color);
+        background-color: var(--white-color);
+        color: var(--primary-color);
+        font-size: 1rem;
+        cursor: pointer;
+        width: 200px;
     }
 }
 
@@ -1998,7 +2096,7 @@ section h2 {
     padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
 }
 
 .info-card:hover {
