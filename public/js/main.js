@@ -1,38 +1,43 @@
-// Gestion du menu mobile
+// Menu mobile
 document.addEventListener('DOMContentLoaded', function() {
     const menuBtn = document.querySelector('.menu-btn');
     const navLinks = document.querySelector('.nav-links');
-    
-    if (menuBtn && navLinks) {
-        // Toggle du menu
-        menuBtn.addEventListener('click', function() {
-            console.log('Menu button clicked'); // Pour le débogage
-            navLinks.classList.toggle('active');
-            menuBtn.classList.toggle('active');
-        });
 
-        // Fermer le menu au clic sur un lien
-        const links = navLinks.querySelectorAll('a');
-        links.forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                menuBtn.classList.remove('active');
-            });
-        });
-
-        // Fermer le menu au clic en dehors
-        document.addEventListener('click', function(event) {
-            if (!menuBtn.contains(event.target) && !navLinks.contains(event.target)) {
-                navLinks.classList.remove('active');
-                menuBtn.classList.remove('active');
-            }
-        });
-
-        // Empêcher la propagation du clic dans le menu
-        navLinks.addEventListener('click', function(event) {
-            event.stopPropagation();
-        });
+    // Vérifier si les éléments existent
+    if (!menuBtn || !navLinks) {
+        console.error('Menu elements not found');
+        return;
     }
+
+    // Fonction pour ouvrir/fermer le menu
+    function toggleMenu() {
+        console.log('Toggle menu');
+        navLinks.classList.toggle('active');
+        menuBtn.classList.toggle('active');
+    }
+
+    // Gestionnaire d'événement pour le bouton menu
+    menuBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleMenu();
+    });
+
+    // Fermer le menu au clic sur un lien
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            menuBtn.classList.remove('active');
+        });
+    });
+
+    // Fermer le menu au clic en dehors
+    document.addEventListener('click', function(event) {
+        const isClickInside = navLinks.contains(event.target) || menuBtn.contains(event.target);
+        if (!isClickInside && navLinks.classList.contains('active')) {
+            toggleMenu();
+        }
+    });
 
     // Gestion du scroll avec debounce
     let scrollTimeout;

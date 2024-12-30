@@ -40,21 +40,20 @@ body {
     width: 100%;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 1000;
     height: 70px;
 }
 
 .logo {
     height: 50px;
-    z-index: 10000;
 }
 
 .logo img {
     height: 100%;
     width: auto;
-    display: block;
 }
 
+/* Navigation links */
 .nav-links {
     display: flex;
     gap: 2rem;
@@ -64,16 +63,14 @@ body {
     color: #333;
     text-decoration: none;
     font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-    background-color: #f5f5f5;
+    color: var(--primary-color);
 }
 
-/* Style amélioré du bouton menu */
+/* Menu mobile button */
 .menu-btn {
     display: none;
     background: var(--gradient-primary);
@@ -90,7 +87,6 @@ body {
     right: 1.5rem;
     top: 1rem;
     z-index: 10000;
-    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -106,6 +102,42 @@ body {
 
 .menu-btn.active {
     background: var(--secondary-color);
+}
+
+/* Styles mobile */
+@media (max-width: 768px) {
+    .menu-btn {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        flex-direction: column;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .nav-links a:last-child {
+        border-bottom: none;
+    }
 }
 
 /* Navigation links pour PC */
@@ -2559,7 +2591,7 @@ section h2 {
 .form-group input,
 .form-group textarea {
     padding: 0.8rem;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
@@ -2657,82 +2689,4 @@ section h2 {
     background-color: var(--primary-color);
     transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
     position: relative;
-}
-
-/* Styles mobile */
-@media (max-width: 768px) {
-    .menu-btn {
-        display: flex;
-    }
-
-    .nav-links {
-        display: none;
-        position: fixed;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 1rem;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        flex-direction: column;
-        text-align: center;
-        z-index: 9998;
-        height: calc(100vh - 70px);
-        overflow-y: auto;
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .nav-links a {
-        padding: 1rem;
-        border-bottom: 1px solid #eee;
-        width: 100%;
-        font-size: 1.1rem;
-        color: var(--primary-color);
-    }
-
-    .nav-links a:last-child {
-        border-bottom: none;
-    }
-
-    .nav-links a:hover {
-        background-color: #f8f8f8;
-        color: var(--secondary-color);
-    }
-}
-
-/* Ajustements pour le menu mobile */
-.menu-btn {
-    display: none;
-    background: var(--gradient-primary);
-    border: none;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    cursor: pointer;
-    color: white;
-    font-size: 1.5rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    right: 1.5rem;
-    top: 1rem;
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-}
-
-.menu-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-
-.menu-btn:active {
-    transform: scale(0.95);
-}
-
-.menu-btn.active {
-    background: var(--secondary-color);
 }
