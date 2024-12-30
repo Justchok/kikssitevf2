@@ -22,28 +22,35 @@
     <header class="header">
         <nav class="navbar">
             <div class="logo">
-                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo" width="150"></a>
-            </div>
-            <button class="menu-btn">☰</button>
-            <div class="nav-links">
-                <a href="/" data-i18n="home">Accueil</a>
-                <a href="/destinations.html" data-i18n="destinations">Destinations</a>
-                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
-                <a href="/offres.html" class="active" data-i18n="offers">Offres</a>
-                <a href="/contact.html" data-i18n="contact">Contact</a>
-                <div class="language-switcher">
-                    <button onclick="switchLanguage('fr')" class="active">
-                        <img src="/assets/images/flags/fr.svg" alt="fr" title="Français">
-                    </button>
-                    <button onclick="switchLanguage('en')">
-                        <img src="/assets/images/flags/en.svg" alt="en" title="English">
-                    </button>
-                </div>
+                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
             </div>
             <div class="burger">
                 <div class="line1"></div>
                 <div class="line2"></div>
                 <div class="line3"></div>
+            </div>
+            <div class="nav-links">
+                <a href="/" data-i18n="home">Accueil</a>
+                <a href="/destinations.html" data-i18n="destinations">Destinations</a>
+                <a href="/offres.html" data-i18n="offers">Offres</a>
+                <a href="/about.html" data-i18n="about">À propos</a>
+                <a href="/contact.html" data-i18n="contact">Contact</a>
+                <div class="language-switcher">
+                    <button class="language-btn" onclick="toggleLanguageMenu()">
+                        <img src="/assets/images/fr-flag.png" alt="French Flag" id="current-flag">
+                        <span id="current-lang">FR</span>
+                    </button>
+                    <div class="language-menu" id="language-menu">
+                        <div class="language-option" onclick="changeLanguage('fr')">
+                            <img src="/assets/images/fr-flag.png" alt="French Flag">
+                            <span>FR</span>
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('en')">
+                            <img src="/assets/images/en-flag.png" alt="English Flag">
+                            <span>EN</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -133,16 +140,6 @@
             <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
         </div>
     </footer>
-
-    <script>
-        // Menu burger
-        const burgerMenu = document.querySelector('.burger');
-        const navLinks = document.querySelector('.nav-links');
-
-        burgerMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            burgerMenu.classList.toggle('active');
-        });
-    </script>
+    <script src="js/main.js"></script>
 </body>
 </html>
