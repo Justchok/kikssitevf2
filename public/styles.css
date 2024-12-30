@@ -66,37 +66,134 @@ body {
 .nav-links {
     display: flex;
     gap: 2rem;
+    align-items: center;
 }
 
-.nav-links a {
+.nav-link {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 500;
     transition: var(--transition);
-    font-size: 1.1rem;
     padding: 0.5rem 1rem;
     border-radius: 5px;
-    position: relative;
 }
 
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 50%;
-    background: var(--gradient-primary);
-    transition: var(--transition);
-    transform: translateX(-50%);
-}
-
-.nav-links a:hover::after {
-    width: 100%;
-}
-
-.nav-links a:hover {
+.nav-link:hover {
     color: var(--secondary-color);
+}
+
+.hamburger {
+    display: none;
+}
+
+/* Styles pour mobile */
+@media screen and (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 1rem;
+        height: 60px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: var(--white-color);
+        box-shadow: var(--box-shadow);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .hamburger {
+        display: block;
+        background: none;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 1002;
+    }
+
+    .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        margin: 5px 0;
+        background-color: var(--primary-color);
+        transition: var(--transition);
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 60px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background-color: var(--white-color);
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 2rem;
+        transition: 0.3s ease-in-out;
+        z-index: 1001;
+        overflow-y: auto;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-link {
+        font-size: 1.2rem;
+        padding: 1rem;
+        width: 100%;
+        text-align: center;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+    }
+
+    .nav-link:hover {
+        background-color: var(--light-color);
+    }
+
+    .nav-link.cta-button {
+        background: var(--gradient-primary);
+        color: var(--white-color);
+        margin: 1rem 0;
+        padding: 1rem 2rem;
+    }
+
+    .nav-link.cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--box-shadow);
+    }
+
+    .language-switcher {
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .language-switcher select {
+        width: 200px;
+        padding: 0.8rem;
+        border-radius: 8px;
+        border: 2px solid var(--light-color);
+        background-color: var(--white-color);
+        font-size: 1rem;
+        color: var(--primary-color);
+    }
 }
 
 /* Section héro avec globe */

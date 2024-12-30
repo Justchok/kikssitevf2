@@ -43,24 +43,18 @@
                 <span></span>
             </button>
             <div class="nav-links">
-                <a href="/" class="active" data-i18n="home">Accueil</a>
-                <a href="/destinations.html" data-i18n="destinations">Destinations</a>
-                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
-                <a href="/offres.html" data-i18n="offers">Offres</a>
-                <a href="/contact.html" data-i18n="contact">Contact</a>
+                <a href="/" class="nav-link" data-i18n="home">Accueil</a>
+                <a href="/about.html" class="nav-link" data-i18n="about">À propos</a>
+                <a href="/destinations.html" class="nav-link" data-i18n="destinations">Destinations</a>
+                <a href="/offres.html" class="nav-link" data-i18n="offers">Offres</a>
+                <a href="/reservations.html" class="nav-link cta-button" data-i18n="booking">Réserver</a>
+                <a href="/contact.html" class="nav-link" data-i18n="contact">Contact</a>
                 <div class="language-switcher">
-                    <button onclick="switchLanguage('fr')" class="active">
-                        <img src="/assets/images/flags/fr.svg" alt="fr" title="Français">
-                    </button>
-                    <button onclick="switchLanguage('en')">
-                        <img src="/assets/images/flags/en.svg" alt="en" title="English">
-                    </button>
+                    <select id="language-select">
+                        <option value="fr">Français</option>
+                        <option value="en">English</option>
+                    </select>
                 </div>
-            </div>
-            <div class="burger">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
             </div>
         </nav>
     </header>
