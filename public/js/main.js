@@ -1,23 +1,42 @@
-// Menu mobile simple
+// Gestion du menu mobile
 document.addEventListener('DOMContentLoaded', function() {
     const menuBtn = document.querySelector('.menu-btn');
     const navLinks = document.querySelector('.nav-links');
-
+    
     if (menuBtn && navLinks) {
-        menuBtn.addEventListener('click', function() {
+        // Toggle du menu
+        menuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             navLinks.classList.toggle('active');
         });
 
-        // Fermer le menu quand on clique sur un lien
-        document.querySelectorAll('.nav-links a').forEach(link => {
+        // Fermer le menu au clic sur un lien
+        navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
             });
         });
+
+        // Fermer le menu au clic en dehors
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Fermer le menu au scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScroll) {
+                navLinks.classList.remove('active');
+            }
+            lastScroll = currentScroll;
+        });
     }
 
     // Gestion du scroll avec debounce
-    let lastScroll = 0;
     let scrollTimeout;
     const navbar = document.querySelector('.navbar');
 
@@ -41,13 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             lastScroll = currentScroll;
         }, 100);
-    });
-
-    // Fermer le menu quand on clique en dehors
-    document.addEventListener('click', (event) => {
-        if (!navLinks.contains(event.target) && !menuBtn.contains(event.target)) {
-            navLinks.classList.remove('active');
-        }
     });
 
     // Empêcher la fermeture du menu lors du clic à l'intérieur
