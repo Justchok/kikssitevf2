@@ -1,196 +1,161 @@
 const translations = {
-    fr: {
-        // Navigation
-        home: "Accueil",
-        destinations: "Destinations",
-        reservations: "Réservations",
-        offers: "Offres",
-        contact: "Contact",
-        
-        // Footer
-        companyDesc: "Votre partenaire de confiance pour des voyages inoubliables.",
-        contactTitle: "Contact",
-        phone: "Tél",
-        address: "Adresse",
-        followUs: "Suivez-nous",
-        allRightsReserved: "Tous droits réservés.",
-        ourPartners: "Nos Partenaires",
-        
-        // Home Page
-        heroTitle: "Voyagez avec Kiks Travel",
-        heroDesc: "Découvrez le monde avec notre expertise et vivez des expériences uniques et inoubliables",
-        
-        // Contact Page
-        contactUs: "Contactez-nous",
-        contactDesc: "Notre équipe est à votre disposition pour répondre à toutes vos questions",
-        ourLocation: "Notre localisation",
-        openingHours: "Horaires d'ouverture",
-        openingHoursDetails: "Du lundi au samedi : 9h - 18h",
-        responseTime: "Réponse sous 24h",
-        formName: "Nom complet",
-        formNamePlaceholder: "Entrez votre nom complet",
-        formEmail: "Email",
-        formEmailPlaceholder: "Entrez votre adresse email",
-        formSubject: "Sujet",
-        formSubjectPlaceholder: "Entrez le sujet de votre message",
-        formMessage: "Message",
-        formMessagePlaceholder: "Écrivez votre message ici",
-        sendMessage: "Envoyer le message",
-        messageSent: "Message envoyé !",
-        messageSuccess: "Nous vous répondrons dans les plus brefs délais.",
-        messageError: "Une erreur est survenue. Veuillez réessayer.",
-        error: "Erreur",
-        
-        // Destinations Page
-        destinationsTitle: "Nos Destinations",
-        destinationsDesc: "Découvrez nos destinations de rêve et commencez votre prochaine aventure.",
-        exploreDestinations: "Explorez nos destinations soigneusement sélectionnées à travers le monde.",
-        clickMarkers: "Cliquez sur les marqueurs pour en savoir plus et réserver votre prochain voyage.",
-        parisDesc: "La ville de l'amour et de la lumière",
-        tokyoDesc: "La fusion parfaite entre tradition et modernité",
-        newyorkDesc: "La ville qui ne dort jamais",
-        dubaiDesc: "Le luxe au cœur du désert",
-        bangkokDesc: "L'exotisme à l'état pur",
-        sydneyDesc: "Entre plages et culture océanienne",
-        rioDesc: "La ville du carnaval et des plages",
-        cairoDesc: "Au cœur de l'histoire antique",
-        
-        // Booking Form
-        bookingTitle: "Réservez Votre Voyage",
-        bookingDesc: "Planifiez votre prochaine aventure avec nous. Remplissez le formulaire ci-dessous pour commencer votre voyage.",
-        formPhone: "Téléphone",
-        formPhonePlaceholder: "Ex: +221 77 123 45 67",
-        formDeparture: "Départ",
-        formDeparturePlaceholder: "Ville ou pays de départ",
-        formDestination: "Destination",
-        formDestinationPlaceholder: "Ville ou pays de destination",
-        formLayover: "Escale (optionnel)",
-        formLayoverPlaceholder: "Ville d'escale (optionnel)",
-        formTravelClass: "Classe",
-        formTravelClassEconomy: "Économique",
-        formTravelClassBusiness: "Affaires",
-        formTravelClassFirst: "Première",
-        formDepartureDate: "Date de départ*",
-        formReturnDate: "Date de retour",
-        formPassengers: "Nombre de passagers",
-        
-        // Offers Page
-        offersTitle: "Nos Offres Spéciales",
-        offersDesc: "Découvrez nos meilleures offres et promotions pour des voyages inoubliables.",
-        offerParisTitle: "Paris en Amoureux",
-        offerParisDesc: "3 jours/2 nuits avec petit-déjeuner inclus",
-        offerDubaiTitle: "Luxe à Dubai",
-        offerDubaiDesc: "5 jours/4 nuits en hôtel 5 étoiles",
-        offerIstanbulTitle: "Découverte d'Istanbul",
-        offerIstanbulDesc: "4 jours/3 nuits avec visites guidées",
-        
-        // Common
-        learnMore: "En savoir plus",
-        bookNow: "Réserver maintenant",
-        ok: "OK",
-        
-        // Booking Messages
-        bookingReceived: "Réservation reçue !",
-        bookingSuccessMessage: "Notre équipe va étudier votre demande et vous contactera rapidement avec nos meilleures offres.",
-        bookingError: "Erreur lors de la réservation",
-        generalError: "Une erreur est survenue. Veuillez réessayer plus tard.",
-        error: "Erreur",
+    // Navigation
+    'home': {
+        'fr': 'Accueil',
+        'en': 'Home'
     },
-    en: {
-        // Navigation
-        home: "Home",
-        destinations: "Destinations",
-        reservations: "Bookings",
-        offers: "Offers",
-        contact: "Contact",
-        
-        // Footer
-        companyDesc: "Your trusted partner for unforgettable travels.",
-        contactTitle: "Contact",
-        phone: "Phone",
-        address: "Address",
-        followUs: "Follow us",
-        allRightsReserved: "All rights reserved.",
-        ourPartners: "Our Partners",
-        
-        // Home Page
-        heroTitle: "Travel with Kiks Travel",
-        heroDesc: "Discover the world with our expertise and live unique and unforgettable experiences",
-        
-        // Contact Page
-        contactUs: "Contact Us",
-        contactDesc: "Our team is here to answer all your questions",
-        ourLocation: "Our Location",
-        openingHours: "Opening Hours",
-        openingHoursDetails: "Monday to Saturday: 9AM - 6PM",
-        responseTime: "Response within 24h",
-        formName: "Full Name",
-        formNamePlaceholder: "Enter your full name",
-        formEmail: "Email",
-        formEmailPlaceholder: "Enter your email address",
-        formSubject: "Subject",
-        formSubjectPlaceholder: "Enter the subject of your message",
-        formMessage: "Message",
-        formMessagePlaceholder: "Write your message here",
-        sendMessage: "Send Message",
-        messageSent: "Message Sent!",
-        messageSuccess: "We will get back to you as soon as possible.",
-        messageError: "An error occurred. Please try again.",
-        error: "Error",
-        
-        // Destinations Page
-        destinationsTitle: "Our Destinations",
-        destinationsDesc: "Discover our dream destinations and start your next adventure.",
-        exploreDestinations: "Explore our carefully selected destinations around the world.",
-        clickMarkers: "Click on markers to learn more and book your next trip.",
-        parisDesc: "The city of love and light",
-        tokyoDesc: "The perfect blend of tradition and modernity",
-        newyorkDesc: "The city that never sleeps",
-        dubaiDesc: "Luxury in the heart of the desert",
-        bangkokDesc: "Pure exoticism",
-        sydneyDesc: "Between beaches and Oceanian culture",
-        rioDesc: "The city of carnival and beaches",
-        cairoDesc: "At the heart of ancient history",
-        
-        // Booking Form
-        bookingTitle: "Book Your Trip",
-        bookingDesc: "Plan your next adventure with us. Fill out the form below to start your journey.",
-        formPhone: "Phone",
-        formPhonePlaceholder: "Ex: +221 77 123 45 67",
-        formDeparture: "Departure",
-        formDeparturePlaceholder: "City or country of departure",
-        formDestination: "Destination",
-        formDestinationPlaceholder: "City or country of destination",
-        formLayover: "Layover (optional)",
-        formLayoverPlaceholder: "Layover city (optional)",
-        formTravelClass: "Class",
-        formTravelClassEconomy: "Economy",
-        formTravelClassBusiness: "Business",
-        formTravelClassFirst: "First",
-        formDepartureDate: "Departure Date*",
-        formReturnDate: "Return Date",
-        formPassengers: "Number of Passengers",
-        
-        // Offers Page
-        offersTitle: "Our Special Offers",
-        offersDesc: "Discover our best offers and promotions for unforgettable travels.",
-        offerParisTitle: "Romantic Paris",
-        offerParisDesc: "3 days/2 nights with breakfast included",
-        offerDubaiTitle: "Luxury in Dubai",
-        offerDubaiDesc: "5 days/4 nights in a 5-star hotel",
-        offerIstanbulTitle: "Discover Istanbul",
-        offerIstanbulDesc: "4 days/3 nights with guided tours",
-        
-        // Common
-        learnMore: "Learn More",
-        bookNow: "Book Now",
-        ok: "OK",
-        
-        // Booking Messages
-        bookingReceived: "Booking Received!",
-        bookingSuccessMessage: "Our team will review your request and contact you shortly with our best offers.",
-        bookingError: "Error during booking",
-        generalError: "An error occurred. Please try again later.",
-        error: "Error",
+    'destinations': {
+        'fr': 'Destinations',
+        'en': 'Destinations'
+    },
+    'reservations': {
+        'fr': 'Réservations',
+        'en': 'Bookings'
+    },
+    'offers': {
+        'fr': 'Offres',
+        'en': 'Offers'
+    },
+    'contact': {
+        'fr': 'Contact',
+        'en': 'Contact'
+    },
+
+    // Hero Section
+    'heroTitle': {
+        'fr': 'Voyagez avec Kiks Travel',
+        'en': 'Travel with Kiks Travel'
+    },
+    'heroDesc': {
+        'fr': 'Découvrez le monde avec notre expertise et vivez des expériences uniques et inoubliables',
+        'en': 'Discover the world with our expertise and live unique, unforgettable experiences'
+    },
+    'bookNow': {
+        'fr': 'Réserver maintenant',
+        'en': 'Book Now'
+    },
+
+    // Offers Page
+    'offersTitle': {
+        'fr': 'Nos Offres Spéciales',
+        'en': 'Our Special Offers'
+    },
+    'offersDesc': {
+        'fr': 'Découvrez nos meilleures offres et promotions pour des voyages inoubliables.',
+        'en': 'Discover our best offers and promotions for unforgettable trips.'
+    },
+    'offerParisTitle': {
+        'fr': 'Paris en Amoureux',
+        'en': 'Romantic Paris'
+    },
+    'offerParisDesc': {
+        'fr': '3 jours/2 nuits avec petit-déjeuner inclus',
+        'en': '3 days/2 nights with breakfast included'
+    },
+    'offerDubaiTitle': {
+        'fr': 'Luxe à Dubai',
+        'en': 'Luxury in Dubai'
+    },
+    'offerDubaiDesc': {
+        'fr': '5 jours/4 nuits en hôtel 5 étoiles',
+        'en': '5 days/4 nights in a 5-star hotel'
+    },
+    'offerIstanbulTitle': {
+        'fr': 'Découverte d\'Istanbul',
+        'en': 'Discover Istanbul'
+    },
+    'offerIstanbulDesc': {
+        'fr': '4 jours/3 nuits avec visites guidées',
+        'en': '4 days/3 nights with guided tours'
+    },
+
+    // Footer
+    'companyDesc': {
+        'fr': 'Votre partenaire de confiance pour des voyages inoubliables.',
+        'en': 'Your trusted partner for unforgettable travels.'
+    },
+    'contactTitle': {
+        'fr': 'Contact',
+        'en': 'Contact'
+    },
+    'phone': {
+        'fr': 'Tél',
+        'en': 'Phone'
+    },
+    'address': {
+        'fr': 'Adresse',
+        'en': 'Address'
+    },
+    'followUs': {
+        'fr': 'Suivez-nous',
+        'en': 'Follow Us'
+    },
+    'ourPartners': {
+        'fr': 'Nos Partenaires',
+        'en': 'Our Partners'
+    },
+    'allRightsReserved': {
+        'fr': 'Tous droits réservés.',
+        'en': 'All rights reserved.'
+    },
+
+    // Form Labels
+    'name': {
+        'fr': 'Nom complet',
+        'en': 'Full Name'
+    },
+    'email': {
+        'fr': 'Email',
+        'en': 'Email'
+    },
+    'phoneLabel': {
+        'fr': 'Téléphone',
+        'en': 'Phone'
+    },
+    'message': {
+        'fr': 'Message',
+        'en': 'Message'
+    },
+    'submit': {
+        'fr': 'Envoyer',
+        'en': 'Submit'
+    },
+
+    // Success Messages
+    'successTitle': {
+        'fr': 'Succès!',
+        'en': 'Success!'
+    },
+    'successMessage': {
+        'fr': 'Votre message a été envoyé avec succès.',
+        'en': 'Your message has been sent successfully.'
+    },
+
+    // Error Messages
+    'errorTitle': {
+        'fr': 'Erreur',
+        'en': 'Error'
+    },
+    'errorMessage': {
+        'fr': 'Une erreur est survenue. Veuillez réessayer.',
+        'en': 'An error occurred. Please try again.'
+    },
+
+    // Offers Section
+    'specialOffers': {
+        'fr': 'Offres Spéciales',
+        'en': 'Special Offers'
+    },
+    'dubaiOffer': {
+        'fr': 'Découvrez le luxe et la modernité',
+        'en': 'Discover luxury and modernity'
+    },
+    'parisOffer': {
+        'fr': 'La ville de l\'amour vous attend',
+        'en': 'The city of love awaits you'
+    },
+    'istanbulOffer': {
+        'fr': 'Où l\'Orient rencontre l\'Occident',
+        'en': 'Where East meets West'
     }
 };

@@ -122,13 +122,30 @@
             <div class="logo">
                 <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
             </div>
-            <button class="menu-toggle">☰</button>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle">
+            <label for="nav-toggle" class="nav-toggle-label">☰</label>
             <div class="nav-links">
                 <a href="/" data-i18n="home">Accueil</a>
-                <a href="/destinations.html" data-i18n="destinations">Destinations</a>
+                <a href="/destinations.html" class="active" data-i18n="destinations">Destinations</a>
+                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
                 <a href="/offres.html" data-i18n="offers">Offres</a>
-                <a href="/about.html" data-i18n="about">À propos</a>
                 <a href="/contact.html" data-i18n="contact">Contact</a>
+                <div class="language-switcher">
+                    <button class="language-btn" onclick="toggleLanguageMenu()">
+                        <img src="/assets/images/fr-flag.png" alt="French Flag" id="current-flag">
+                        <span id="current-lang">FR</span>
+                    </button>
+                    <div class="language-menu" id="language-menu">
+                        <div class="language-option" onclick="changeLanguage('fr')">
+                            <img src="/assets/images/fr-flag.png" alt="French Flag">
+                            <span>FR</span>
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('en')">
+                            <img src="/assets/images/en-flag.png" alt="English Flag">
+                            <span>EN</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
@@ -162,24 +179,6 @@
                 <div class="social-links">
                     <a href="https://www.facebook.com/kikstravel" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
                     <a href="https://www.instagram.com/kikstours/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="partners-section">
-            <h3 class="partners-title" data-i18n="ourPartners">Nos Partenaires</h3>
-            <div class="partners-grid">
-                <div class="partner-logo">
-                    <img src="/assets/images/partners/airfrance.png" alt="Air France">
-                </div>
-                <div class="partner-logo">
-                    <img src="/assets/images/partners/turkish.png" alt="Turkish Airlines">
-                </div>
-                <div class="partner-logo">
-                    <img src="/assets/images/partners/royal.png" alt="Royal Air Maroc">
-                </div>
-                <div class="partner-logo">
-                    <img src="/assets/images/partners/tap.png" alt="TAP Air Portugal">
                 </div>
             </div>
         </div>

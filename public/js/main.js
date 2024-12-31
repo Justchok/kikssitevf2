@@ -1,56 +1,47 @@
-// Menu mobile
+// Your other JavaScript code can go here
 document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.querySelector('.menu-toggle');
-    const nav = document.querySelector('.nav-links');
+    // Get menu elements
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const mobileMenuLinks = document.querySelectorAll('.nav-links a');
 
-    if (menuToggle && nav) {
-        // Toggle menu
-        menuToggle.addEventListener('click', () => {
-            nav.classList.toggle('active');
-            menuToggle.classList.toggle('active');
-        });
-
-        // Fermer le menu au clic sur un lien
-        const navLinks = document.querySelectorAll('.nav-links a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                nav.classList.remove('active');
-                menuToggle.classList.remove('active');
-            });
-        });
-
-        // Fermer le menu au clic en dehors
-        document.addEventListener('click', (e) => {
-            if (!nav.contains(e.target) && !menuToggle.contains(e.target) && nav.classList.contains('active')) {
-                nav.classList.remove('active');
-                menuToggle.classList.remove('active');
-            }
-        });
-    }
-
-    // Gestion du scroll avec debounce
-    let scrollTimeout;
-    const navbar = document.querySelector('.navbar');
-
-    window.addEventListener('scroll', () => {
-        if (scrollTimeout) {
-            clearTimeout(scrollTimeout);
+    // Handle menu toggle
+    navToggle.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
         }
+    });
 
-        scrollTimeout = setTimeout(() => {
-            const currentScroll = window.pageYOffset;
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (window.innerWidth <= 768) {
+            const isClickInsideMenu = navLinks.contains(event.target);
+            const isClickOnToggle = event.target.closest('.nav-toggle-label');
             
-            if (!nav.classList.contains('active')) {
-                if (currentScroll > lastScroll && currentScroll > 80) {
-                    // Scroll vers le bas
-                    navbar.style.transform = 'translateY(-100%)';
-                } else {
-                    // Scroll vers le haut
-                    navbar.style.transform = 'translateY(0)';
-                }
+            if (!isClickInsideMenu && !isClickOnToggle && navToggle.checked) {
+                navToggle.checked = false;
+                document.body.style.overflow = '';
             }
+        }
+    });
 
-            lastScroll = currentScroll;
-        }, 100);
+    // Close mobile menu when clicking links
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                navToggle.checked = false;
+                document.body.style.overflow = '';
+            }
+        });
+    });
+
+    // Handle resize events
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            navToggle.checked = false;
+            document.body.style.overflow = '';
+        }
     });
 });

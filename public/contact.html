@@ -144,20 +144,29 @@
             <div class="logo">
                 <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
             </div>
-            <button class="menu-toggle">☰</button>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle">
+            <label for="nav-toggle" class="nav-toggle-label">☰</label>
             <div class="nav-links">
                 <a href="/" data-i18n="home">Accueil</a>
                 <a href="/destinations.html" data-i18n="destinations">Destinations</a>
+                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
                 <a href="/offres.html" data-i18n="offers">Offres</a>
-                <a href="/about.html" data-i18n="about">À propos</a>
                 <a href="/contact.html" class="active" data-i18n="contact">Contact</a>
                 <div class="language-switcher">
-                    <button onclick="switchLanguage('fr')" class="active">
-                        <img src="/assets/images/flags/fr.svg" alt="fr" title="Français">
+                    <button class="language-btn" onclick="toggleLanguageMenu()">
+                        <img src="/assets/images/fr-flag.png" alt="French Flag" id="current-flag">
+                        <span id="current-lang">FR</span>
                     </button>
-                    <button onclick="switchLanguage('en')">
-                        <img src="/assets/images/flags/en.svg" alt="en" title="English">
-                    </button>
+                    <div class="language-menu" id="language-menu">
+                        <div class="language-option" onclick="changeLanguage('fr')">
+                            <img src="/assets/images/fr-flag.png" alt="French Flag">
+                            <span>FR</span>
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('en')">
+                            <img src="/assets/images/en-flag.png" alt="English Flag">
+                            <span>EN</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="burger">
@@ -196,30 +205,21 @@
         </section>
 
         <section class="contact-form-section">
-            <div class="form-container">
-                <h2 data-i18n="sendMessage">Envoyez-nous un message</h2>
-                <form id="contactForm" class="contact-form">
+            <div class="container">
+                <form id="contact-form" class="contact-form">
                     <div class="form-group">
-                        <label for="name" data-i18n="formName">Nom complet</label>
-                        <input type="text" id="name" name="name" required data-i18n-placeholder="formNamePlaceholder">
+                        <label for="name" data-i18n="name">Nom complet</label>
+                        <input type="text" id="name" name="name" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="email" data-i18n="formEmail">Email</label>
-                        <input type="email" id="email" name="email" required data-i18n-placeholder="formEmailPlaceholder">
+                        <label for="email" data-i18n="email">Email</label>
+                        <input type="email" id="email" name="email" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="subject" data-i18n="formSubject">Sujet</label>
-                        <input type="text" id="subject" name="subject" required data-i18n-placeholder="formSubjectPlaceholder">
+                        <label for="message" data-i18n="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
                     </div>
-
-                    <div class="form-group">
-                        <label for="message" data-i18n="formMessage">Message</label>
-                        <textarea id="message" name="message" required data-i18n-placeholder="formMessagePlaceholder"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn-primary" data-i18n="sendMessage">Envoyer le message</button>
+                    <button type="submit" class="submit-btn" data-i18n="submit">Envoyer</button>
                 </form>
             </div>
         </section>
@@ -249,67 +249,11 @@
             </div>
         </div>
 
-        <div class="partners-section">
-            <h3 class="partners-title" data-i18n="ourPartners">Nos Partenaires</h3>
-            <div class="partners-grid">
-                <div class="partner-logo">
-                    <img src="images/partners/amadeus.png" alt="Amadeus">
-                </div>
-                <div class="partner-logo">
-                    <img src="images/partners/TBO.png" alt="TBO">
-                </div>
-                <div class="partner-logo">
-                    <img src="images/partners/iata.svg" alt="IATA">
-                </div>
-                <div class="partner-logo">
-                    <img src="images/partners/sabre.png" alt="Sabre">
-                </div>
-            </div>
-        </div>
-
         <div class="footer-bottom">
             <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
         </div>
     </footer>
 
-    <script>
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const contactData = Object.fromEntries(formData.entries());
-
-            try {
-                const response = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(contactData)
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    Swal.fire({
-                        title: 'Message envoyé !',
-                        text: 'Nous vous répondrons dans les plus brefs délais.',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    this.reset();
-                } else {
-                    throw new Error(result.message || 'Erreur lors de l\'envoi');
-                }
-            } catch (error) {
-                Swal.fire({
-                    title: 'Erreur',
-                    text: error.message || 'Une erreur est survenue. Veuillez réessayer.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    </script>
+    <script src="/js/contact.js"></script>
 </body>
 </html>

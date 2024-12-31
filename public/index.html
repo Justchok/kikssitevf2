@@ -24,11 +24,6 @@
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/language-switcher.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
-    <script src="globe.js" defer></script>
-    <script src="/js/translations.js" defer></script>
-    <script src="/js/language-switcher.js" defer></script>
 </head>
 <body>
     <header class="header">
@@ -36,25 +31,26 @@
             <div class="logo">
                 <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
             </div>
-            <button class="menu-toggle">☰</button>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle">
+            <label for="nav-toggle" class="nav-toggle-label">☰</label>
             <div class="nav-links">
                 <a href="/" data-i18n="home">Accueil</a>
                 <a href="/destinations.html" data-i18n="destinations">Destinations</a>
+                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
                 <a href="/offres.html" data-i18n="offers">Offres</a>
-                <a href="/about.html" data-i18n="about">À propos</a>
                 <a href="/contact.html" data-i18n="contact">Contact</a>
                 <div class="language-switcher">
                     <button class="language-btn" onclick="toggleLanguageMenu()">
-                        <img src="/assets/images/fr-flag.png" alt="French Flag" id="current-flag">
+                        <img src="/assets/images/icons/iconefr.jpeg" alt="French Flag" id="current-flag">
                         <span id="current-lang">FR</span>
                     </button>
                     <div class="language-menu" id="language-menu">
                         <div class="language-option" onclick="changeLanguage('fr')">
-                            <img src="/assets/images/fr-flag.png" alt="French Flag">
+                            <img src="/assets/images/icons/iconefr.jpeg" alt="French Flag">
                             <span>FR</span>
                         </div>
                         <div class="language-option" onclick="changeLanguage('en')">
-                            <img src="/assets/images/en-flag.png" alt="English Flag">
+                            <img src="/assets/images/icons/iconeeng.jpeg" alt="English Flag">
                             <span>EN</span>
                         </div>
                     </div>
@@ -80,6 +76,25 @@
                 <a href="/reservations.html" class="cta-button" data-i18n="bookNow">Réserver maintenant</a>
             </div>
         </section>
+
+        <!-- Partners Section -->
+        <section class="partners-section">
+            <h2 class="section-title" data-i18n="ourPartners">Nos Partenaires</h2>
+            <div class="partners-grid">
+                <div class="partner-item">
+                    <img src="/assets/images/partners/sabre.svg" alt="Sabre" class="partner-logo">
+                </div>
+                <div class="partner-item">
+                    <img src="/assets/images/partners/TBO.jpg" alt="TBO" class="partner-logo">
+                </div>
+                <div class="partner-item">
+                    <img src="/assets/images/partners/amadeus.png" alt="Amadeus" class="partner-logo">
+                </div>
+                <div class="partner-item">
+                    <img src="/assets/images/partners/iata.svg" alt="IATA" class="partner-logo">
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -90,81 +105,52 @@
             </div>
             <div class="footer-section">
                 <h3 data-i18n="contactTitle">Contact</h3>
-                <p><span data-i18n="phone">Tél</span>: +221 338244246</p>
-                <p>Email: info@kikstravel.com</p>
-            </div>
-            <div class="footer-section">
-                <h3 data-i18n="address">Adresse</h3>
-                <p>Espace Ataya Keur Damel<br>Batiment 4 Appartement 412</p>
+                <p><span data-i18n="phone">Tél</span>: +221 77 777 77 77</p>
+                <p>Email: contact@kikstravel.com</p>
+                <p><span data-i18n="address">Adresse</span>: Dakar, Sénégal</p>
             </div>
             <div class="footer-section">
                 <h3 data-i18n="followUs">Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/kikstravel" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/kikstours/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
         </div>
-
-        <div class="partners-section">
-            <h3 class="partners-title" data-i18n="ourPartners">Nos Partenaires</h3>
-            <div class="partners-grid">
-                <div class="partner-logo">
-                    <img src="images/partners/amadeus.png" alt="Amadeus">
-                </div>
-                <div class="partner-logo">
-                    <img src="images/partners/TBO.jpg" alt="TBO">
-                </div>
-                <div class="partner-logo">
-                    <img src="images/partners/iata.svg" alt="IATA">
-                </div>
-                <div class="partner-logo">
-                    <img src="images/partners/sabre.svg" alt="Sabre">
-                </div>
-            </div>
-        </div>
-
         <div class="footer-bottom">
             <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
         </div>
     </footer>
-
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="globe.js"></script>
+    <script src="/js/translations.js"></script>
+    <script src="/js/language-switcher.js"></script>
+    <script src="/js/main.js"></script>
     <script>
         // Menu burger
-        const menuToggle = document.querySelector('.menu-toggle');
+        const navToggle = document.querySelector('#nav-toggle');
         const navLinks = document.querySelector('.nav-links');
 
-        menuToggle.addEventListener('click', () => {
+        navToggle.addEventListener('change', () => {
             navLinks.classList.toggle('active');
-            menuToggle.classList.toggle('active');
         });
     </script>
     <script>
         // Service Worker pour le cache
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('ServiceWorker registration successful');
-                }).catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker enregistré avec succès:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Erreur lors de l\'enregistrement du Service Worker:', error);
+                    });
             });
         }
-        
-        // Préchargement des pages au survol
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('mouseover', () => {
-                const href = link.getAttribute('href');
-                if (href && !link.prefetched) {
-                    const prefetchLink = document.createElement('link');
-                    prefetchLink.rel = 'prefetch';
-                    prefetchLink.href = href;
-                    document.head.appendChild(prefetchLink);
-                    link.prefetched = true;
-                }
-            });
-        });
     </script>
-    <script src="js/main.js"></script>
 </body>
 </html>

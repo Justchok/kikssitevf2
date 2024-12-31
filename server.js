@@ -56,6 +56,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Middleware pour servir les fichiers statiques
+app.use(express.static('public'));
+app.use('/assets', express.static('assets'));
+
 // Middleware pour gérer les fichiers uploadés
 app.use(fileUpload({
     createParentPath: true,
@@ -88,10 +92,6 @@ app.use('/admin', (req, res, next) => {
   }
   next();
 });
-
-// Middleware pour servir les fichiers statiques
-app.use(express.static('public'));
-app.use('/assets', express.static('assets'));
 
 // Routes pour les pages HTML
 app.get('/', (req, res) => {
@@ -387,6 +387,199 @@ app.post('/api/public/book-offer', async (req, res) => {
     }
 });
 
+// Route pour les demandes d'offres
+app.post('/api/public/inquire-offer', async (req, res) => {
+    try {
+        const { name, email, phone, offerTitle } = req.body;
+
+        // Envoi de l'email à l'administrateur
+        await sendEmail(
+            process.env.SMTP_USER,
+            `Nouvelle demande d'offre - ${offerTitle}`,
+            offerAdminEmailTemplate(name, email, phone, offerTitle)
+        );
+
+        // Envoi de la confirmation au client
+        await sendEmail(
+            email,
+            'Confirmation de votre demande - Kiks Travel',
+            offerClientEmailTemplate(name, phone, offerTitle)
+        );
+
+        res.json({ 
+            success: true, 
+            message: 'Demande envoyée avec succès'
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de l\'envoi de la demande:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Erreur lors de l\'envoi de la demande. Veuillez réessayer plus tard.',
+            error: error.message
+        });
+    }
+});
+
+// Route pour les offres spéciales
+app.post('/api/public/special-offer', async (req, res) => {
+    try {
+        console.log('Réception d\'une demande d\'offre spéciale:', req.body);
+        const { name, email, phone, offerTitle, offerPrice } = req.body;
+
+        // Validation des données
+        if (!name || !email || !phone || !offerTitle) {
+            return res.status(400).json({
+                success: false,
+                message: 'Veuillez fournir toutes les informations requises'
+            });
+        }
+
+        // Email à l'administrateur
+        const adminEmailContent = `
+            <h2>Nouvelle demande de réservation d'offre spéciale</h2>
+            <p><strong>Offre:</strong> ${offerTitle}</p>
+            <p><strong>Prix:</strong> ${offerPrice}</p>
+            <p><strong>Client:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Téléphone:</strong> ${phone}</p>
+            <p>Veuillez contacter le client dans les plus brefs délais pour finaliser la réservation.</p>
+        `;
+
+        await sendEmail(
+            process.env.ADMIN_EMAIL || 'contact@kikstravel.com',
+            `Nouvelle réservation - ${offerTitle}`,
+            adminEmailContent
+        );
+
+        // Email de confirmation au client
+        const clientEmailContent = `
+            <h2>Confirmation de votre demande de réservation</h2>
+            <p>Cher(e) ${name},</p>
+            <p>Nous avons bien reçu votre demande de réservation pour l'offre suivante :</p>
+            <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+                <h3 style="color: #3ea0c6; margin-bottom: 10px;">${offerTitle}</h3>
+                <p><strong>Prix:</strong> ${offerPrice}</p>
+            </div>
+            <p>Notre équipe vous contactera très prochainement pour finaliser les détails de votre réservation.</p>
+            <p>Si vous avez des questions, n'hésitez pas à nous contacter :</p>
+            <ul>
+                <li>Email: contact@kikstravel.com</li>
+                <li>Téléphone: +221 338244246</li>
+            </ul>
+            <p>Merci de votre confiance!</p>
+            <p>L'équipe Kiks Travel</p>
+        `;
+
+        await sendEmail(
+            email,
+            'Confirmation de votre demande de réservation - Kiks Travel',
+            clientEmailContent
+        );
+
+        res.json({
+            success: true,
+            message: 'Votre demande a été envoyée avec succès'
+        });
+
+    } catch (error) {
+        console.error('Erreur lors du traitement de l\'offre spéciale:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Une erreur est survenue lors du traitement de votre demande'
+        });
+    }
+});
+
+// Contact form endpoint
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, message } = req.body;
+
+        // Create transport
+        const transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASSWORD
+            }
+        });
+
+        // Email content
+        const mailOptions = {
+            from: process.env.SMTP_USER,
+            to: process.env.SMTP_USER, // Send to ourselves
+            subject: `Nouveau message de contact de ${name}`,
+            html: `
+                <h2>Nouveau message de contact</h2>
+                <p><strong>Nom:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Message:</strong></p>
+                <p>${message}</p>
+            `
+        };
+
+        // Send email
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({ message: 'Message envoyé avec succès!' });
+    } catch (error) {
+        console.error('Error sending contact email:', error);
+        res.status(500).json({ error: 'Erreur lors de l\'envoi du message' });
+    }
+});
+
+// Route pour le formulaire de contact
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+
+        // Envoi de l'email à l'administrateur
+        await sendEmail(
+            process.env.SMTP_USER,
+            `Nouveau message de contact - ${subject}`,
+            `
+            <h2>Nouveau message de contact</h2>
+            <p><strong>Nom:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Sujet:</strong> ${subject}</p>
+            <p><strong>Message:</strong></p>
+            <p>${message}</p>
+            `
+        );
+
+        // Envoi de la confirmation au client
+        await sendEmail(
+            email,
+            'Confirmation de votre message - Kiks Travel',
+            `
+            <h2>Confirmation de réception</h2>
+            <p>Cher(e) ${name},</p>
+            <p>Nous avons bien reçu votre message concernant "${subject}".</p>
+            <p>Notre équipe vous répondra dans les plus brefs délais.</p>
+            <br>
+            <p>Cordialement,</p>
+            <p>L'équipe Kiks Travel</p>
+            `
+        );
+
+        res.json({ 
+            success: true, 
+            message: 'Message envoyé avec succès'
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de l\'envoi du message:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Erreur lors de l\'envoi du message. Veuillez réessayer plus tard.',
+            error: error.message
+        });
+    }
+});
+
 // Routes d'administration
 app.post('/api/offers', adminAuth, async (req, res) => {
     try {
@@ -443,48 +636,89 @@ app.post('/api/gallery', adminAuth, fileUpload(), async (req, res) => {
             return res.status(400).json({ error: 'Aucune image fournie' });
         }
 
-        const image = req.files.image;
-        const title = req.body.title;
-        const description = req.body.description;
-
+        const { title, description } = req.body;
         if (!title || !description) {
             return res.status(400).json({ error: 'Titre et description requis' });
         }
 
-        // Générer un nom de fichier unique
+        const image = req.files.image;
+        
+        // Sauvegarder l'image
         const fileName = `${Date.now()}-${image.name}`;
         const filePath = path.join(GALLERY_PATH, fileName);
-
-        // Déplacer l'image
         await image.mv(filePath);
 
-        // Lire le fichier gallery.json
-        let gallery = [];
-        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
-        
-        try {
-            gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
-        } catch (error) {
-            // Si le fichier n'existe pas, on commence avec un tableau vide
-        }
-
-        // Ajouter la nouvelle image
-        const newImage = {
+        // Créer la nouvelle entrée de galerie
+        const newGallery = {
             id: Date.now(),
             title,
             description,
             image: `/uploads/gallery/${fileName}`
         };
 
-        gallery.push(newImage);
+        // Lire et mettre à jour le fichier gallery.json
+        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
+        let gallery = [];
+        try {
+            gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
+        } catch (error) {
+            // Si le fichier n'existe pas, on commence avec un tableau vide
+        }
 
-        // Sauvegarder le fichier gallery.json
+        gallery.push(newGallery);
         fs.writeFileSync(galleryJsonPath, JSON.stringify(gallery, null, 2));
 
-        res.json(newImage);
+        res.json(newGallery);
+    } catch (error) {
+        console.error('Erreur lors de la création de la galerie:', error);
+        res.status(500).json({ error: 'Erreur lors de la création de la galerie' });
+    }
+});
+
+app.post('/api/gallery/:id/images', adminAuth, fileUpload(), async (req, res) => {
+    try {
+        if (!req.files || !req.files.images) {
+            return res.status(400).json({ error: 'Aucune image fournie' });
+        }
+
+        const galleryId = parseInt(req.params.id);
+        const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
+        
+        // Lire le fichier gallery.json
+        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
+        let gallery = [];
+        try {
+            gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
+        } catch (error) {
+            return res.status(500).json({ error: 'Erreur lors de la lecture de la galerie' });
+        }
+
+        // Trouver la galerie à mettre à jour
+        const galleryEntry = gallery.find(entry => entry.id === galleryId);
+        if (!galleryEntry) {
+            return res.status(404).json({ error: 'Galerie non trouvée' });
+        }
+
+        // Sauvegarder chaque image
+        const uploadedImages = [];
+        for (const image of images) {
+            const fileName = `${Date.now()}-${image.name}`;
+            const filePath = path.join(GALLERY_PATH, fileName);
+            await image.mv(filePath);
+            uploadedImages.push(`/uploads/gallery/${fileName}`);
+        }
+
+        // Ajouter les nouvelles images à la galerie
+        if (!galleryEntry.images) galleryEntry.images = [];
+        galleryEntry.images.push(...uploadedImages);
+
+        // Sauvegarder les changements
+        fs.writeFileSync(galleryJsonPath, JSON.stringify(gallery, null, 2));
+
+        res.json({ success: true, images: uploadedImages });
     } catch (error) {
         console.error('Erreur lors de l\'upload:', error);
-        res.status(500).json({ error: 'Erreur lors de l\'upload de l\'image' });
+        res.status(500).json({ error: 'Erreur lors de l\'upload des images' });
     }
 });
 
@@ -577,104 +811,6 @@ app.get('/api/gallery', (req, res) => {
     } catch (error) {
         console.error('Erreur lors de la lecture de la galerie:', error);
         res.status(500).json({ error: 'Erreur lors de la lecture de la galerie' });
-    }
-});
-
-// Route pour ajouter des images à une galerie existante
-app.post('/api/gallery/:id/images', adminAuth, fileUpload(), async (req, res) => {
-    try {
-        if (!req.files || !req.files.images) {
-            return res.status(400).json({ error: 'Aucune image fournie' });
-        }
-
-        const galleryId = parseInt(req.params.id);
-        const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
-        
-        // Lire le fichier gallery.json
-        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
-        let gallery = [];
-        try {
-            gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
-        } catch (error) {
-            return res.status(500).json({ error: 'Erreur lors de la lecture de la galerie' });
-        }
-
-        // Trouver la galerie à mettre à jour
-        const galleryEntry = gallery.find(entry => entry.id === galleryId);
-        if (!galleryEntry) {
-            return res.status(404).json({ error: 'Galerie non trouvée' });
-        }
-
-        // Sauvegarder chaque image
-        const uploadedImages = [];
-        for (const image of images) {
-            const fileName = `${Date.now()}-${image.name}`;
-            const filePath = path.join(GALLERY_PATH, fileName);
-            await image.mv(filePath);
-            uploadedImages.push(`/uploads/gallery/${fileName}`);
-        }
-
-        // Ajouter les nouvelles images à la galerie
-        if (!galleryEntry.images) galleryEntry.images = [];
-        galleryEntry.images.push(...uploadedImages);
-
-        // Sauvegarder les changements
-        fs.writeFileSync(galleryJsonPath, JSON.stringify(gallery, null, 2));
-
-        res.json({ success: true, images: uploadedImages });
-    } catch (error) {
-        console.error('Erreur lors de l\'upload:', error);
-        res.status(500).json({ error: 'Erreur lors de l\'upload des images' });
-    }
-});
-
-// Route pour créer une nouvelle galerie
-app.post('/api/gallery', adminAuth, fileUpload(), async (req, res) => {
-    try {
-        if (!req.files || !req.files.images) {
-            return res.status(400).json({ error: 'Aucune image fournie' });
-        }
-
-        const { title, description } = req.body;
-        if (!title || !description) {
-            return res.status(400).json({ error: 'Titre et description requis' });
-        }
-
-        const images = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
-        
-        // Sauvegarder les images
-        const uploadedImages = [];
-        for (const image of images) {
-            const fileName = `${Date.now()}-${image.name}`;
-            const filePath = path.join(GALLERY_PATH, fileName);
-            await image.mv(filePath);
-            uploadedImages.push(`/uploads/gallery/${fileName}`);
-        }
-
-        // Créer la nouvelle entrée de galerie
-        const newGallery = {
-            id: Date.now(),
-            title,
-            description,
-            images: uploadedImages
-        };
-
-        // Lire et mettre à jour le fichier gallery.json
-        const galleryJsonPath = path.join(__dirname, 'server', 'data', 'gallery.json');
-        let gallery = [];
-        try {
-            gallery = JSON.parse(fs.readFileSync(galleryJsonPath, 'utf8'));
-        } catch (error) {
-            // Si le fichier n'existe pas, on commence avec un tableau vide
-        }
-
-        gallery.push(newGallery);
-        fs.writeFileSync(galleryJsonPath, JSON.stringify(gallery, null, 2));
-
-        res.json(newGallery);
-    } catch (error) {
-        console.error('Erreur lors de la création de la galerie:', error);
-        res.status(500).json({ error: 'Erreur lors de la création de la galerie' });
     }
 });
 

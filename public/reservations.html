@@ -25,16 +25,13 @@
             <div class="logo">
                 <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
             </div>
-            <div class="burger">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
-            </div>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle">
+            <label for="nav-toggle" class="nav-toggle-label">☰</label>
             <div class="nav-links">
                 <a href="/" data-i18n="home">Accueil</a>
                 <a href="/destinations.html" data-i18n="destinations">Destinations</a>
+                <a href="/reservations.html" class="active" data-i18n="reservations">Réservations</a>
                 <a href="/offres.html" data-i18n="offers">Offres</a>
-                <a href="/about.html" data-i18n="about">À propos</a>
                 <a href="/contact.html" data-i18n="contact">Contact</a>
                 <div class="language-switcher">
                     <button class="language-btn" onclick="toggleLanguageMenu()">
@@ -149,29 +146,14 @@
             </div>
         </div>
 
-        <div class="partners-section">
-            <h3 class="partners-title" data-i18n="ourPartners">Nos Partenaires</h3>
-            <div class="partners-grid">
-                <div class="partner-logo">
-                    <img src="/assets/images/partners/airfrance.png" alt="Air France">
-                </div>
-                <div class="partner-logo">
-                    <img src="/assets/images/partners/turkish.png" alt="Turkish Airlines">
-                </div>
-                <div class="partner-logo">
-                    <img src="/assets/images/partners/royal.png" alt="Royal Air Maroc">
-                </div>
-                <div class="partner-logo">
-                    <img src="/assets/images/partners/tap.png" alt="TAP Air Portugal">
-                </div>
-            </div>
-        </div>
-
         <div class="footer-bottom">
             <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
+    <script src="/js/translations.js"></script>
+    <script src="/js/language-switcher.js" defer></script>
+    <script src="/js/reservations.js" defer></script>
 </body>
 </html>

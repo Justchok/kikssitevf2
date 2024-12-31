@@ -1,33 +1,92 @@
 .language-switcher {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
+    position: relative;
     margin-left: 1rem;
 }
 
-.language-switcher button {
-    background: none;
-    border: none;
+.language-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
     cursor: pointer;
-    padding: 0.25rem;
-    border-radius: 50%;
     transition: all 0.3s ease;
-    opacity: 0.6;
 }
 
-.language-switcher button:hover {
-    transform: translateY(-2px);
-    opacity: 0.8;
+.language-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.language-switcher button.active {
-    opacity: 1;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.language-switcher img {
+.language-btn img {
     width: 24px;
     height: 24px;
     border-radius: 50%;
     object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.language-btn span {
+    color: #333;
+    font-weight: 500;
+}
+
+.language-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 1000;
+    min-width: 120px;
+    padding: 0.5rem;
+}
+
+.language-menu.show {
+    display: block;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 5px;
+}
+
+.language-option:hover {
+    background: rgba(62, 160, 198, 0.1);
+}
+
+.language-option img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.language-option span {
+    color: #333;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+    .language-switcher {
+        margin: 1rem 0;
+    }
+
+    .language-menu {
+        position: static;
+        width: 100%;
+        margin-top: 0.5rem;
+        box-shadow: none;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
 }
