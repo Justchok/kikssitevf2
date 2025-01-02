@@ -84,40 +84,49 @@ body {
     z-index: 1001;
 }
 
-/* Mobile styles */
+/* Mobile menu styles */
 @media screen and (max-width: 768px) {
     .nav-toggle-label {
         display: block;
+        cursor: pointer;
+        font-size: 24px;
+        padding: 10px;
     }
 
     .nav-links {
         display: none;
-        position: fixed;
+        position: absolute;
         top: 70px;
         left: 0;
-        right: 0;
+        width: 100%;
         background: white;
-        padding: 1rem;
-        flex-direction: column;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        text-align: center;
-        transform: translateY(-100%);
-        transition: transform 0.3s ease-in-out;
+        padding: 10px 0;
     }
 
     .nav-toggle:checked ~ .nav-links {
         display: flex;
-        transform: translateY(0);
+        flex-direction: column;
     }
 
     .nav-links a {
-        padding: 1rem;
         width: 100%;
+        padding: 15px 20px;
         border-bottom: 1px solid #eee;
+        text-align: left;
     }
 
     .nav-links a:last-child {
         border-bottom: none;
+    }
+
+    .nav-links a:hover {
+        background: #f8f9fa;
+    }
+
+    .nav-links a.active {
+        color: var(--primary-color);
+        font-weight: bold;
     }
 }
 
@@ -1089,11 +1098,12 @@ section h2 {
 .offer-info p {
     color: #666;
     margin-bottom: 0.5rem;
+    font-size: 0.9rem;
 }
 
 .offer-info .price {
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: bold;
     color: var(--primary-color);
     margin: 1rem 0;
 }
@@ -1665,8 +1675,8 @@ section h2 {
 }
 
 .destination-info h4 {
-    margin: 0;
     color: #333;
+    margin: 0;
     font-size: 1.1rem;
 }
 
@@ -1795,44 +1805,42 @@ section h2 {
     transform: translateY(0);
 }
 
-/* Style des offres spéciales */
-.offers-section {
-    padding: 2rem 5%;
+.popup-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.popup-button:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* Offres */
+.offers {
+    padding: 4rem 2rem;
+    background-color: #f8f9fa;
+}
+
+.offers h2 {
     text-align: center;
-}
-
-.offers-section h1 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-    font-size: 2.5rem;
-}
-
-.offers-section p {
-    color: var(--primary-color);
     margin-bottom: 2rem;
+    color: #333;
 }
 
 .offers-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    overflow-x: auto;
-    padding: 1rem 0;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-}
-
-.offers-grid::-webkit-scrollbar {
-    height: 8px;
-}
-
-.offers-grid::-webkit-scrollbar-track {
-    background: var(--light-color);
-    border-radius: 4px;
-}
-
-.offers-grid::-webkit-scrollbar-thumb {
-    background: var(--secondary-color);
-    border-radius: 4px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .offer-card {
@@ -1899,8 +1907,7 @@ section h2 {
 /* Responsive design pour les offres */
 @media screen and (max-width: 768px) {
     .offers-grid {
-        gap: 1rem;
-        padding: 0.5rem;
+        grid-template-columns: 1fr;
     }
 
     .offer-card {
@@ -2562,16 +2569,8 @@ section h2 {
 
 .form-group input,
 .form-group textarea {
-    padding: 0.8rem;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
-
-.form-group textarea {
-    min-height: 150px;
-    resize: vertical;
+    border: 2px solid var(--light-color);
+    border-radius: 8px;
 }
 
 .form-group input:focus,
@@ -2934,7 +2933,6 @@ section h2 {
     padding: 0.8rem 1.5rem;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    text-decoration: none;
     border: none;
     border-radius: 25px;
     font-weight: 500;
