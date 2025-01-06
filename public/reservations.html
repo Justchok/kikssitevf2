@@ -55,7 +55,7 @@
             <h1 data-i18n="bookingTitle">Réservez Votre Voyage</h1>
             <p data-i18n="bookingDesc">Planifiez votre prochaine aventure avec nous. Remplissez le formulaire ci-dessous pour commencer votre voyage.</p>
             
-            <form id="booking-form" class="booking-form" action="javascript:void(0);">
+            <form id="booking-form" class="booking-form" action="javascript:void(0);" onsubmit="return validateForm()">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="name" data-i18n="formName">Nom complet</label>
@@ -88,33 +88,27 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="travel-class" data-i18n="formTravelClass">Classe</label>
-                        <select id="travel-class" name="travelClass" required>
-                            <option value="economy" data-i18n="formTravelClassEconomy">Économique</option>
-                            <option value="business" data-i18n="formTravelClassBusiness">Affaires</option>
-                            <option value="first" data-i18n="formTravelClassFirst">Première</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label for="departure-date" data-i18n="formDepartureDate">Date de départ</label>
-                        <input type="date" id="departure-date" name="departure-date" required class="form-control">
+                        <input type="date" id="departure-date" name="departure-date" required min="">
                     </div>
 
                     <div class="form-group">
                         <label for="return-date" data-i18n="formReturnDate">Date de retour</label>
-                        <input type="date" id="return-date" name="return-date" required class="form-control">
+                        <input type="date" id="return-date" name="return-date" required min="">
                     </div>
 
                     <div class="form-group">
                         <label for="passengers" data-i18n="formPassengers">Nombre de passagers</label>
-                        <input type="number" id="passengers" name="passengers" min="1" max="9" value="1" required>
+                        <input type="number" id="passengers" name="passengers" min="1" max="10" value="1" required>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="message" data-i18n="formMessage">Message (optionnel)</label>
+                        <textarea id="message" name="message" rows="4" data-i18n-placeholder="formMessagePlaceholder"></textarea>
                     </div>
                 </div>
 
-                <div class="form-group submit-group">
-                    <button type="submit" class="submit-button" data-i18n="bookNow">Réserver maintenant</button>
-                </div>
+                <button type="submit" class="submit-btn pulse" data-i18n="formSubmit">Réserver maintenant</button>
             </form>
         </section>
     </main>
@@ -150,6 +144,45 @@
 
     <script src="js/translations.js"></script>
     <script src="js/language-switcher.js"></script>
+    <script>
+        // Définir la date minimale pour aujourd'hui
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('departure-date').min = today;
+        document.getElementById('return-date').min = today;
+
+        // Mettre à jour la date minimale de retour quand la date de départ change
+        document.getElementById('departure-date').addEventListener('change', function() {
+            document.getElementById('return-date').min = this.value;
+            if (document.getElementById('return-date').value < this.value) {
+                document.getElementById('return-date').value = this.value;
+            }
+        });
+
+        function validateForm() {
+            const departureDate = new Date(document.getElementById('departure-date').value);
+            const returnDate = new Date(document.getElementById('return-date').value);
+            
+            if (returnDate < departureDate) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur de date',
+                    text: 'La date de retour doit être après la date de départ'
+                });
+                return false;
+            }
+
+            // Afficher un message de confirmation
+            Swal.fire({
+                icon: 'success',
+                title: 'Réservation envoyée !',
+                text: 'Nous vous contacterons bientôt pour confirmer votre réservation.',
+                showConfirmButton: true,
+                confirmButtonText: 'OK'
+            });
+            
+            return false; // Empêcher l'envoi du formulaire pour la démo
+        }
+    </script>
     <script src="js/main.js"></script>
     <script src="js/reservations.js"></script>
 </body>
