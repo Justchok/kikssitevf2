@@ -1,92 +1,108 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle booking buttons
-    document.querySelectorAll('.btn-primary').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const card = this.closest('.offer-card');
-            const title = card.querySelector('h3').textContent;
-            const price = card.querySelector('.price').textContent;
-            const description = card.querySelector('p[data-i18n^="offer"]').textContent;
-            
-            showOfferForm(title, description, price);
-        });
-    });
-});
+    // Fonction pour ouvrir le popup avec les détails de l'offre
+    function openOfferPopup(offerTitle) {
+        const today = new Date().toISOString().split('T')[0];
+        
+        Swal.fire({
+            title: 'Réserver cette offre',
+            html: `
+                <form id="offer-form" class="swal2-form">
+                    <div class="form-group">
+                        <input type="text" id="name" class="swal2-input" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" class="swal2-input" placeholder="Votre email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" class="swal2-input" placeholder="Votre téléphone" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" id="departureDate" class="swal2-input" min="${today}" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="passengers" class="swal2-input" placeholder="Nombre de passagers" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" class="swal2-textarea" placeholder="Message (optionnel)"></textarea>
+                    </div>
+                </form>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Envoyer',
+            cancelButtonText: 'Annuler',
+            confirmButtonColor: '#3ea0c6',
+            cancelButtonColor: '#d33',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                const formData = {
+                    offerTitle: offerTitle,
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    departureDate: document.getElementById('departureDate').value,
+                    passengers: document.getElementById('passengers').value,
+                    message: document.getElementById('message').value
+                };
 
-function showOfferForm(title, description, price) {
-    Swal.fire({
-        title: 'Réserver cette offre',
-        html: `
-            <div class="offer-details">
-                <h4>${title}</h4>
-                <p>${description}</p>
-                <p class="price-highlight">${price}</p>
-            </div>
-            <form id="offerForm" class="offer-form">
-                <div class="form-group">
-                    <label for="name">Nom complet</label>
-                    <input type="text" id="name" name="name" required class="swal2-input" placeholder="Votre nom">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required class="swal2-input" placeholder="votre@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="phone">Téléphone</label>
-                    <input type="tel" id="phone" name="phone" required class="swal2-input" placeholder="Votre numéro de téléphone">
-                </div>
-            </form>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Réserver',
-        cancelButtonText: 'Annuler',
-        confirmButtonColor: '#3ea0c6',
-        cancelButtonColor: '#6c757d',
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
-            const form = document.getElementById('offerForm');
-            const formData = {
-                name: form.querySelector('#name').value,
-                email: form.querySelector('#email').value,
-                phone: form.querySelector('#phone').value,
-                offerTitle: title,
-                offerPrice: price
-            };
-
-            return submitSpecialOffer(formData);
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
+                return fetch('http://localhost:8000/api/send-offer.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (!result.success) {
+                        throw new Error(result.message || 'Une erreur est survenue');
+                    }
+                    return result;
+                });
+            }
+        }).then((result) => {
+            if (result.value) {
+                Swal.fire({
+                    title: 'Demande envoyée !',
+                    text: 'Nous avons bien reçu votre demande et vous contacterons très prochainement.',
+                    icon: 'success',
+                    confirmButtonColor: '#3ea0c6'
+                });
+            }
+        }).catch(error => {
             Swal.fire({
-                title: 'Réservation envoyée !',
-                text: 'Votre demande de réservation a été envoyée avec succès. Notre équipe vous contactera très prochainement pour finaliser les détails.',
-                icon: 'success',
+                title: 'Erreur',
+                text: error.message || 'Une erreur est survenue lors de l\'envoi de votre demande.',
+                icon: 'error',
                 confirmButtonColor: '#3ea0c6'
             });
-        }
-    });
-}
-
-async function submitSpecialOffer(formData) {
-    try {
-        const response = await fetch('/api/public/special-offer', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
         });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error(result.message || 'Une erreur est survenue');
-        }
-
-        return result;
-    } catch (error) {
-        Swal.showValidationMessage(`Erreur: ${error.message}`);
     }
-}
+
+    // Ajouter des écouteurs d'événements à tous les boutons "Réserver"
+    document.querySelectorAll('.reserve-offer-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const offerTitle = this.getAttribute('data-offer-title');
+            openOfferPopup(offerTitle);
+        });
+    });
+
+    // Ajouter du CSS personnalisé pour le formulaire
+    const style = document.createElement('style');
+    style.textContent = `
+        .swal2-form {
+            margin: 1em auto;
+        }
+        .swal2-form .form-group {
+            margin-bottom: 1em;
+        }
+        .swal2-input, .swal2-textarea {
+            width: 100% !important;
+            margin: 0.5em auto !important;
+        }
+        .swal2-textarea {
+            height: 100px !important;
+        }
+    `;
+    document.head.appendChild(style);
+});

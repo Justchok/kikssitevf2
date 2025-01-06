@@ -17,12 +17,12 @@ const PORT = process.env.PORT || 3001;
 
 // Configuration du transporteur d'email avec IONOS
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.ionos.fr',
+    host: 'smtp.ionos.fr',
     port: 465,
     secure: true, // true pour le port 465 (SSL)
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD
+        user: 'info@kikstravel.com',
+        pass: 'Ktravel&tours1!'
     }
 });
 
@@ -30,7 +30,7 @@ const transporter = nodemailer.createTransport({
 async function sendEmail(to, subject, html) {
     try {
         const mailOptions = {
-            from: process.env.SMTP_USER, // Votre adresse email IONOS
+            from: 'info@kikstravel.com', // Votre adresse email IONOS
             to: to,
             subject: subject,
             html: html
@@ -310,43 +310,84 @@ const adminAuth = (req, res, next) => {
 // Route pour les réservations de vols
 app.post('/api/public/book-flight', async (req, res) => {
     try {
-        console.log('Réception d\'une réservation de vol:', req.body);
-        const { name, email, phone, departure, destination, layover, travelClass, departureDate, returnDate, passengers } = req.body;
-
-        const flightDetails = {
+        const {
+            name,
+            email,
+            phone,
             departure,
             destination,
-            layover,
-            travelClass,
             departureDate,
             returnDate,
-            passengers
-        };
+            passengers,
+            class: flightClass,
+            message
+        } = req.body;
 
-        // Envoi de l'email à l'administrateur (email IONOS)
-        await sendEmail(
-            process.env.SMTP_USER, // L'admin reçoit sur l'email IONOS
-            'Nouvelle réservation de vol - Kiks Travel',
-            adminEmailTemplate(name, email, phone, flightDetails)
-        );
-
-        // Envoi de l'email de confirmation au client (sur son email personnel)
-        await sendEmail(
-            email, // Le client reçoit sur son email personnel
-            'Confirmation de votre demande de réservation - Kiks Travel',
-            clientEmailTemplate(name, phone, flightDetails)
-        );
-
-        res.json({ 
-            success: true, 
-            message: 'Réservation reçue avec succès'
+        // Email pour l'administrateur
+        await transporter.sendMail({
+            from: '"Kiks Travel" <info@kikstravel.com>',
+            to: 'info@kikstravel.com',
+            subject: `Nouvelle réservation de vol - ${name}`,
+            html: `
+                <div style="font-family: Arial, sans-serif;">
+                    <h2>Nouvelle demande de réservation</h2>
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 5px;">
+                        <p><strong>Nom :</strong> ${name}</p>
+                        <p><strong>Email :</strong> ${email}</p>
+                        <p><strong>Téléphone :</strong> ${phone}</p>
+                        <p><strong>Départ :</strong> ${departure}</p>
+                        <p><strong>Destination :</strong> ${destination}</p>
+                        <p><strong>Date de départ :</strong> ${departureDate}</p>
+                        <p><strong>Date de retour :</strong> ${returnDate}</p>
+                        <p><strong>Nombre de passagers :</strong> ${passengers}</p>
+                        <p><strong>Classe :</strong> ${flightClass === 'economy' ? 'Économique' : 
+                                                     flightClass === 'business' ? 'Affaires' : 
+                                                     'Première classe'}</p>
+                        ${message ? `<p><strong>Message :</strong> ${message}</p>` : ''}
+                    </div>
+                </div>
+            `
         });
 
+        // Email pour le client
+        await transporter.sendMail({
+            from: '"Kiks Travel" <info@kikstravel.com>',
+            to: email,
+            subject: 'Confirmation de votre demande de réservation - Kiks Travel',
+            html: `
+                <div style="font-family: Arial, sans-serif;">
+                    <h2>Confirmation de votre demande de réservation</h2>
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 5px;">
+                        <p>Cher(e) ${name},</p>
+                        <p>Nous avons bien reçu votre demande de réservation. Voici un récapitulatif :</p>
+                        <ul>
+                            <li><strong>Départ :</strong> ${departure}</li>
+                            <li><strong>Destination :</strong> ${destination}</li>
+                            <li><strong>Date de départ :</strong> ${departureDate}</li>
+                            <li><strong>Date de retour :</strong> ${returnDate}</li>
+                            <li><strong>Nombre de passagers :</strong> ${passengers}</li>
+                            <li><strong>Classe :</strong> ${flightClass === 'economy' ? 'Économique' : 
+                                                         flightClass === 'business' ? 'Affaires' : 
+                                                         'Première classe'}</li>
+                        </ul>
+                        <p>Notre équipe vous contactera dans les plus brefs délais pour finaliser votre réservation.</p>
+                        <p>Pour toute question, n'hésitez pas à nous contacter :</p>
+                        <ul>
+                            <li>Téléphone : +221 77 200 44 32</li>
+                            <li>Email : info@kikstravel.com</li>
+                        </ul>
+                    </div>
+                </div>
+            `
+        });
+
+        res.json({ success: true, message: 'Demande de réservation envoyée avec succès' });
+
     } catch (error) {
-        console.error('Erreur lors de la réservation:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Erreur lors de la réservation. Veuillez réessayer plus tard.',
+        console.error('Erreur:', error);
+        res.status(500).json({
+            success: false,
+            message: "Une erreur est survenue lors de l'envoi des emails",
             error: error.message
         });
     }
@@ -360,7 +401,7 @@ app.post('/api/public/book-offer', async (req, res) => {
         
         // Envoi de l'email à l'administrateur (email IONOS)
         await sendEmail(
-            process.env.SMTP_USER, // L'admin reçoit sur l'email IONOS
+            'info@kikstravel.com', // L'admin reçoit sur l'email IONOS
             'Nouvelle réservation d\'offre - Kiks Travel',
             offerAdminEmailTemplate(name, email, phone, offerTitle)
         );
@@ -394,7 +435,7 @@ app.post('/api/public/inquire-offer', async (req, res) => {
 
         // Envoi de l'email à l'administrateur
         await sendEmail(
-            process.env.SMTP_USER,
+            'info@kikstravel.com',
             `Nouvelle demande d'offre - ${offerTitle}`,
             offerAdminEmailTemplate(name, email, phone, offerTitle)
         );
@@ -447,7 +488,7 @@ app.post('/api/public/special-offer', async (req, res) => {
         `;
 
         await sendEmail(
-            process.env.ADMIN_EMAIL || 'contact@kikstravel.com',
+            'info@kikstravel.com',
             `Nouvelle réservation - ${offerTitle}`,
             adminEmailContent
         );
@@ -464,7 +505,7 @@ app.post('/api/public/special-offer', async (req, res) => {
             <p>Notre équipe vous contactera très prochainement pour finaliser les détails de votre réservation.</p>
             <p>Si vous avez des questions, n'hésitez pas à nous contacter :</p>
             <ul>
-                <li>Email: contact@kikstravel.com</li>
+                <li>Email: info@kikstravel.com</li>
                 <li>Téléphone: +221 338244246</li>
             </ul>
             <p>Merci de votre confiance!</p>
@@ -498,19 +539,19 @@ app.post('/api/contact', async (req, res) => {
 
         // Create transport
         const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
+            host: 'smtp.ionos.fr',
             port: 587,
             secure: false,
             auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASSWORD
+                user: 'info@kikstravel.com',
+                pass: 'Ktravel&tours1!'
             }
         });
 
         // Email content
         const mailOptions = {
-            from: process.env.SMTP_USER,
-            to: process.env.SMTP_USER, // Send to ourselves
+            from: 'info@kikstravel.com',
+            to: 'info@kikstravel.com', // Send to ourselves
             subject: `Nouveau message de contact de ${name}`,
             html: `
                 <h2>Nouveau message de contact</h2>
@@ -538,7 +579,7 @@ app.post('/api/contact', async (req, res) => {
 
         // Envoi de l'email à l'administrateur
         await sendEmail(
-            process.env.SMTP_USER,
+            'info@kikstravel.com',
             `Nouveau message de contact - ${subject}`,
             `
             <h2>Nouveau message de contact</h2>
@@ -876,28 +917,55 @@ app.post('/api/admin/migrate', adminAuth, async (req, res) => {
 });
 
 // Route de test pour l'envoi d'emails
-app.get('/api/test-email', async (req, res) => {
+app.post('/api/test-email', async (req, res) => {
     try {
-        // Test d'envoi d'email
-        await sendEmail(
-            process.env.SMTP_USER, // On envoie à notre propre adresse pour le test
-            'Test d\'envoi d\'email - Kiks Travel',
+        const { name, email, message } = req.body;
+
+        // Email pour l'administrateur
+        await transporter.sendMail({
+            from: '"Kiks Travel" <info@kikstravel.com>',
+            to: 'info@kikstravel.com',
+            subject: `Test Email - Message de ${name}`,
+            html: `
+                <div style="font-family: Arial, sans-serif;">
+                    <h2>Nouveau message de test</h2>
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 5px;">
+                        <p><strong>Nom :</strong> ${name}</p>
+                        <p><strong>Email :</strong> ${email}</p>
+                        <p><strong>Message :</strong> ${message}</p>
+                    </div>
+                </div>
             `
-            <h1>Test d'envoi d'email</h1>
-            <p>Si vous recevez cet email, la configuration SMTP est correcte !</p>
-            <p>Email envoyé le : ${new Date().toLocaleString()}</p>
+        });
+
+        // Email de confirmation pour l'utilisateur
+        await transporter.sendMail({
+            from: '"Kiks Travel" <info@kikstravel.com>',
+            to: email,
+            subject: 'Confirmation - Test Email Kiks Travel',
+            html: `
+                <div style="font-family: Arial, sans-serif;">
+                    <h2>Confirmation de test</h2>
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 5px;">
+                        <p>Bonjour ${name},</p>
+                        <p>Nous avons bien reçu votre message de test :</p>
+                        <p><em>${message}</em></p>
+                        <p>Cet email confirme que notre système d'envoi d'emails fonctionne correctement.</p>
+                    </div>
+                </div>
             `
-        );
+        });
 
         res.json({ 
             success: true, 
-            message: 'Email de test envoyé avec succès'
+            message: 'Emails envoyés avec succès'
         });
+
     } catch (error) {
-        console.error('Erreur lors du test d\'envoi d\'email:', error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Erreur lors de l\'envoi de l\'email de test',
+        console.error('Erreur:', error);
+        res.status(500).json({
+            success: false,
+            message: "Une erreur est survenue lors de l'envoi des emails",
             error: error.message
         });
     }

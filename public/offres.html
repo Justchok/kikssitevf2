@@ -8,6 +8,128 @@
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/language-switcher.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Style pour le modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .modal .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .modal input,
+        .modal textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .modal textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .modal button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .modal button:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-reserve {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .btn-reserve:hover {
+            background-color: #0056b3;
+        }
+
+        .offer-card {
+            position: relative;
+            padding-bottom: 60px; /* Espace pour le bouton */
+        }
+
+        /* Ajout de SweetAlert */
+        .swal2-popup {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -55,7 +177,7 @@
                         <h3 data-i18n="offerParisTitle">Paris en Amoureux</h3>
                         <p data-i18n="offerParisDesc">3 jours/2 nuits avec petit-déjeuner inclus</p>
                         <p class="price">850 000 FCFA</p>
-                        <button type="button" class="btn-primary" data-i18n="bookNow">Réserver maintenant</button>
+                        <button type="button" class="btn-reserve" data-offer-title="Paris en Amoureux" data-destination="Paris" data-i18n="bookNow">Réserver maintenant</button>
                     </div>
                 </div>
                 
@@ -65,7 +187,7 @@
                         <h3 data-i18n="offerDubaiTitle">Luxe à Dubai</h3>
                         <p data-i18n="offerDubaiDesc">5 jours/4 nuits en hôtel 5 étoiles</p>
                         <p class="price">1 250 000 FCFA</p>
-                        <button type="button" class="btn-primary" data-i18n="bookNow">Réserver maintenant</button>
+                        <button type="button" class="btn-reserve" data-offer-title="Luxe à Dubai" data-destination="Dubai" data-i18n="bookNow">Réserver maintenant</button>
                     </div>
                 </div>
                 
@@ -75,7 +197,7 @@
                         <h3 data-i18n="offerIstanbulTitle">Découverte d'Istanbul</h3>
                         <p data-i18n="offerIstanbulDesc">4 jours/3 nuits avec visites guidées</p>
                         <p class="price">950 000 FCFA</p>
-                        <button type="button" class="btn-primary" data-i18n="bookNow">Réserver maintenant</button>
+                        <button type="button" class="btn-reserve" data-offer-title="Découverte d'Istanbul" data-destination="Istanbul" data-i18n="bookNow">Réserver maintenant</button>
                     </div>
                 </div>
             </div>
@@ -111,9 +233,118 @@
         </div>
     </footer>
 
+    <!-- Modal de réservation -->
+    <div id="reservationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Réserver cette offre</h2>
+            <form id="offerForm">
+                <input type="hidden" id="offerTitle" name="offerTitle">
+                <div class="form-group">
+                    <label for="name">Nom complet</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Téléphone</label>
+                    <input type="tel" id="phone" name="phone" pattern="[0-9+\-\s]+" required>
+                </div>
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" name="destination" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message (optionnel)</label>
+                    <textarea id="message" name="message" rows="4"></textarea>
+                </div>
+                <button type="submit">Envoyer la demande</button>
+            </form>
+        </div>
+    </div>
+
     <script src="js/translations.js"></script>
     <script src="js/language-switcher.js"></script>
     <script src="js/offers.js"></script>
     <script src="js/nav.js"></script>
+    <script>
+        // Fonction pour ouvrir le modal avec le titre et la destination de l'offre
+        function openReservationModal(offerTitle, destination) {
+            document.getElementById('reservationModal').style.display = 'block';
+            document.getElementById('offerTitle').value = offerTitle;
+            document.getElementById('destination').value = destination;
+        }
+
+        // Fermer le modal quand on clique sur X
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('reservationModal').style.display = 'none';
+        }
+
+        // Fermer le modal quand on clique en dehors
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('reservationModal')) {
+                document.getElementById('reservationModal').style.display = 'none';
+            }
+        }
+
+        // Gérer la soumission du formulaire
+        document.getElementById('offerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                offerTitle: document.getElementById('offerTitle').value,
+                destination: document.getElementById('destination').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                const response = await fetch('/api/public/special-offer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Demande envoyée !',
+                        text: 'Nous vous contacterons bientôt pour discuter des détails.',
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    });
+                    document.getElementById('offerForm').reset();
+                    document.getElementById('reservationModal').style.display = 'none';
+                } else {
+                    throw new Error(data.message || 'Une erreur est survenue');
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Erreur lors de l\'envoi de la demande : ' + error.message
+                });
+            }
+        });
+
+        // Ajouter les gestionnaires d'événements aux boutons de réservation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn-reserve').forEach(button => {
+                button.addEventListener('click', function() {
+                    const offerTitle = this.getAttribute('data-offer-title');
+                    const destination = this.getAttribute('data-destination');
+                    openReservationModal(offerTitle, destination);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

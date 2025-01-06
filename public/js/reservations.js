@@ -1,25 +1,50 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const bookingForm = document.getElementById('booking-form');
+    const form = document.getElementById('reservation-form');
     
-    if (bookingForm) {
-        bookingForm.addEventListener('submit', async function(e) {
+    if (form) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // Validation des dates
+            const departureDate = new Date(document.getElementById('departureDate').value);
+            const returnDate = new Date(document.getElementById('returnDate').value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (departureDate < today) {
+                Swal.fire({
+                    title: 'Erreur',
+                    text: 'La date de départ ne peut pas être dans le passé',
+                    icon: 'error',
+                    confirmButtonColor: '#3ea0c6'
+                });
+                return;
+            }
+
+            if (returnDate <= departureDate) {
+                Swal.fire({
+                    title: 'Erreur',
+                    text: 'La date de retour doit être après la date de départ',
+                    icon: 'error',
+                    confirmButtonColor: '#3ea0c6'
+                });
+                return;
+            }
+
             const formData = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 departure: document.getElementById('departure').value,
                 destination: document.getElementById('destination').value,
-                layover: document.getElementById('layover').value,
-                travelClass: document.getElementById('travel-class').value,
-                departureDate: document.getElementById('departure-date').value,
-                returnDate: document.getElementById('return-date').value,
-                passengers: document.getElementById('passengers').value
+                departureDate: document.getElementById('departureDate').value,
+                returnDate: document.getElementById('returnDate').value,
+                passengers: document.getElementById('passengers').value,
+                message: document.getElementById('message')?.value || ''
             };
 
             try {
-                const response = await fetch('/api/public/book-flight', {
+                const response = await fetch('./api/send-email.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -31,23 +56,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (result.success) {
                     Swal.fire({
-                        title: 'Demande envoyée !',
-                        text: 'Votre demande a été envoyée avec succès. Notre équipe vous contactera dans les plus brefs délais.',
+                        title: 'Réservation envoyée !',
+                        text: 'Votre demande de réservation a été envoyée avec succès. Nous vous contacterons dans les plus brefs délais.',
                         icon: 'success',
-                        confirmButtonText: 'OK',
                         confirmButtonColor: '#3ea0c6'
                     });
-                    bookingForm.reset();
+                    form.reset();
                 } else {
-                    throw new Error(result.message);
+                    throw new Error(result.message || 'Une erreur est survenue');
                 }
             } catch (error) {
                 console.error('Booking error:', error);
                 Swal.fire({
                     title: 'Erreur',
-                    text: 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer plus tard.',
+                    text: 'Une erreur est survenue lors de l\'envoi de votre réservation. Veuillez réessayer plus tard.',
                     icon: 'error',
-                    confirmButtonText: 'OK',
                     confirmButtonColor: '#3ea0c6'
                 });
             }
