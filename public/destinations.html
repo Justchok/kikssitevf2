@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Découvrez nos destinations de voyage - Kiks Travel">
-    <meta name="keywords" content="destinations voyage, afrique, europe, asie">
+    <meta name="keywords" content="destinations voyage, kiks travel, voyages sénégal">
     <title>Kiks Travel Tours - Destinations</title>
-    <link rel="icon" type="image/png" href="./assets/images/kikslogo.png">
+    <link rel="icon" type="image/png" href="assets/images/kikslogo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/language-switcher.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         #map {
             height: 700px;
@@ -153,34 +153,35 @@
             color: #d75534 !important;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <header class="header">
+    <header>
         <nav class="navbar">
-            <div class="logo">
-                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
-            </div>
-            <input type="checkbox" id="nav-toggle" class="nav-toggle">
-            <label for="nav-toggle" class="nav-toggle-label">☰</label>
-            <div class="nav-links">
-                <a href="/" data-i18n="home">Accueil</a>
-                <a href="/destinations.html" class="active" data-i18n="destinations">Destinations</a>
-                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
-                <a href="/offres.html" data-i18n="offers">Offres</a>
-                <a href="/contact.html" data-i18n="contact">Contact</a>
+            <div class="nav-container">
+                <a href="/" class="logo">
+                    <img src="assets/images/kikslogo.png" alt="Logo">
+                </a>
+                <div class="nav-menu">
+                    <a href="/" data-i18n="home">Accueil</a>
+                    <a href="destinations.html" class="active" data-i18n="destinations">Destinations</a>
+                    <a href="reservations.html" data-i18n="reservations">Réservations</a>
+                    <a href="offres.html" data-i18n="offers">Offres</a>
+                    <a href="contact.html" data-i18n="contact">Contact</a>
+                </div>
                 <div class="language-switcher">
                     <button class="language-btn" onclick="toggleLanguageMenu()">
-                        <img src="/assets/images/fr-flag.png" alt="French Flag" id="current-flag">
-                        <span id="current-lang">FR</span>
+                        <img src="assets/images/icons/iconefr.jpeg" alt="Français" id="currentFlag">
+                        <span id="currentLang">FR</span>
                     </button>
-                    <div class="language-menu" id="language-menu">
+                    <div class="language-menu" id="languageMenu">
                         <div class="language-option" onclick="changeLanguage('fr')">
-                            <img src="/assets/images/fr-flag.png" alt="French Flag">
-                            <span>FR</span>
+                            <img src="assets/images/icons/iconefr.jpeg" alt="Français">
+                            FR
                         </div>
                         <div class="language-option" onclick="changeLanguage('en')">
-                            <img src="/assets/images/en-flag.png" alt="English Flag">
-                            <span>EN</span>
+                            <img src="assets/images/icons/iconeeng.jpeg" alt="English">
+                            EN
                         </div>
                     </div>
                 </div>
@@ -206,7 +207,7 @@
             </div>
             <div class="footer-section">
                 <h3 data-i18n="contactTitle">Contact</h3>
-                <p><span data-i18n="phone">Tél</span>: +221 338244246</p>
+                <p><span data-i18n="phone">Tél</span>: +221 77 200 44 32</p>
                 <p>Email: info@kikstravel.com</p>
             </div>
             <div class="footer-section">
@@ -227,15 +228,15 @@
         </div>
     </footer>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="/js/translations.js"></script>
-    <script src="/js/language-switcher.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/translations.js"></script>
+    <script src="js/language-switcher.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/map.js"></script>
     <script src="/js/destinations.js"></script>
     <script>
         // Menu burger
-        const burgerMenu = document.querySelector('.burger');
-        const navLinks = document.querySelector('.nav-links');
+        const burgerMenu = document.querySelector('.menu-btn');
+        const navLinks = document.querySelector('#nav-links');
 
         burgerMenu.addEventListener('click', () => {
             navLinks.classList.toggle('active');

@@ -12,7 +12,7 @@
     <meta property="og:image" content="/images/logo.png">
     <meta property="og:url" content="https://www.kikstravel.fr">
     <link rel="canonical" href="https://www.kikstravel.fr">
-    <title>Kiks Travel - Votre agence de voyage</title>
+    <title>Kiks Travel Tours - Accueil</title>
     <link rel="icon" type="image/png" href="./assets/images/kikslogo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,30 +28,30 @@
 <body>
     <header class="header">
         <nav class="navbar">
-            <div class="logo">
-                <a href="/"><img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo"></a>
-            </div>
-            <input type="checkbox" id="nav-toggle" class="nav-toggle">
-            <label for="nav-toggle" class="nav-toggle-label">☰</label>
-            <div class="nav-links">
-                <a href="/" data-i18n="home">Accueil</a>
-                <a href="/destinations.html" data-i18n="destinations">Destinations</a>
-                <a href="/reservations.html" data-i18n="reservations">Réservations</a>
-                <a href="/offres.html" data-i18n="offers">Offres</a>
-                <a href="/contact.html" data-i18n="contact">Contact</a>
+            <div class="nav-container">
+                <a href="/" class="logo">
+                    <img src="/assets/images/kikslogo.png" alt="Logo">
+                </a>
+                <div class="nav-menu">
+                    <a href="/" class="active" data-i18n="home">Accueil</a>
+                    <a href="/destinations.html" data-i18n="destinations">Destinations</a>
+                    <a href="/reservations.html" data-i18n="reservations">Réservations</a>
+                    <a href="/offres.html" data-i18n="offers">Offres</a>
+                    <a href="/contact.html" data-i18n="contact">Contact</a>
+                </div>
                 <div class="language-switcher">
                     <button class="language-btn" onclick="toggleLanguageMenu()">
-                        <img src="/assets/images/icons/iconefr.jpeg" alt="French Flag" id="current-flag">
-                        <span id="current-lang">FR</span>
+                        <img src="assets/images/icons/iconefr.jpeg" alt="Français" id="currentFlag">
+                        <span id="currentLang">FR</span>
                     </button>
-                    <div class="language-menu" id="language-menu">
+                    <div class="language-menu" id="languageMenu">
                         <div class="language-option" onclick="changeLanguage('fr')">
-                            <img src="/assets/images/icons/iconefr.jpeg" alt="French Flag">
-                            <span>FR</span>
+                            <img src="assets/images/icons/iconefr.jpeg" alt="Français">
+                            FR
                         </div>
                         <div class="language-option" onclick="changeLanguage('en')">
-                            <img src="/assets/images/icons/iconeeng.jpeg" alt="English Flag">
-                            <span>EN</span>
+                            <img src="assets/images/icons/iconeeng.jpeg" alt="English">
+                            EN
                         </div>
                     </div>
                 </div>
@@ -105,8 +105,8 @@
             </div>
             <div class="footer-section">
                 <h3 data-i18n="contactTitle">Contact</h3>
-                <p><span data-i18n="phone">Tél</span>: +221 77 777 77 77</p>
-                <p>Email: contact@kikstravel.com</p>
+                <p><span data-i18n="phone">Tél</span>: +221 77 200 44 32</p>
+                <p>Email: info@kikstravel.com</p>
                 <p><span data-i18n="address">Adresse</span>: Dakar, Sénégal</p>
             </div>
             <div class="footer-section">
