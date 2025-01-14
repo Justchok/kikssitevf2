@@ -150,30 +150,106 @@
                 width: 80px;
             }
         }
+        
+        /* Navigation responsive */
+        .desktop-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .desktop-nav .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .desktop-nav .nav-links a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .desktop-nav .nav-links a:hover {
+            color: #007bff;
+        }
+        
+        .desktop-nav .language-switcher {
+            margin-left: 20px;
+        }
+        
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .mobile-nav a {
+            display: block;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .mobile-nav a:hover {
+            background-color: #f5f5f5;
+        }
+        
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+            .mobile-nav {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
     <header class="header">
-        <a href="/" class="logo">
-            <img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo">
-        </a>
-        <div class="language-switcher">
-            <button class="language-btn" onclick="toggleLanguageMenu()">
-                <img src="/assets/images/icons/iconefr.jpeg" alt="Français" id="currentFlag">
-                <span id="currentLang">FR</span>
-            </button>
-            <div class="language-menu" id="languageMenu">
-                <div class="language-option" onclick="changeLanguage('fr')">
-                    <img src="/assets/images/icons/iconefr.jpeg" alt="Français">
-                    FR
-                </div>
-                <div class="language-option" onclick="changeLanguage('en')">
-                    <img src="/assets/images/icons/iconeeng.jpeg" alt="English">
-                    EN
+        <!-- Navigation pour grands écrans -->
+        <nav class="desktop-nav">
+            <a href="/" class="logo">
+                <img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo">
+            </a>
+            <div class="nav-links">
+                <a href="/" data-i18n="menuHome">Accueil</a>
+                <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
+                <a href="/reservations.html" class="active" data-i18n="menuBooking">Réservations</a>
+                <a href="/offres.html" data-i18n="menuOffers">Offres</a>
+                <div class="language-switcher">
+                    <button class="language-btn" onclick="toggleLanguageMenu()">
+                        <img src="/assets/images/icons/iconefr.jpeg" alt="Français" id="currentFlag">
+                        <span id="currentLang">FR</span>
+                    </button>
+                    <div class="language-menu" id="languageMenu">
+                        <div class="language-option" onclick="changeLanguage('fr')">
+                            <img src="/assets/images/icons/iconefr.jpeg" alt="Français">
+                            FR
+                        </div>
+                        <div class="language-option" onclick="changeLanguage('en')">
+                            <img src="/assets/images/icons/iconeeng.jpeg" alt="English">
+                            EN
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </nav>
     </header>
+
+    <!-- Navigation mobile en bas -->
+    <nav class="nav-menu mobile-nav">
+        <a href="/" data-i18n="menuHome">Accueil</a>
+        <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
+        <a href="/reservations.html" class="active" data-i18n="menuBooking">Réservations</a>
+        <a href="/offres.html" data-i18n="menuOffers">Offres</a>
+    </nav>
 
     <main>
         <section class="reservations-section">
@@ -257,20 +333,17 @@
                 <h3 data-i18n="contactTitle">Contact</h3>
                 <p><span data-i18n="phone">Tél</span>: +221 77 200 44 32</p>
                 <p>Email: info@kikstravel.com</p>
-            </div>
-            <div class="footer-section">
-                <h3 data-i18n="address">Adresse</h3>
-                <p>Espace Ataya Keur Damel<br>Batiment 4 Appartement 412</p>
+                <p><span data-i18n="address">Adresse</span>: Dakar, Sénégal</p>
             </div>
             <div class="footer-section">
                 <h3 data-i18n="followUs">Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/kikstravel" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/kikstours/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
         </div>
-
         <div class="footer-bottom">
             <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
         </div>

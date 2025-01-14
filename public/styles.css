@@ -63,30 +63,46 @@ body {
 }
 
 .nav-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    padding: 15px;
     display: flex;
-    gap: 2.5rem;
-    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 .nav-menu a {
-    color: #2c3e50;
+    color: #333;
     text-decoration: none;
     font-weight: 500;
-    font-size: 1.05rem;
-    padding: 0.5rem 1rem;
+    padding: 8px 12px;
     border-radius: 8px;
     transition: all 0.3s ease;
 }
 
 .nav-menu a:hover {
-    color: #3ea0c6;
-    background-color: rgba(62, 160, 198, 0.1);
+    color: #3498db;
+    background-color: rgba(52, 152, 219, 0.1);
 }
 
 .nav-menu a.active {
-    color: #3ea0c6;
-    background-color: rgba(62, 160, 198, 0.15);
-    font-weight: 600;
+    color: #3498db;
+    background-color: rgba(52, 152, 219, 0.15);
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        padding: 10px;
+    }
+
+    .nav-menu a {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
 }
 
 .language-switcher {
@@ -1229,7 +1245,7 @@ section h2 {
 /* Section Galerie */
 .galerie {
     padding: 80px 20px;
-    background: var(--light-color);
+    background-color: var(--light-color);
 }
 
 .galerie h2 {
@@ -1887,7 +1903,7 @@ section h2 {
     }
 
     .logo img {
-        height: 50px;
+        height: 40px;
     }
 
     .nav-links {
@@ -2313,19 +2329,17 @@ section h2 {
     flex-direction: column;
 }
 
-.form-group.full-width {
-    grid-column: 1 / -1;
-}
-
 .form-group label {
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: var(--dark-color);
+    color: #333;
+    transition: color 0.3s ease;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
+    width: 100%;
     padding: 0.8rem;
     border: 2px solid #e1e1e1;
     border-radius: 8px;
@@ -2336,13 +2350,13 @@ section h2 {
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(62, 160, 198, 0.1);
     outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(62, 160, 198, 0.1);
 }
 
 .form-group input[type="date"] {
-    color: var(--dark-color);
+    color: #333;
     cursor: pointer;
 }
 
@@ -2394,13 +2408,17 @@ section h2 {
 }
 
 @keyframes pulse {
-    0%, 100% {
+    0% {
         opacity: 0;
         transform: scale(1);
     }
     50% {
         opacity: 1;
         transform: scale(1.05);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
     }
 }
 
@@ -2899,4 +2917,87 @@ section h2 {
 
 .offers-section .btn-primary:active {
     transform: translateY(0);
+}
+
+/* Navigation responsive */
+.desktop-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--nav-bg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+}
+
+.desktop-nav .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.desktop-nav .nav-links a {
+    color: var(--nav-link-color);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.desktop-nav .nav-links a:hover {
+    color: var(--nav-link-hover);
+    background-color: var(--nav-active-bg);
+}
+
+.desktop-nav .nav-links a.active {
+    color: var(--nav-active-color);
+    background-color: var(--nav-active-bg);
+}
+
+/* Navigation mobile */
+.mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--nav-bg);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-around;
+    z-index: 1000;
+}
+
+/* Media queries pour la navigation responsive */
+@media screen and (min-width: 768px) {
+    .desktop-nav {
+        display: flex;
+    }
+    
+    .mobile-nav {
+        display: none;
+    }
+    
+    body {
+        padding-top: var(--nav-height);
+        padding-bottom: 0;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .desktop-nav {
+        display: none;
+    }
+    
+    .mobile-nav {
+        display: flex;
+    }
+    
+    body {
+        padding-top: 0;
+        padding-bottom: var(--nav-height);
+    }
 }

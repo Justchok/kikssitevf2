@@ -334,30 +334,125 @@
                 width: 80px;
             }
         }
+
+        /* Navigation responsive */
+        .desktop-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #3498db;
+        }
+
+        .language-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 5px 0;
+            margin-top: 5px;
+            z-index: 1000;
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .lang-option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .lang-option img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+
+            .mobile-nav {
+                display: block;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .mobile-nav a {
+                display: block;
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+        }
     </style>
 </head>
 <body>
     <header class="header">
-        <a href="/" class="logo">
-            <img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo">
-        </a>
-        <div class="language-switcher">
-            <button class="language-btn" onclick="toggleLanguageMenu()">
-                <img src="/assets/images/icons/iconefr.jpeg" alt="Français" id="currentFlag">
-                <span id="currentLang">FR</span>
-            </button>
-            <div class="language-menu" id="languageMenu">
-                <div class="language-option" onclick="changeLanguage('fr')">
-                    <img src="/assets/images/icons/iconefr.jpeg" alt="Français">
-                    FR
-                </div>
-                <div class="language-option" onclick="changeLanguage('en')">
-                    <img src="/assets/images/icons/iconeeng.jpeg" alt="English">
-                    EN
+        <!-- Navigation pour grands écrans -->
+        <nav class="desktop-nav">
+            <a href="/" class="logo">
+                <img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo">
+            </a>
+            <div class="nav-links">
+                <a href="/" data-i18n="menuHome">Accueil</a>
+                <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
+                <a href="/reservations.html" data-i18n="menuBooking">Réservations</a>
+                <a href="/offres.html" data-i18n="menuOffers">Offres</a>
+                <div class="language-switcher">
+                    <button class="language-btn">
+                        <img src="/assets/images/icons/iconefr.jpeg" alt="French Flag" id="current-flag">
+                        <span id="current-lang">FR</span>
+                    </button>
+                    <div class="language-dropdown">
+                        <a href="#" data-lang="fr" class="lang-option">
+                            <img src="/assets/images/icons/iconefr.jpeg" alt="French Flag">
+                            Français
+                        </a>
+                        <a href="#" data-lang="en" class="lang-option">
+                            <img src="/assets/images/icons/iconeeng.jpeg" alt="English Flag">
+                            English
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        </nav>
     </header>
+
+    <!-- Navigation mobile en bas -->
+    <nav class="nav-menu mobile-nav">
+        <a href="/" data-i18n="menuHome">Accueil</a>
+        <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
+        <a href="/reservations.html" data-i18n="menuBooking">Réservations</a>
+        <a href="/offres.html" data-i18n="menuOffers">Offres</a>
+    </nav>
 
     <main>
         <section class="hero-section">
@@ -421,20 +516,17 @@
                 <h3 data-i18n="contactTitle">Contact</h3>
                 <p><span data-i18n="phone">Tél</span>: +221 77 200 44 32</p>
                 <p>Email: info@kikstravel.com</p>
-            </div>
-            <div class="footer-section">
-                <h3 data-i18n="address">Adresse</h3>
-                <p>Espace Ataya Keur Damel<br>Batiment 4 Appartement 412</p>
+                <p><span data-i18n="address">Adresse</span>: Dakar, Sénégal</p>
             </div>
             <div class="footer-section">
                 <h3 data-i18n="followUs">Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/kikstravel" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/kikstours/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
         </div>
-
         <div class="footer-bottom">
             <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
         </div>

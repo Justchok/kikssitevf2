@@ -234,6 +234,81 @@
                 width: 80px;
             }
         }
+
+        /* Navigation pour grands écrans */
+        .desktop-nav {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .desktop-nav .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .desktop-nav .nav-links a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .desktop-nav .nav-links a:hover {
+            color: #007bff;
+        }
+
+        .desktop-nav .language-switcher {
+            margin-left: 20px;
+        }
+
+        .desktop-nav .language-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 5px 0;
+            margin-top: 5px;
+            z-index: 1000;
+        }
+
+        .desktop-nav .language-dropdown.show {
+            display: block;
+        }
+
+        .desktop-nav .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .desktop-nav .lang-option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .desktop-nav .lang-option img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-nav {
+                display: flex;
+            }
+            .mobile-nav {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -259,6 +334,14 @@
         </div>
     </header>
 
+    <nav class="nav-menu">
+        <a href="/" data-i18n="menuHome">Accueil</a>
+        <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
+        <a href="/reservations.html" data-i18n="menuBooking">Réservations</a>
+        <a href="/offres.html" class="active" data-i18n="menuOffers">Offres</a>
+        <a href="/contact.html" data-i18n="menuContact">Contact</a>
+    </nav>
+
     <main>
         <section class="offers-section">
             <h1 data-i18n="offersTitle">Nos Offres Spéciales</h1>
@@ -270,7 +353,7 @@
                     <div class="offer-info">
                         <h3 data-i18n="offerParisTitle">Paris en Amoureux</h3>
                         <p data-i18n="offerParisDesc">3 jours/2 nuits avec petit-déjeuner inclus</p>
-                        <p class="price">850 000 FCFA</p>
+                        <p class="price">1 050 000 FCFA</p>
                         <button type="button" class="btn-reserve" data-offer-title="Paris en Amoureux" data-destination="Paris" data-i18n="bookNow">Réserver maintenant</button>
                     </div>
                 </div>
@@ -308,24 +391,25 @@
                 <h3 data-i18n="contactTitle">Contact</h3>
                 <p><span data-i18n="phone">Tél</span>: +221 77 200 44 32</p>
                 <p>Email: info@kikstravel.com</p>
-            </div>
-            <div class="footer-section">
-                <h3 data-i18n="address">Adresse</h3>
-                <p>Espace Ataya Keur Damel<br>Batiment 4 Appartement 412</p>
+                <p><span data-i18n="address">Adresse</span>: Dakar, Sénégal</p>
             </div>
             <div class="footer-section">
                 <h3 data-i18n="followUs">Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/kikstravel" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/kikstours/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
                 </div>
             </div>
         </div>
-
         <div class="footer-bottom">
             <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
         </div>
     </footer>
+
+    <script src="js/translations.js"></script>
+    <script src="js/language-switcher.js"></script>
+    <script src="js/offres.js"></script>
 
     <!-- Modal de réservation -->
     <div id="reservationModal" class="modal">
@@ -359,10 +443,6 @@
         </div>
     </div>
 
-    <script src="js/translations.js"></script>
-    <script src="js/language-switcher.js"></script>
-    <script src="js/offers.js"></script>
-    <script src="js/nav.js"></script>
     <script>
         // Fonction pour ouvrir le modal avec le titre et la destination de l'offre
         function openReservationModal(offerTitle, destination) {
