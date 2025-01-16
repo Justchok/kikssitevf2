@@ -1,8 +1,12 @@
-const ffmpeg = require('fluent-ffmpeg');
-const path = require('path');
+import ffmpeg from 'fluent-ffmpeg';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-const inputPath = path.join(__dirname, 'public', 'assets', 'videos', '0114 (2).mp4');
-const outputPath = path.join(__dirname, 'public', 'assets', 'videos', '0114-compressed.mp4');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const inputPath = join(__dirname, 'public', 'assets', 'videos', '0114 (2).mp4');
+const outputPath = join(__dirname, 'public', 'assets', 'videos', '0114-compressed.mp4');
 
 // Compression de la vidéo
 ffmpeg(inputPath)
