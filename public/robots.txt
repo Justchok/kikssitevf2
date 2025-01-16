@@ -1,6 +1,20 @@
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /admin/
+Allow: /index.html
+Allow: /reservations.html
+Allow: /contact.html
+Allow: /destinations.html
+Allow: /offres.html
+Allow: /assets/
+Allow: /css/
+Allow: /js/
 
-Sitemap: https://www.kikstravel.fr/sitemap.xml
+Disallow: /server/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /.env
+
+Sitemap: https://www.kikstravel.com/sitemap.xml
+
+# Kiks Travel Tours
+# https://www.kikstravel.com

@@ -3,8 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiks Travel Tours</title>
+    <title>Kiks Travel Tours - Agence de Voyage à Dakar, Sénégal | Réservation de Vols et Voyages</title>
+    <meta name="description" content="Kiks Travel Tours, votre agence de voyage à Dakar. Réservez vos billets d'avion, voyages organisés et séjours sur mesure. Prix compétitifs et service personnalisé.">
+    <meta name="keywords" content="agence voyage Dakar, billet avion Sénégal, Kiks Travel, réservation vol, voyage organisé, séjour Afrique, billetterie aérienne Dakar">
+    <meta name="author" content="Kiks Travel Tours">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Kiks Travel Tours - Agence de Voyage à Dakar">
+    <meta property="og:description" content="Réservez vos billets d'avion et voyages avec Kiks Travel Tours. Votre agence de confiance à Dakar pour des voyages sur mesure.">
+    <meta property="og:image" content="/assets/images/kikslogo.png">
+    <meta property="og:url" content="https://www.kikstravel.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://www.kikstravel.com">
     <link rel="icon" type="image/png" href="assets/images/kikslogo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/min/styles.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link rel="preload" as="image" href="assets/images/kikslogo.webp" type="image/webp">
+    <link rel="preload" as="script" href="js/min/main.min.js">
     <style>
         * {
             margin: 0;
@@ -13,8 +30,57 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh;
             overflow: hidden;
+            position: relative;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 0.3rem;
+        }
+
+        .nav-links a:hover {
+            color: #d45a3d;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #d45a3d;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         #background-video {
@@ -33,12 +99,12 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            z-index: 2;
+            z-index: 1000;
         }
 
         .logo img {
-            height: 80px;
-            width: auto;
+            width: 150px;
+            height: auto;
         }
 
         .content {
@@ -47,47 +113,71 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            width: 90%;
-            max-width: 800px;
-            padding: 2rem;
+            color: white;
+            z-index: 1;
         }
 
-        h1 {
-            font-size: 3.5em;
-            color: #d45a3d;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        .content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
         }
 
-        p {
-            font-size: 1.8em;
-            color: #d45a3d;
-            margin-bottom: 30px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        .content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
         }
 
         .btn {
             display: inline-block;
-            padding: 15px 40px;
+            padding: 1rem 2rem;
             background-color: #d45a3d;
             color: white;
             text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            border: 2px solid #d45a3d;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
         }
 
         .btn:hover {
-            background-color: transparent;
-            color: #d45a3d;
+            background-color: #b94b31;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .nav-links a {
+                font-size: 1rem;
+            }
+
+            .content h1 {
+                font-size: 2.5rem;
+            }
+
+            .content p {
+                font-size: 1rem;
+            }
+
+            .logo img {
+                width: 120px;
+            }
         }
     </style>
 </head>
 <body>
-    <video autoplay muted loop playsinline id="background-video">
+    <nav class="nav-bar">
+        <ul class="nav-links">
+            <li><a href="/">Accueil</a></li>
+            <li><a href="reservations.html">Réservations</a></li>
+            <li><a href="destinations.html">Destinations</a></li>
+            <li><a href="offres.html">Offres</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <video autoplay muted loop id="background-video">
         <source src="assets/videos/0114 (2).mp4" type="video/mp4">
     </video>
 
@@ -96,9 +186,12 @@
     </a>
 
     <div class="content">
-        <h1>Voyagez avec Kiks Travel</h1>
+        <h1>Kiks Travel Tours</h1>
         <p>Votre partenaire de confiance pour des voyages inoubliables</p>
         <a href="reservations.html" class="btn">Réserver maintenant</a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <script src="js/min/main.min.js" defer></script>
 </body>
 </html>

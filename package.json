@@ -7,7 +7,11 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "npm install"
+    "optimize:js": "terser public/js/*.js -o public/js/min/*.js",
+    "optimize:css": "cleancss -o public/css/min/styles.min.css public/css/*.css",
+    "optimize:html": "html-minifier --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true public/*.html -o public/min/*.html",
+    "optimize:images": "node optimize.js",
+    "build": "npm run optimize:js && npm run optimize:css && npm run optimize:html && npm run optimize:images"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
@@ -17,11 +21,14 @@
     "express-fileupload": "^1.4.3",
     "node-fetch": "^3.3.2",
     "nodemailer": "^6.9.16",
-    "resend": "^2.0.0",
-    "sharp": "^0.33.5"
+    "resend": "^2.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "clean-css-cli": "^5.6.3",
+    "html-minifier": "^4.0.0",
+    "nodemon": "^2.0.22",
+    "sharp": "^0.33.5",
+    "terser": "^5.37.0"
   },
   "engines": {
     "node": ">=14.0.0"

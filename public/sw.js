@@ -2,29 +2,21 @@ const CACHE_NAME = 'kiks-travel-v1';
 const urlsToCache = [
     '/',
     '/index.html',
-    '/about.html',
-    '/contact.html',
-    '/destinations.html',
-    '/offres.html',
     '/reservations.html',
-    '/styles.css',
-    '/css/footer.css',
-    '/css/language-switcher.css',
-    '/js/main.js',
-    '/js/translations.js',
-    '/js/language-switcher.js',
-    '/globe.js',
-    '/assets/images/kikslogo.png'
+    '/contact.html',
+    '/css/min/styles.min.css',
+    '/js/min/main.min.js',
+    '/assets/images/kikslogo.webp',
+    '/assets/images/kikslogo.opt.png',
+    'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
-// Installation du Service Worker
+// Installation du service worker
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Cache ouvert');
-                return cache.addAll(urlsToCache);
-            })
+            .then(cache => cache.addAll(urlsToCache))
     );
 });
 
@@ -33,20 +25,12 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         fetch(event.request)
             .then(response => {
-                // Si la requête réussit, mettre en cache et retourner la réponse
-                if (response.ok) {
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(event.request, responseClone);
-                        });
-                }
+                const responseClone = response.clone();
+                caches.open(CACHE_NAME)
+                    .then(cache => cache.put(event.request, responseClone));
                 return response;
             })
-            .catch(() => {
-                // Si la requête échoue, essayer de récupérer depuis le cache
-                return caches.match(event.request);
-            })
+            .catch(() => caches.match(event.request))
     );
 });
 
