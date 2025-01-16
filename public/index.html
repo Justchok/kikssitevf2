@@ -83,34 +83,69 @@
             width: 100%;
         }
 
-        #background-video {
+        .video-container {
             position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: url('assets/images/dubai.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .video-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        #background-video {
+            position: absolute;
             right: 0;
             bottom: 0;
             min-width: 100%;
             min-height: 100%;
             width: auto;
             height: auto;
-            z-index: -1;
+            z-index: 1;
             object-fit: cover;
-            transform: scale(1.01);
-            will-change: transform;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 1s ease-in-out;
         }
 
         #background-video.loaded {
             opacity: 1;
         }
 
-        .video-placeholder {
+        .loading-spinner {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: -2;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-spinner.show {
+            opacity: 1;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .logo {
@@ -245,18 +280,18 @@
         </ul>
     </nav>
 
-    <div class="video-placeholder"></div>
-    <video 
-        id="background-video" 
-        autoplay 
-        muted 
-        loop 
-        playsinline
-        preload="auto">
-        <source 
-            src="assets/videos/0114 (2).mp4#t=0.1" 
-            type="video/mp4">
-    </video>
+    <div class="video-container">
+        <div class="loading-spinner"></div>
+        <video 
+            id="background-video" 
+            autoplay 
+            muted 
+            loop 
+            playsinline
+            preload="auto">
+            <source src="assets/videos/0114 (2).mp4#t=0.1" type="video/mp4">
+        </video>
+    </div>
 
     <a href="/" class="logo">
         <img src="assets/images/kikslogo.png" alt="Kiks Travel Logo">
@@ -271,69 +306,77 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script src="js/min/main.min.js" defer></script>
     <script>
-        // Optimisation de la vidéo
+        // Gestion optimisée du chargement de la vidéo
+        const videoContainer = document.querySelector('.video-container');
         const video = document.getElementById('background-video');
-        const placeholder = document.querySelector('.video-placeholder');
+        const loadingSpinner = document.querySelector('.loading-spinner');
+        let isVideoLoaded = false;
 
-        // Fonction pour charger la vidéo de manière optimisée
-        function loadVideo() {
-            // Réduire la qualité sur mobile
-            if (window.innerWidth <= 768) {
-                video.style.transform = 'scale(1.01) translateX(20%)';
-            }
-
-            // Marquer la vidéo comme chargée une fois prête
-            video.addEventListener('canplay', function() {
-                video.classList.add('loaded');
-            });
-
-            // Gérer la mise en pause quand la vidéo n'est pas visible
-            if ('IntersectionObserver' in window) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (!entry.isIntersecting) {
-                            video.pause();
-                        } else {
-                            video.play().catch(() => {
-                                // Gérer l'erreur silencieusement
-                            });
-                        }
-                    });
-                }, { threshold: 0.1 });
-
-                observer.observe(video);
-            }
-
-            // Optimiser la mémoire
-            window.addEventListener('blur', () => {
-                video.pause();
-            });
-
-            window.addEventListener('focus', () => {
-                video.play().catch(() => {
-                    // Gérer l'erreur silencieusement
-                });
-            });
-
-            // Recharger la vidéo si elle est bloquée
-            video.addEventListener('stalled', () => {
-                video.load();
-            });
-
-            // Optimiser le cache
-            if ('caches' in window) {
-                caches.open('video-cache').then(cache => {
-                    cache.add(video.querySelector('source').src);
-                });
-            }
+        // Fonction pour charger l'image de fond en premier
+        function preloadBackground() {
+            const img = new Image();
+            img.src = 'assets/images/dubai.jpg';
+            img.onload = () => {
+                videoContainer.style.backgroundImage = `url('${img.src}')`;
+            };
         }
 
-        // Charger la vidéo quand la page est prête
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', loadVideo);
-        } else {
-            loadVideo();
+        // Charger l'image de fond
+        preloadBackground();
+
+        // Afficher le spinner pendant le chargement
+        loadingSpinner.classList.add('show');
+
+        // Gérer le chargement de la vidéo
+        function handleVideoLoad() {
+            if (isVideoLoaded) return;
+            isVideoLoaded = true;
+            
+            // Masquer le spinner
+            loadingSpinner.classList.remove('show');
+            
+            // Afficher la vidéo avec une transition douce
+            video.classList.add('loaded');
+            
+            // Optimisation de la lecture
+            video.play().catch(() => {
+                console.log('Lecture automatique impossible');
+            });
         }
+
+        // Événements de chargement de la vidéo
+        video.addEventListener('canplay', handleVideoLoad);
+        video.addEventListener('loadeddata', handleVideoLoad);
+
+        // Gérer la mise en pause quand la vidéo n'est pas visible
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting && isVideoLoaded) {
+                        video.pause();
+                    } else if (isVideoLoaded) {
+                        video.play().catch(() => {});
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            observer.observe(video);
+        }
+
+        // Optimiser la mémoire
+        window.addEventListener('blur', () => {
+            if (isVideoLoaded) video.pause();
+        });
+
+        window.addEventListener('focus', () => {
+            if (isVideoLoaded) video.play().catch(() => {});
+        });
+
+        // Gérer les erreurs de chargement
+        video.addEventListener('error', () => {
+            loadingSpinner.classList.remove('show');
+            console.log('Erreur de chargement de la vidéo');
+        });
 
         // Menu hamburger existant
         document.querySelector('.hamburger').addEventListener('click', function() {
