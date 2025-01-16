@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Configuration du transporteur d'email avec IONOS
 const transporter = nodemailer.createTransport({
@@ -318,10 +318,27 @@ app.post('/api/public/book-flight', async (req, res) => {
             destination,
             departureDate,
             returnDate,
-            passengers,
-            class: flightClass,
-            message
+            adults,
+            children,
+            infants,
+            cabin,
+            airline,
+            message,
+            additionalTravelers
         } = req.body;
+
+        // Préparation des détails des passagers
+        let passengersDetails = `<p><strong>Passager principal :</strong> ${name}</p>`;
+        
+        if (additionalTravelers && additionalTravelers.length > 0) {
+            passengersDetails += '<p><strong>Passagers additionnels :</strong></p><ul>';
+            additionalTravelers.forEach((traveler, index) => {
+                const type = traveler.type === 'adult' ? 'Adulte' :
+                           traveler.type === 'child' ? 'Enfant' : 'Bébé';
+                passengersDetails += `<li>${type} : ${traveler.firstname} ${traveler.lastname}</li>`;
+            });
+            passengersDetails += '</ul>';
+        }
 
         // Email pour l'administrateur
         await transporter.sendMail({
@@ -339,11 +356,21 @@ app.post('/api/public/book-flight', async (req, res) => {
                         <p><strong>Destination :</strong> ${destination}</p>
                         <p><strong>Date de départ :</strong> ${departureDate}</p>
                         <p><strong>Date de retour :</strong> ${returnDate}</p>
-                        <p><strong>Nombre de passagers :</strong> ${passengers}</p>
-                        <p><strong>Classe :</strong> ${flightClass === 'economy' ? 'Économique' : 
-                                                     flightClass === 'business' ? 'Affaires' : 
-                                                     'Première classe'}</p>
+                        <p><strong>Nombre de passagers :</strong></p>
+                        <ul>
+                            <li>Adultes : ${adults}</li>
+                            <li>Enfants : ${children}</li>
+                            <li>Bébés : ${infants}</li>
+                        </ul>
+                        <p><strong>Cabine :</strong> ${
+                            cabin === 'economy' ? 'Économique' : 
+                            cabin === 'premium_economy' ? 'Premium Économique' :
+                            cabin === 'business' ? 'Business' : 
+                            'Première classe'
+                        }</p>
+                        ${airline ? `<p><strong>Compagnie aérienne souhaitée :</strong> ${airline}</p>` : ''}
                         ${message ? `<p><strong>Message :</strong> ${message}</p>` : ''}
+                        ${passengersDetails}
                     </div>
                 </div>
             `
@@ -365,11 +392,21 @@ app.post('/api/public/book-flight', async (req, res) => {
                             <li><strong>Destination :</strong> ${destination}</li>
                             <li><strong>Date de départ :</strong> ${departureDate}</li>
                             <li><strong>Date de retour :</strong> ${returnDate}</li>
-                            <li><strong>Nombre de passagers :</strong> ${passengers}</li>
-                            <li><strong>Classe :</strong> ${flightClass === 'economy' ? 'Économique' : 
-                                                         flightClass === 'business' ? 'Affaires' : 
-                                                         'Première classe'}</li>
+                            <li><strong>Passagers :</strong></li>
+                            <ul>
+                                <li>Adultes : ${adults}</li>
+                                <li>Enfants : ${children}</li>
+                                <li>Bébés : ${infants}</li>
+                            </ul>
+                            <li><strong>Cabine :</strong> ${
+                                cabin === 'economy' ? 'Économique' : 
+                                cabin === 'premium_economy' ? 'Premium Économique' :
+                                cabin === 'business' ? 'Business' : 
+                                'Première classe'
+                            }</li>
+                            ${airline ? `<li><strong>Compagnie aérienne souhaitée :</strong> ${airline}</li>` : ''}
                         </ul>
+                        ${passengersDetails}
                         <p>Notre équipe vous contactera dans les plus brefs délais pour finaliser votre réservation.</p>
                         <p>Pour toute question, n'hésitez pas à nous contacter :</p>
                         <ul>

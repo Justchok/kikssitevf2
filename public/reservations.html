@@ -209,6 +209,32 @@
                 display: block;
             }
         }
+        
+        .traveler-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .traveler-card h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .traveler-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .traveler-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -259,8 +285,8 @@
             <form id="booking-form" class="booking-form" action="javascript:void(0);">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="name" data-i18n="formName">Nom complet</label>
-                        <input type="text" id="name" name="name" required data-i18n-placeholder="formNamePlaceholder">
+                        <label for="name" data-i18n="formFullName">Nom et Prénom</label>
+                        <input type="text" id="name" name="name" required data-i18n-placeholder="formFullNamePlaceholder">
                     </div>
                     
                     <div class="form-group">
@@ -274,8 +300,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="departure" data-i18n="formDeparture">Départ</label>
-                        <input type="text" id="departure" name="departure" placeholder="Ville ou pays de départ" required>
+                        <label for="departure" data-i18n="formOrigin">Origine</label>
+                        <input type="text" id="departure" name="departure" placeholder="Ville ou pays d'origine" required>
                     </div>
 
                     <div class="form-group">
@@ -290,7 +316,7 @@
 
                     <div class="form-group">
                         <label for="departure-date" data-i18n="formDepartureDate">Date de départ</label>
-                        <input type="date" id="departure-date" name="departure-date" required min="">
+                        <input type="date" id="departure-date" name="departure-date" required min="" onchange="updateReturnDateMin()">
                     </div>
 
                     <div class="form-group">
@@ -299,22 +325,44 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="passengers" data-i18n="formPassengers">Nombre de passagers</label>
-                        <input type="number" id="passengers" name="passengers" min="1" required>
+                        <label for="adults" data-i18n="formAdults">Adultes (12+ ans)</label>
+                        <input type="number" id="adults" name="adults" min="1" value="1" required onchange="updateTravelersFields()">
                     </div>
 
                     <div class="form-group">
-                        <label for="class" data-i18n="formClass">Classe de vol</label>
-                        <select id="class" name="class" required>
+                        <label for="children" data-i18n="formChildren">Enfants (2-11 ans)</label>
+                        <input type="number" id="children" name="children" min="0" value="0" required onchange="updateTravelersFields()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="infants" data-i18n="formInfants">Bébés (0-2 ans)</label>
+                        <input type="number" id="infants" name="infants" min="0" value="0" required onchange="updateTravelersFields()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cabin" data-i18n="formCabin">Cabine</label>
+                        <select id="cabin" name="cabin" required>
                             <option value="economy">Économique</option>
-                            <option value="business">Affaires</option>
+                            <option value="premium_economy">Premium Économique</option>
+                            <option value="business">Business</option>
                             <option value="first">Première classe</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="airline" data-i18n="formAirline">Compagnie aérienne souhaitée (optionnel)</label>
+                        <input type="text" id="airline" name="airline" data-i18n-placeholder="formAirlinePlaceholder" placeholder="Ex: Air France, Turkish Airlines...">
                     </div>
 
                     <div class="form-group full-width">
                         <label for="message" data-i18n="formMessage">Message (optionnel)</label>
                         <textarea id="message" name="message" rows="4" data-i18n-placeholder="formMessagePlaceholder"></textarea>
+                    </div>
+
+                    <!-- Section pour les détails des voyageurs -->
+                    <div id="travelers-details" class="form-group full-width" style="display: none;">
+                        <h3 data-i18n="formTravelersDetails">Détails des voyageurs</h3>
+                        <div id="travelers-container"></div>
                     </div>
                 </div>
 
@@ -385,8 +433,11 @@
                     destination: document.getElementById('destination').value,
                     departureDate: document.getElementById('departure-date').value,
                     returnDate: document.getElementById('return-date').value,
-                    passengers: document.getElementById('passengers').value,
-                    class: document.getElementById('class').value,
+                    adults: document.getElementById('adults').value,
+                    children: document.getElementById('children').value,
+                    infants: document.getElementById('infants').value,
+                    cabin: document.getElementById('cabin').value,
+                    airline: document.getElementById('airline').value,
                     message: document.getElementById('message').value
                 };
 
@@ -427,6 +478,11 @@
                 }
             });
         });
+        
+        function updateReturnDateMin() {
+            const departureDate = document.getElementById('departure-date').value;
+            document.getElementById('return-date').min = departureDate;
+        }
     </script>
     <script src="js/main.js"></script>
     <script src="js/reservations.js"></script>
