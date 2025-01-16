@@ -93,6 +93,24 @@
             height: auto;
             z-index: -1;
             object-fit: cover;
+            transform: scale(1.01);
+            will-change: transform;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #background-video.loaded {
+            opacity: 1;
+        }
+
+        .video-placeholder {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: -2;
         }
 
         .logo {
@@ -143,31 +161,81 @@
             background-color: #b94b31;
         }
 
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 0;
+        }
+
+        .hamburger span {
+            width: 30px;
+            height: 3px;
+            background: white;
+            border-radius: 10px;
+            transition: all 0.3s linear;
+            position: relative;
+            transform-origin: 1px;
+        }
+
         @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+                margin-left: auto;
+            }
+
             .nav-links {
-                gap: 1.5rem;
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 100%;
+                max-width: 300px;
+                background: rgba(0, 0, 0, 0.9);
+                flex-direction: column;
+                padding: 80px 20px 20px;
+                gap: 2rem;
+                transition: right 0.3s ease-in-out;
+            }
+
+            .nav-links.active {
+                right: 0;
             }
 
             .nav-links a {
-                font-size: 1rem;
+                font-size: 1.2rem;
+                padding: 1rem;
+                width: 100%;
+                text-align: center;
             }
 
-            .content h1 {
-                font-size: 2.5rem;
+            .hamburger.active span:first-child {
+                transform: rotate(45deg);
             }
 
-            .content p {
-                font-size: 1rem;
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
             }
 
-            .logo img {
-                width: 120px;
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg);
             }
         }
     </style>
 </head>
 <body>
     <nav class="nav-bar">
+        <button class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <ul class="nav-links">
             <li><a href="/">Accueil</a></li>
             <li><a href="reservations.html">Réservations</a></li>
@@ -177,8 +245,17 @@
         </ul>
     </nav>
 
-    <video autoplay muted loop id="background-video">
-        <source src="assets/videos/0114 (2).mp4" type="video/mp4">
+    <div class="video-placeholder"></div>
+    <video 
+        id="background-video" 
+        autoplay 
+        muted 
+        loop 
+        playsinline
+        preload="auto">
+        <source 
+            src="assets/videos/0114 (2).mp4#t=0.1" 
+            type="video/mp4">
     </video>
 
     <a href="/" class="logo">
@@ -193,5 +270,92 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script src="js/min/main.min.js" defer></script>
+    <script>
+        // Optimisation de la vidéo
+        const video = document.getElementById('background-video');
+        const placeholder = document.querySelector('.video-placeholder');
+
+        // Fonction pour charger la vidéo de manière optimisée
+        function loadVideo() {
+            // Réduire la qualité sur mobile
+            if (window.innerWidth <= 768) {
+                video.style.transform = 'scale(1.01) translateX(20%)';
+            }
+
+            // Marquer la vidéo comme chargée une fois prête
+            video.addEventListener('canplay', function() {
+                video.classList.add('loaded');
+            });
+
+            // Gérer la mise en pause quand la vidéo n'est pas visible
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) {
+                            video.pause();
+                        } else {
+                            video.play().catch(() => {
+                                // Gérer l'erreur silencieusement
+                            });
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                observer.observe(video);
+            }
+
+            // Optimiser la mémoire
+            window.addEventListener('blur', () => {
+                video.pause();
+            });
+
+            window.addEventListener('focus', () => {
+                video.play().catch(() => {
+                    // Gérer l'erreur silencieusement
+                });
+            });
+
+            // Recharger la vidéo si elle est bloquée
+            video.addEventListener('stalled', () => {
+                video.load();
+            });
+
+            // Optimiser le cache
+            if ('caches' in window) {
+                caches.open('video-cache').then(cache => {
+                    cache.add(video.querySelector('source').src);
+                });
+            }
+        }
+
+        // Charger la vidéo quand la page est prête
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadVideo);
+        } else {
+            loadVideo();
+        }
+
+        // Menu hamburger existant
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Fermer le menu quand on clique sur un lien
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.hamburger').classList.remove('active');
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+
+        // Fermer le menu quand on clique en dehors
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-bar')) {
+                document.querySelector('.hamburger').classList.remove('active');
+                document.querySelector('.nav-links').classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
