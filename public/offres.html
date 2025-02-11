@@ -309,6 +309,121 @@
                 display: none;
             }
         }
+
+        /* Style pour les cartes d'offres au survol */
+        .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Style pour le modal de flyer complet */
+        .full-flyer-modal .swal2-popup {
+            padding: 0;
+            background: #f8f9fa;
+        }
+
+        .full-flyer-modal .swal2-title {
+            padding: 1rem;
+            margin: 0;
+            background: #007bff;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .full-flyer-modal .swal2-close {
+            color: white;
+            right: 1rem;
+        }
+
+        .full-flyer-modal .swal2-html-container {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Style pour les prix */
+        .price-list {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .price-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .price-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Style pour les caractéristiques */
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features-list li i {
+            color: #007bff;
+        }
+
+        /* Style pour le modal en plein écran */
+        .fullscreen-image-modal .swal2-popup {
+            padding: 0;
+            background: black;
+        }
+
+        .fullscreen-image-modal .swal2-title {
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            margin: 0;
+            padding: 1rem;
+            font-size: 1.2rem;
+            z-index: 1;
+        }
+
+        .fullscreen-image-modal .swal2-close {
+            color: white;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            z-index: 2;
+        }
+
+        .fullscreen-image-modal .swal2-html-container {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Style pour l'effet de zoom au survol */
+        .full-flyer-modal img:hover {
+            cursor: zoom-in;
+        }
+
+        /* Style pour le conteneur d'image en plein écran */
+        .fullscreen-image-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: black;
+        }
+
+        .fullscreen-image-container img {
+            max-width: 100%;
+            max-height: 100vh;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
@@ -337,47 +452,18 @@
     <nav class="nav-menu">
         <a href="/" data-i18n="menuHome">Accueil</a>
         <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
-        <a href="/reservations.html" data-i18n="menuBooking">Réservations</a>
         <a href="/offres.html" class="active" data-i18n="menuOffers">Offres</a>
+        <a href="/apropos.html" data-i18n="menuAbout">À propos</a>
         <a href="/contact.html" data-i18n="menuContact">Contact</a>
     </nav>
 
     <main>
         <section class="offers-section">
-            <h1 data-i18n="offersTitle">Nos Offres Spéciales</h1>
-            <p data-i18n="offersDesc">Découvrez nos meilleures offres et promotions pour des voyages inoubliables.</p>
-            
-            <div class="offers-grid">
-                <div class="offer-card">
-                    <img src="assets/images/destinations/paris.jpeg" alt="Offre Paris" class="offer-image">
-                    <div class="offer-info">
-                        <h3 data-i18n="offerParisTitle">Paris en Amoureux</h3>
-                        <p data-i18n="offerParisDesc">3 jours/2 nuits avec petit-déjeuner inclus</p>
-                        <p class="price">1 050 000 FCFA</p>
-                        <button type="button" class="btn-reserve" data-offer-title="Paris en Amoureux" data-destination="Paris" data-i18n="bookNow">Réserver maintenant</button>
-                    </div>
-                </div>
-                
-                <div class="offer-card">
-                    <img src="assets/images/destinations/dubai.jpg" alt="Offre Dubai" class="offer-image">
-                    <div class="offer-info">
-                        <h3 data-i18n="offerDubaiTitle">Luxe à Dubai</h3>
-                        <p data-i18n="offerDubaiDesc">5 jours/4 nuits en hôtel 5 étoiles</p>
-                        <p class="price">1 250 000 FCFA</p>
-                        <button type="button" class="btn-reserve" data-offer-title="Luxe à Dubai" data-destination="Dubai" data-i18n="bookNow">Réserver maintenant</button>
-                    </div>
-                </div>
-                
-                <div class="offer-card">
-                    <img src="assets/images/destinations/istanbul.jpg" alt="Offre Istanbul" class="offer-image">
-                    <div class="offer-info">
-                        <h3 data-i18n="offerIstanbulTitle">Découverte d'Istanbul</h3>
-                        <p data-i18n="offerIstanbulDesc">4 jours/3 nuits avec visites guidées</p>
-                        <p class="price">950 000 FCFA</p>
-                        <button type="button" class="btn-reserve" data-offer-title="Découverte d'Istanbul" data-destination="Istanbul" data-i18n="bookNow">Réserver maintenant</button>
-                    </div>
-                </div>
+            <div class="section-header" style="text-align: center; padding: 2rem;">
+                <h1 data-i18n="offersTitle">Nos Offres Spéciales</h1>
+                <p data-i18n="offersDesc">Découvrez nos offres exclusives pour des voyages exceptionnels</p>
             </div>
+            <!-- Le conteneur des offres sera injecté ici par offres.js -->
         </section>
     </main>
 
@@ -396,9 +482,9 @@
             <div class="footer-section">
                 <h3 data-i18n="followUs">Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.facebook.com/kikstraveltours" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/kikstraveltours" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/kiks-travel-tours" target="_blank"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
         </div>
@@ -407,17 +493,12 @@
         </div>
     </footer>
 
-    <script src="js/translations.js"></script>
-    <script src="js/language-switcher.js"></script>
-    <script src="js/offres.js"></script>
-
     <!-- Modal de réservation -->
     <div id="reservationModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Réserver cette offre</h2>
+            <h2>Réserver <span id="offerTitle"></span></h2>
             <form id="offerForm">
-                <input type="hidden" id="offerTitle" name="offerTitle">
                 <div class="form-group">
                     <label for="name">Nom complet</label>
                     <input type="text" id="name" name="name" required>
@@ -428,27 +509,23 @@
                 </div>
                 <div class="form-group">
                     <label for="phone">Téléphone</label>
-                    <input type="tel" id="phone" name="phone" pattern="[0-9+\-\s]+" required>
+                    <input type="tel" id="phone" name="phone" required>
                 </div>
-                <div class="form-group">
-                    <label for="destination">Destination</label>
-                    <input type="text" id="destination" name="destination" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message (optionnel)</label>
-                    <textarea id="message" name="message" rows="4"></textarea>
-                </div>
+                <input type="hidden" id="offerDestination" name="offerDestination">
                 <button type="submit">Envoyer la demande</button>
             </form>
         </div>
     </div>
 
+    <script src="js/translations.js"></script>
+    <script src="js/language-switcher.js"></script>
+    <script src="js/offres.js"></script>
     <script>
         // Fonction pour ouvrir le modal avec le titre et la destination de l'offre
         function openReservationModal(offerTitle, destination) {
+            document.getElementById('offerTitle').textContent = offerTitle;
+            document.getElementById('offerDestination').value = destination;
             document.getElementById('reservationModal').style.display = 'block';
-            document.getElementById('offerTitle').value = offerTitle;
-            document.getElementById('destination').value = destination;
         }
 
         // Fermer le modal quand on clique sur X
@@ -471,53 +548,41 @@
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
-                offerTitle: document.getElementById('offerTitle').value,
-                destination: document.getElementById('destination').value,
-                message: document.getElementById('message').value
+                offerTitle: document.getElementById('offerTitle').textContent,
+                offerDestination: document.getElementById('offerDestination').value
             };
 
             try {
-                const response = await fetch('/api/public/special-offer', {
+                const response = await fetch('/api/public/book-offer', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(formData)
                 });
 
-                const data = await response.json();
+                const result = await response.json();
 
-                if (data.success) {
+                if (result.success) {
                     Swal.fire({
+                        title: 'Succès!',
+                        text: 'Votre demande a été envoyée avec succès. Nous vous contacterons bientôt.',
                         icon: 'success',
-                        title: 'Demande envoyée !',
-                        text: 'Nous vous contacterons bientôt pour discuter des détails.',
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK'
+                        confirmButtonColor: '#007bff'
                     });
-                    document.getElementById('offerForm').reset();
                     document.getElementById('reservationModal').style.display = 'none';
+                    document.getElementById('offerForm').reset();
                 } else {
-                    throw new Error(data.message || 'Une erreur est survenue');
+                    throw new Error(result.message || 'Une erreur est survenue');
                 }
             } catch (error) {
                 Swal.fire({
+                    title: 'Erreur!',
+                    text: error.message || 'Une erreur est survenue lors de l\'envoi de votre demande',
                     icon: 'error',
-                    title: 'Erreur',
-                    text: 'Erreur lors de l\'envoi de la demande : ' + error.message
+                    confirmButtonColor: '#007bff'
                 });
             }
-        });
-
-        // Ajouter les gestionnaires d'événements aux boutons de réservation
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.btn-reserve').forEach(button => {
-                button.addEventListener('click', function() {
-                    const offerTitle = this.getAttribute('data-offer-title');
-                    const destination = this.getAttribute('data-destination');
-                    openReservationModal(offerTitle, destination);
-                });
-            });
         });
     </script>
 </body>

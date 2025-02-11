@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À propos - Kiks Travel Tours</title>
+    <meta name="description" content="Découvrez l'histoire et l'équipe de Kiks Travel Tours, votre agence de voyage de confiance à Dakar, Sénégal.">
+    <meta name="keywords" content="Kiks Travel Tours, agence voyage Dakar, équipe Kiks Travel, agence voyage Sénégal">
+    <link rel="icon" type="image/png" href="assets/images/kikslogo.png">
+    <link rel="stylesheet" href="css/min/styles.min.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Style de la barre de navigation */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #d45a3d;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 10;
+        }
+
+        .hamburger span {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.3s ease;
+                margin: 0;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links li {
+                margin: 1.5rem 0;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+        }
+
+        /* Styles pour la section À propos */
+        .about-section {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-top: 40px;
+        }
+
+        .about-header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .about-header p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .mission-values {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .mission-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .mission-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .mission-card i {
+            font-size: 2.5rem;
+            color: #d45a3d;
+            margin-bottom: 20px;
+        }
+
+        .mission-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .mission-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .team-section {
+            margin-top: 60px;
+            background-color: #f8f9fa;
+            padding: 60px 0;
+        }
+
+        .team-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .team-header h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .member-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .member-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .member-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .member-info .position {
+            color: #d45a3d;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .member-info p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-links a {
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #d45a3d;
+        }
+
+        /* Style du footer */
+        .footer {
+            background-color: #4b382c;
+            color: #ffffff;
+            padding: 3rem 0 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section {
+            text-align: center;
+        }
+
+        .footer-section h3 {
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-section p {
+            color: #ffffff;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .footer .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .footer .social-links a {
+            color: #ffffff;
+            font-size: 1.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer .social-links a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <a href="index.html" class="logo">
+            <img src="assets/images/kikslogo.png" alt="Kiks Travel Logo">
+        </a>
+        <button class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="destinations.html">Destinations</a></li>
+            <li><a href="offres.html">Offres</a></li>
+            <li><a href="apropos.html" class="active">À propos</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="about-section">
+            <div class="about-header">
+                <h1>À propos de Kiks Travel Tours</h1>
+                <p>Votre partenaire de confiance pour des voyages d'exception. Depuis notre création, nous nous efforçons de créer des expériences de voyage uniques et mémorables pour nos clients.</p>
+            </div>
+
+            <div class="mission-values">
+                <div class="mission-card">
+                    <i class="fas fa-star"></i>
+                    <h3>Notre Mission</h3>
+                    <p>Offrir des services de voyage exceptionnels et personnalisés, en mettant l'accent sur la qualité, la sécurité et la satisfaction de nos clients.</p>
+                </div>
+                <div class="mission-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Nos Valeurs</h3>
+                    <p>Excellence, intégrité, professionnalisme et attention personnalisée sont au cœur de tout ce que nous faisons.</p>
+                </div>
+                <div class="mission-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Notre Engagement</h3>
+                    <p>Nous nous engageons à créer des moments inoubliables et à accompagner nos clients à chaque étape de leur voyage.</p>
+                </div>
+            </div>
+
+            <div class="team-section">
+                <div class="team-header">
+                    <h2>Notre Équipe</h2>
+                    <p>Découvrez les personnes passionnées qui font de vos rêves de voyage une réalité.</p>
+                </div>
+                <div class="team-grid" id="team-members">
+                    <!-- Les membres de l'équipe seront ajoutés ici dynamiquement via JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Kiks Travel</h3>
+                <p>Votre partenaire de confiance pour des voyages inoubliables.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Tél: +221 77 200 44 32</p>
+                <p>Email: info@kikstravel.com</p>
+                <p>Adresse: Dakar, Sénégal</p>
+            </div>
+            <div class="footer-section">
+                <h3>Suivez-nous</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/kikstraveltours" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/kikstraveltours" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/kiks-travel-tours" target="_blank"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Kiks Travel. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script src="js/min/main.min.js"></script>
+    <script src="js/team.js"></script>
+    <script>
+        // Activer le menu hamburger
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Fermer le menu quand on clique sur un lien
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.hamburger').classList.remove('active');
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

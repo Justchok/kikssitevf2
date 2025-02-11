@@ -1,0 +1,56 @@
+Formulaire d'information pour l'équipe Kiks Travel
+
+Créez un formulaire Google Forms avec les champs suivants :
+
+1. Informations personnelles
+   - Nom complet *
+   - Poste/Position dans l'entreprise *
+   - Email professionnel *
+   - Numéro de téléphone professionnel
+
+2. Biographie professionnelle
+   - Description courte (100-150 mots) *
+   - Expertise principale *
+   - Années d'expérience dans le domaine *
+   - Langues parlées *
+
+3. Photo et réseaux sociaux
+   - Photo professionnelle (format carré recommandé, minimum 500x500px) *
+   - Lien LinkedIn (optionnel)
+   - Lien Twitter (optionnel)
+   - Lien Instagram (optionnel)
+
+4. Spécialités et compétences
+   - Domaines d'expertise (choix multiples) *
+     □ Voyages d'affaires
+     □ Tourisme religieux
+     □ Voyages de luxe
+     □ Voyages de groupe
+     □ Voyages sur mesure
+     □ Autres (préciser)
+   
+   - Régions/Destinations de spécialité (choix multiples) *
+     □ Afrique
+     □ Europe
+     □ Moyen-Orient
+     □ Asie
+     □ Amériques
+     □ Autres (préciser)
+
+5. Citation personnelle
+   - Une phrase qui résume votre passion pour le voyage *
+
+* Champs obligatoires
+
+Instructions pour créer le formulaire :
+1. Allez sur forms.google.com
+2. Créez un nouveau formulaire
+3. Ajoutez les sections et questions comme indiqué ci-dessus
+4. Activez la collecte des adresses email
+5. Configurez les paramètres de réponse pour recevoir une notification par email
+6. Testez le formulaire avant de le partager
+
+Lien recommandé pour créer le formulaire :
+https://forms.google.com/create
+
+Une fois que vous aurez créé le formulaire, vous pourrez partager le lien avec votre équipe. Les réponses seront automatiquement collectées dans une feuille Google Sheets, ce qui facilitera la mise à jour de la section "Notre Équipe" sur le site web.
