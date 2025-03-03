@@ -5,17 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Découvrez nos destinations de voyage - Kiks Travel">
     <meta name="keywords" content="destinations voyage, kiks travel, voyages sénégal">
-    <title>Kiks Travel Tours - Destinations</title>
+    <title data-i18n="destinations.title">Kiks Travel Tours - Destinations</title>
     <link rel="icon" type="image/png" href="assets/images/kikslogo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/min/styles.min.css">
+    <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/language-switcher.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #4b382c;
+        }
+
+        .header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            justify-content: space-between;
+        }
+
+        .logo img {
+            height: 50px; /* Taille réduite du logo */
+            width: auto;
+        }
+
+        .destinations-section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .destinations-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .destinations-intro h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .destinations-intro p {
+            color: #666;
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
         #map {
             height: 700px;
             width: 100%;
@@ -119,11 +164,11 @@
             border: none;
             padding: 10px 20px;
             border-radius: 25px;
+            text-decoration: none;
             font-size: 1em;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-block;
-            text-decoration: none;
         }
 
         .popup-button:hover {
@@ -131,227 +176,90 @@
             transform: translateY(-2px);
         }
 
-        /* Style pour le contrôle de zoom */
-        .leaflet-control-zoom {
-            border: none !important;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
-        }
-
-        .leaflet-control-zoom a {
-            background-color: white !important;
-            color: #4b382c !important;
-            border: none !important;
-            width: 30px !important;
-            height: 30px !important;
-            line-height: 30px !important;
-            font-size: 16px !important;
-            transition: all 0.3s ease !important;
-        }
-
-        .leaflet-control-zoom a:hover {
-            background-color: #f5f5f5 !important;
-            color: #d75534 !important;
-        }
-
-        /* Styles pour le header et le sélecteur de langue */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            width: 100px;
-            height: auto;
-        }
-
-        .logo img {
-            width: 100%;
-            height: auto;
-        }
-
-        /* Style pour le sélecteur de langue */
-        .language-switcher {
-            position: relative;
-            margin-left: auto;
-        }
-
-        .language-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .language-btn:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .language-btn img {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-        }
-
-        .language-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 5px 0;
-            margin-top: 5px;
-            z-index: 1000;
-        }
-
-        .language-menu.show {
-            display: block;
-        }
-
-        .language-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .language-option:hover {
-            background-color: #f5f5f5;
-        }
-
-        .language-option img {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-
-        /* Ajustement pour le contenu principal */
-        main {
-            padding-top: 100px; /* Pour compenser le header fixe */
-        }
-
-        /* Responsive design */
         @media (max-width: 768px) {
-            .header {
-                padding: 10px;
+            .destinations-section {
+                padding: 60px 15px;
             }
 
-            .logo {
-                width: 80px;
+            .destinations-intro h1 {
+                font-size: 2em;
             }
+
+            #map {
+                height: 500px;
+            }
+        }
+
+        /* Ajout de marge en bas pour la barre de navigation */
+        main {
+            margin-bottom: 70px;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header class="header">
-        <a href="/" class="logo">
-            <img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo">
-        </a>
+        <div class="logo">
+            <img src="assets/images/kikslogo.png" alt="Kiks Travel Logo">
+        </div>
         <div class="language-switcher">
-            <button class="language-btn" onclick="toggleLanguageMenu()">
-                <img src="/assets/images/icons/iconefr.jpeg" alt="Français" id="currentFlag">
-                <span id="currentLang">FR</span>
-            </button>
-            <div class="language-menu" id="languageMenu">
-                <div class="language-option" onclick="changeLanguage('fr')">
-                    <img src="/assets/images/icons/iconefr.jpeg" alt="Français">
-                    FR
+            <div class="selected-language">
+                <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag" id="current-language-flag">
+                <span class="language-name" id="current-language-name">Français</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="language-options">
+                <div class="lang-option" data-lang="fr">
+                    <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag">
+                    <span>Français</span>
                 </div>
-                <div class="language-option" onclick="changeLanguage('en')">
-                    <img src="/assets/images/icons/iconeeng.jpeg" alt="English">
-                    EN
+                <div class="lang-option" data-lang="en">
+                    <img src="assets/images/icons/iconeeng.jpeg" alt="English" class="language-flag">
+                    <span>English</span>
                 </div>
             </div>
         </div>
     </header>
-
-    <nav class="nav-menu">
-        <a href="/" data-i18n="menuHome">Accueil</a>
-        <a href="/destinations.html" class="active" data-i18n="menuDestinations">Destinations</a>
-        <a href="/reservations.html" data-i18n="menuBooking">Réservations</a>
-        <a href="/offres.html" data-i18n="menuOffers">Offres</a>
-        <a href="/apropos.html" data-i18n="menuAbout">À propos</a>
-        <a href="/contact.html" data-i18n="menuContact">Contact</a>
-    </nav>
-
+    
     <main>
         <section class="destinations-section">
             <div class="destinations-intro">
                 <h1 data-i18n="destinationsTitle">Nos Destinations</h1>
-                <p data-i18n="destinationsDesc">Découvrez nos destinations de rêve et commencez votre prochaine aventure.</p>
+                <p data-i18n="destinationsIntro">Découvrez nos destinations de rêve et commencez votre prochaine aventure.</p>
             </div>
             <div id="map"></div>
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Kiks Travel</h3>
-                <p data-i18n="companyDesc">Votre partenaire de confiance pour des voyages inoubliables.</p>
-            </div>
-            <div class="footer-section">
-                <h3 data-i18n="contactTitle">Contact</h3>
-                <p><span data-i18n="phone">Tél</span>: +221 77 200 44 32</p>
-                <p>Email: info@kikstravel.com</p>
-                <p><span data-i18n="address">Adresse</span>: Dakar, Sénégal</p>
-            </div>
-            <div class="footer-section">
-                <h3 data-i18n="followUs">Suivez-nous</h3>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
-        </div>
-    </footer>
-
     <nav class="nav-menu">
-        <a href="/" data-i18n="menuHome">Accueil</a>
-        <a href="/destinations.html" class="active" data-i18n="menuDestinations">Destinations</a>
-        <a href="/reservations.html" data-i18n="menuBooking">Réservations</a>
-        <a href="/offres.html" data-i18n="menuOffers">Offres</a>
-        <a href="/apropos.html" data-i18n="menuAbout">À propos</a>
-        <a href="/contact.html" data-i18n="menuContact">Contact</a>
+        <a href="index.html">
+            <i class="fas fa-home"></i>
+            <span data-i18n="menuHome">Accueil</span>
+        </a>
+        <a href="destinations.html" class="active">
+            <i class="fas fa-map-marker-alt"></i>
+            <span data-i18n="menuDestinations">Destinations</span>
+        </a>
+        <a href="reservations.html">
+            <i class="fas fa-ticket-alt"></i>
+            <span data-i18n="menuReservation">Réservations</span>
+        </a>
+        <a href="offres.html">
+            <i class="fas fa-percentage"></i>
+            <span data-i18n="menuOffers">Offres</span>
+        </a>
+        <a href="apropos.html">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="menuAbout">À propos</span>
+        </a>
+        <a href="contact.html">
+            <i class="fas fa-envelope"></i>
+            <span data-i18n="menuContact">Contact</span>
+        </a>
     </nav>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="js/translations.js"></script>
+    <script src="js/destinations.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/language-switcher.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/map.js"></script>
-    <script src="/js/destinations.js"></script>
-    <script>
-        // Menu burger
-        const burgerMenu = document.querySelector('.menu-btn');
-        const navLinks = document.querySelector('#nav-links');
-
-        burgerMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            burgerMenu.classList.toggle('active');
-        });
-    </script>
 </body>
 </html>

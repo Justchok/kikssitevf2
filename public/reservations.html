@@ -3,102 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réservation de Vols et Voyages | Kiks Travel Tours Dakar</title>
-    <meta name="description" content="Réservez votre prochain voyage avec Kiks Travel Tours. Billets d'avion, séjours sur mesure, voyages d'affaires. Service client disponible 7j/7 pour vous accompagner.">
-    <meta name="keywords" content="réservation vol Dakar, billet avion Sénégal, voyage sur mesure, Kiks Travel réservation, vol international, voyage affaires">
-    <meta name="author" content="Kiks Travel Tours">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Réservation de Vols - Kiks Travel Tours">
-    <meta property="og:description" content="Réservez vos billets d'avion et voyages en ligne. Service personnalisé et accompagnement pour tous vos projets de voyage.">
-    <meta property="og:image" content="/assets/images/kikslogo.png">
-    <meta property="og:url" content="https://www.kikstravel.com/reservations">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="https://www.kikstravel.com/reservations">
+    <title>Réservations - Kiks Travel Tours</title>
     <link rel="icon" type="image/png" href="assets/images/kikslogo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/min/styles.min.css">
+    <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="css/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/language-switcher.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Styles existants... */
-        
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: white;
-            font-size: 16px;
-            color: #333;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-        }
-        
-        /* Style pour le champ destination pré-rempli */
-        input[readonly] {
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: #f8f9fa;
-            border: 1px solid #28a745;
-            color: #28a745;
-            font-weight: 500;
         }
 
-        input[readonly]:focus {
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-        }
-
-        /* Styles pour le header et le sélecteur de langue */
         .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px;
+            padding: 15px 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.95);
+            background-color: #ffffff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            width: 100px;
-            height: auto;
+            justify-content: space-between;
         }
 
         .logo img {
-            width: 100%;
-            height: auto;
+            height: 50px; /* Taille réduite du logo */
+            width: auto;
         }
 
-        /* Style pour le sélecteur de langue */
+        .reservation-container {
+            max-width: 1000px;
+            margin: 80px auto;
+            padding: 20px;
+        }
+
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-header h1 {
+            color: #4b382c;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #4b382c;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #d45a3d;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 90, 61, 0.1);
+        }
+
+        .passengers-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .passengers-section h3 {
+            color: #4b382c;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .cabin-selection {
+            margin: 2rem 0;
+        }
+
+        .cabin-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .cabin-option {
+            position: relative;
+        }
+
+        .cabin-option input[type="radio"] {
+            display: none;
+        }
+
+        .cabin-option label {
+            display: block;
+            padding: 1rem;
+            text-align: center;
+            background: #f8f9fa;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cabin-option input[type="radio"]:checked + label {
+            border-color: #d45a3d;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(212, 90, 61, 0.1);
+        }
+
+        .submit-btn {
+            background: #d45a3d;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .submit-btn:hover {
+            background: #c04d32;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 90, 61, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .travelers-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .travelers-section h3 {
+            color: #4b382c;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .travelers-count {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .traveler-type {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .number-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .number-input button {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #e1e1e1;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #4b382c;
+            transition: all 0.3s ease;
+        }
+
+        .number-input button:hover {
+            background: #f8f9fa;
+            border-color: #d45a3d;
+            color: #d45a3d;
+        }
+
+        .number-input input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            font-size: 1rem;
+            color: #4b382c;
+            background: transparent;
+        }
+
+        .traveler-details {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .traveler-details h4 {
+            color: #4b382c;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .reservation-container {
+                margin: 60px auto;
+                padding: 15px;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-header h1 {
+                font-size: 2rem;
+            }
+
+            .travelers-count {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        main {
+            margin-bottom: 70px;
+        }
+
         .language-switcher {
             position: relative;
             margin-left: auto;
         }
 
         .language-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             background: none;
             border: none;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .language-btn:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            padding: 8px;
         }
 
         .language-btn img {
@@ -107,277 +309,215 @@
             border-radius: 50%;
         }
 
-        .language-menu {
+        .language-dropdown {
             display: none;
             position: absolute;
             top: 100%;
             right: 0;
             background: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 5px 0;
-            margin-top: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 8px 0;
+            min-width: 150px;
             z-index: 1000;
         }
 
-        .language-menu.show {
+        .language-dropdown.show {
             display: block;
         }
 
-        .language-option {
+        .lang-option {
             display: flex;
             align-items: center;
-            gap: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
+            gap: 8px;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #4b382c;
             transition: background-color 0.3s;
         }
 
-        .language-option:hover {
-            background-color: #f5f5f5;
+        .lang-option:hover {
+            background-color: #f8f9fa;
         }
 
-        .language-option img {
+        .lang-option img {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-        }
-
-        /* Ajustement pour le contenu principal */
-        main {
-            padding-top: 100px; /* Pour compenser le header fixe */
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .header {
-                padding: 10px;
-            }
-
-            .logo {
-                width: 80px;
-            }
-        }
-        
-        /* Navigation responsive */
-        .desktop-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .desktop-nav .nav-links {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-        
-        .desktop-nav .nav-links a {
-            color: #333;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .desktop-nav .nav-links a:hover {
-            color: #007bff;
-        }
-        
-        .desktop-nav .language-switcher {
-            margin-left: 20px;
-        }
-        
-        .mobile-nav {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #fff;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-        }
-        
-        .mobile-nav a {
-            display: block;
-            padding: 10px;
-            color: #333;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-        
-        .mobile-nav a:hover {
-            background-color: #f5f5f5;
-        }
-        
-        @media (max-width: 768px) {
-            .desktop-nav {
-                display: none;
-            }
-            .mobile-nav {
-                display: block;
-            }
-        }
-        
-        .traveler-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
-        
-        .traveler-card h4 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #333;
-        }
-        
-        .traveler-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        @media (max-width: 768px) {
-            .traveler-inputs {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <!-- Navigation pour grands écrans -->
-        <nav class="desktop-nav">
-            <a href="/" class="logo">
-                <img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo">
+        <div class="logo">
+            <a href="index.html">
+                <img src="assets/images/kikslogo.png" alt="Kiks Travel Tours Logo">
             </a>
-            <div class="nav-links">
-                <a href="/" data-i18n="menuHome">Accueil</a>
-                <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
-                <a href="/reservations.html" class="active" data-i18n="menuBooking">Réservations</a>
-                <a href="/offres.html" data-i18n="menuOffers">Offres</a>
-                <div class="language-switcher">
-                    <button class="language-btn" onclick="toggleLanguageMenu()">
-                        <img src="/assets/images/icons/iconefr.jpeg" alt="Français" id="currentFlag">
-                        <span id="currentLang">FR</span>
-                    </button>
-                    <div class="language-menu" id="languageMenu">
-                        <div class="language-option" onclick="changeLanguage('fr')">
-                            <img src="/assets/images/icons/iconefr.jpeg" alt="Français">
-                            FR
-                        </div>
-                        <div class="language-option" onclick="changeLanguage('en')">
-                            <img src="/assets/images/icons/iconeeng.jpeg" alt="English">
-                            EN
-                        </div>
-                    </div>
+        </div>
+        <div class="language-switcher">
+            <div class="selected-language">
+                <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag" id="current-language-flag">
+                <span class="language-name" id="current-language-name">Français</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="language-options">
+                <div class="lang-option" data-lang="fr">
+                    <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag">
+                    <span>Français</span>
+                </div>
+                <div class="lang-option" data-lang="en">
+                    <img src="assets/images/icons/iconeeng.jpeg" alt="English" class="language-flag">
+                    <span>English</span>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- Navigation mobile en bas -->
-    <nav class="nav-menu mobile-nav">
-        <a href="/" data-i18n="menuHome">Accueil</a>
-        <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
-        <a href="/reservations.html" class="active" data-i18n="menuBooking">Réservations</a>
-        <a href="/offres.html" data-i18n="menuOffers">Offres</a>
-    </nav>
+    <div class="reservation-container">
+        <div class="form-section">
+            <div class="form-header">
+                <h1>Réservez Votre Voyage</h1>
+                <p>Planifiez votre prochaine aventure avec nous. Remplissez le formulaire ci-dessous pour commencer votre voyage.</p>
+            </div>
 
-    <main>
-        <section class="reservations-section">
-            <h1 data-i18n="bookingTitle">Réservez Votre Voyage</h1>
-            <p data-i18n="bookingDesc">Planifiez votre prochaine aventure avec nous. Remplissez le formulaire ci-dessous pour commencer votre voyage.</p>
-            
-            <form id="booking-form" class="booking-form" action="javascript:void(0);">
-                <div class="form-grid">
+            <form id="reservationForm">
+                <!-- Informations de vol -->
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="name" data-i18n="formFullName">Nom et Prénom</label>
-                        <input type="text" id="name" name="name" required data-i18n-placeholder="formFullNamePlaceholder">
+                        <label for="origin">Origine</label>
+                        <input type="text" id="origin" name="origin" required placeholder="Ex: Paris">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="email" data-i18n="formEmail">Email</label>
-                        <input type="email" id="email" name="email" required data-i18n-placeholder="formEmailPlaceholder">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="phone" data-i18n="formPhone">Téléphone</label>
-                        <input type="tel" id="phone" name="phone" pattern="[0-9+\-\s]+" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="departure" data-i18n="formOrigin">Origine</label>
-                        <input type="text" id="departure" name="departure" placeholder="Ville ou pays d'origine" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="destination" data-i18n="formDestination">Destination</label>
-                        <input type="text" id="destination" name="destination" data-i18n-placeholder="formDestinationPlaceholder" placeholder="Ville ou pays de destination" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="layover" data-i18n="formLayover">Escale (optionnel)</label>
-                        <input type="text" id="layover" name="layover" placeholder="Ville d'escale (optionnel)">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="departure-date" data-i18n="formDepartureDate">Date de départ</label>
-                        <input type="date" id="departure-date" name="departure-date" required min="" onchange="updateReturnDateMin()">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="return-date" data-i18n="formReturnDate">Date de retour</label>
-                        <input type="date" id="return-date" name="return-date" required min="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="adults" data-i18n="formAdults">Adultes (12+ ans)</label>
-                        <input type="number" id="adults" name="adults" min="1" value="1" required onchange="updateTravelersFields()">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="children" data-i18n="formChildren">Enfants (2-11 ans)</label>
-                        <input type="number" id="children" name="children" min="0" value="0" required onchange="updateTravelersFields()">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="infants" data-i18n="formInfants">Bébés (0-2 ans)</label>
-                        <input type="number" id="infants" name="infants" min="0" value="0" required onchange="updateTravelersFields()">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cabin" data-i18n="formCabin">Cabine</label>
-                        <select id="cabin" name="cabin" required>
-                            <option value="economy">Économique</option>
-                            <option value="premium_economy">Premium Économique</option>
-                            <option value="business">Business</option>
-                            <option value="first">Première classe</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="airline" data-i18n="formAirline">Compagnie aérienne souhaitée (optionnel)</label>
-                        <input type="text" id="airline" name="airline" data-i18n-placeholder="formAirlinePlaceholder" placeholder="Ex: Air France, Turkish Airlines...">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="message" data-i18n="formMessage">Message (optionnel)</label>
-                        <textarea id="message" name="message" rows="4" data-i18n-placeholder="formMessagePlaceholder"></textarea>
-                    </div>
-
-                    <!-- Section pour les détails des voyageurs -->
-                    <div id="travelers-details" class="form-group full-width" style="display: none;">
-                        <h3 data-i18n="formTravelersDetails">Détails des voyageurs</h3>
-                        <div id="travelers-container"></div>
+                        <label for="destination">Destination</label>
+                        <input type="text" id="destination" name="destination" required placeholder="Ex: New York">
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn pulse" data-i18n="formSubmit">Réserver maintenant</button>
+                <div class="form-group">
+                    <label for="stopover">Escale (optionnel)</label>
+                    <input type="text" id="stopover" name="stopover" placeholder="Ex: Londres">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="departureDate">Date de départ</label>
+                        <input type="date" id="departureDate" name="departureDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="returnDate">Date de retour</label>
+                        <input type="date" id="returnDate" name="returnDate">
+                    </div>
+                </div>
+
+                <!-- Nombre de voyageurs -->
+                <div class="travelers-section">
+                    <h3>Voyageurs</h3>
+                    
+                    <!-- Sélection du nombre de voyageurs -->
+                    <div class="travelers-count">
+                        <div class="traveler-type">
+                            <label>Adultes (12+ ans)</label>
+                            <div class="number-input">
+                                <button type="button" onclick="updateTravelerCount('adults', -1)">-</button>
+                                <input type="number" id="adultsCount" name="adultsCount" value="1" min="1" max="9" readonly>
+                                <button type="button" onclick="updateTravelerCount('adults', 1)">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="traveler-type">
+                            <label>Enfants (2-11 ans)</label>
+                            <div class="number-input">
+                                <button type="button" onclick="updateTravelerCount('children', -1)">-</button>
+                                <input type="number" id="childrenCount" name="childrenCount" value="0" min="0" max="9" readonly>
+                                <button type="button" onclick="updateTravelerCount('children', 1)">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="traveler-type">
+                            <label>Bébés (0-2 ans)</label>
+                            <div class="number-input">
+                                <button type="button" onclick="updateTravelerCount('infants', -1)">-</button>
+                                <input type="number" id="infantsCount" name="infantsCount" value="0" min="0" max="9" readonly>
+                                <button type="button" onclick="updateTravelerCount('infants', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conteneur pour les détails des voyageurs -->
+                    <div id="travelersDetails">
+                        <!-- Les détails des voyageurs seront ajoutés ici dynamiquement -->
+                    </div>
+                </div>
+
+                <!-- Sélection de la cabine -->
+                <div class="cabin-selection">
+                    <h3>Classe de voyage</h3>
+                    <div class="cabin-options">
+                        <div class="cabin-option">
+                            <input type="radio" id="economy" name="cabin" value="economy" checked>
+                            <label for="economy">Économique</label>
+                        </div>
+                        <div class="cabin-option">
+                            <input type="radio" id="premium" name="cabin" value="premium">
+                            <label for="premium">Premium</label>
+                        </div>
+                        <div class="cabin-option">
+                            <input type="radio" id="business" name="cabin" value="business">
+                            <label for="business">Affaires</label>
+                        </div>
+                        <div class="cabin-option">
+                            <input type="radio" id="first" name="cabin" value="first">
+                            <label for="first">Première</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact principal -->
+                <div class="contact-section">
+                    <h3>Contact principal</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="votre@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Téléphone</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="Ex: +221 77 200 44 32">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Réserver maintenant</button>
             </form>
-        </section>
-    </main>
+        </div>
+    </div>
+
+    <nav class="nav-menu">
+        <a href="index.html">
+            <i class="fas fa-home"></i>
+            <span data-i18n="menuHome">Accueil</span>
+        </a>
+        <a href="destinations.html">
+            <i class="fas fa-map-marker-alt"></i>
+            <span data-i18n="menuDestinations">Destinations</span>
+        </a>
+        <a href="reservations.html" class="active">
+            <i class="fas fa-ticket-alt"></i>
+            <span data-i18n="menuReservation">Réservations</span>
+        </a>
+        <a href="offres.html">
+            <i class="fas fa-percentage"></i>
+            <span data-i18n="menuOffers">Offres</span>
+        </a>
+        <a href="apropos.html">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="menuAbout">À propos</span>
+        </a>
+        <a href="contact.html">
+            <i class="fas fa-envelope"></i>
+            <span data-i18n="menuContact">Contact</span>
+        </a>
+    </nav>
 
     <footer class="footer">
         <div class="footer-content">
@@ -394,105 +534,164 @@
             <div class="footer-section">
                 <h3 data-i18n="followUs">Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.facebook.com/kikstravel" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/kikstours/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/kiks-travel-tours" target="_blank"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
-        </div>
     </footer>
 
-    <script src="js/translations.js"></script>
+    <script src="js/reservations.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/language-switcher.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Récupérer la destination depuis l'URL si elle existe
-            const urlParams = new URLSearchParams(window.location.search);
-            const destination = urlParams.get('destination');
+        // Gestionnaire pour le nombre de voyageurs et leurs détails
+        let travelers = {
+            adults: 1,
+            children: 0,
+            infants: 0
+        };
+
+        function updateTravelerCount(type, change) {
+            const currentCount = travelers[type];
+            const newCount = currentCount + change;
             
-            if (destination) {
-                document.getElementById('destination').value = decodeURIComponent(destination);
+            // Vérification des limites
+            if (type === 'adults' && newCount < 1) return; // Au moins 1 adulte
+            if (newCount < 0 || newCount > 9) return; // Max 9 par catégorie
+            
+            travelers[type] = newCount;
+            document.getElementById(`${type}Count`).value = newCount;
+            
+            updateTravelersDetails();
+        }
+
+        function updateTravelersDetails() {
+            const container = document.getElementById('travelersDetails');
+            container.innerHTML = ''; // Réinitialiser le conteneur
+            
+            // Ajouter les champs pour chaque voyageur
+            for (let i = 0; i < travelers.adults; i++) {
+                addTravelerFields('adult', i + 1);
+            }
+            for (let i = 0; i < travelers.children; i++) {
+                addTravelerFields('child', i + 1);
+            }
+            for (let i = 0; i < travelers.infants; i++) {
+                addTravelerFields('infant', i + 1);
+            }
+        }
+
+        function addTravelerFields(type, index) {
+            const typeLabel = type === 'adult' ? 'Adulte' : type === 'child' ? 'Enfant' : 'Bébé';
+            const div = document.createElement('div');
+            div.className = 'traveler-details';
+            div.innerHTML = `
+                <h4>${typeLabel} ${index}</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="${type}FirstName${index}">Prénom</label>
+                        <input type="text" id="${type}FirstName${index}" name="${type}FirstName${index}" required 
+                               placeholder="Prénom">
+                    </div>
+                    <div class="form-group">
+                        <label for="${type}LastName${index}">Nom</label>
+                        <input type="text" id="${type}LastName${index}" name="${type}LastName${index}" required 
+                               placeholder="Nom">
+                    </div>
+                </div>
+            `;
+            document.getElementById('travelersDetails').appendChild(div);
+        }
+
+        // Initialisation des détails du premier adulte
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTravelersDetails();
+        });
+
+        // Validation des dates
+        document.getElementById('returnDate').addEventListener('change', function() {
+            const departureDate = new Date(document.getElementById('departureDate').value);
+            const returnDate = new Date(this.value);
+            
+            if (returnDate < departureDate) {
+                alert('La date de retour ne peut pas être antérieure à la date de départ.');
+                this.value = '';
+            }
+        });
+
+        // Soumission du formulaire
+        document.getElementById('reservationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Récupération de tous les voyageurs
+            const travelersData = [];
+            
+            // Adultes
+            for (let i = 1; i <= travelers.adults; i++) {
+                travelersData.push({
+                    type: 'adult',
+                    firstName: document.getElementById(`adultFirstName${i}`).value,
+                    lastName: document.getElementById(`adultLastName${i}`).value
+                });
+            }
+            
+            // Enfants
+            for (let i = 1; i <= travelers.children; i++) {
+                travelersData.push({
+                    type: 'child',
+                    firstName: document.getElementById(`childFirstName${i}`).value,
+                    lastName: document.getElementById(`childLastName${i}`).value
+                });
+            }
+            
+            // Bébés
+            for (let i = 1; i <= travelers.infants; i++) {
+                travelersData.push({
+                    type: 'infant',
+                    firstName: document.getElementById(`infantFirstName${i}`).value,
+                    lastName: document.getElementById(`infantLastName${i}`).value
+                });
             }
 
-            document.getElementById('booking-form').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                // Validation des dates
-                const departureDate = new Date(document.getElementById('departure-date').value);
-                const returnDate = new Date(document.getElementById('return-date').value);
-                
-                if (returnDate < departureDate) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'La date de retour doit être après la date de départ'
-                    });
-                    return;
+            const formData = new FormData(this);
+            const reservationData = {
+                origin: formData.get('origin'),
+                destination: formData.get('destination'),
+                stopover: formData.get('stopover'),
+                departureDate: formData.get('departureDate'),
+                returnDate: formData.get('returnDate'),
+                cabin: formData.get('cabin'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                travelers: travelersData
+            };
+
+            try {
+                const response = await fetch('/api/public/book-flight', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reservationData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Votre demande de réservation a été envoyée avec succès ! Vous recevrez un email de confirmation.');
+                    this.reset();
+                    travelers = { adults: 1, children: 0, infants: 0 };
+                    updateTravelersDetails();
+                } else {
+                    alert('Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.');
                 }
-
-                const formData = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    departure: document.getElementById('departure').value,
-                    destination: document.getElementById('destination').value,
-                    departureDate: document.getElementById('departure-date').value,
-                    returnDate: document.getElementById('return-date').value,
-                    adults: document.getElementById('adults').value,
-                    children: document.getElementById('children').value,
-                    infants: document.getElementById('infants').value,
-                    cabin: document.getElementById('cabin').value,
-                    airline: document.getElementById('airline').value,
-                    message: document.getElementById('message').value
-                };
-
-                try {
-                    const response = await fetch('/api/public/book-flight', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    });
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Réservation envoyée !',
-                            text: 'Nous vous contacterons bientôt pour confirmer votre réservation.',
-                            showConfirmButton: true,
-                            confirmButtonText: 'OK'
-                        });
-                        document.getElementById('booking-form').reset();
-                        
-                        // Si on avait une destination dans l'URL, la remettre après le reset
-                        if (destination) {
-                            document.getElementById('destination').value = decodeURIComponent(destination);
-                        }
-                    } else {
-                        throw new Error(data.message || 'Une erreur est survenue');
-                    }
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur',
-                        text: 'Erreur lors de l\'envoi de la demande : ' + error.message
-                    });
-                }
-            });
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.');
+            }
         });
-        
-        function updateReturnDateMin() {
-            const departureDate = document.getElementById('departure-date').value;
-            document.getElementById('return-date').min = departureDate;
-        }
     </script>
-    <script src="js/main.js"></script>
-    <script src="js/reservations.js"></script>
 </body>
 </html>

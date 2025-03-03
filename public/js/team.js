@@ -43,27 +43,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-let teamMembers = [];
+// Structure des membres de l'équipe
+const teamMembers = [
+    {
+        name: "Raki Hawa KANE",
+        position: "Directrice",
+        description: "En tant que Directrice, je coordonne l'ensemble des activités de l'agence pour assurer une expérience de voyage exceptionnelle à nos clients.",
+        photo: "assets/images/team/default-avatar.jpg"
+    },
+    {
+        name: "Maimouna Mounira KANE",
+        position: "Chef de comptoir - Aide comptable",
+        description: "Responsable de la gestion du portefeuille client et des opérations financières de l'entreprise. Je veille à la bonne gestion de la caisse et des transactions bancaires.",
+        photo: "assets/images/team/default-avatar.jpg"
+    },
+    {
+        name: "Adama Diallo FATY",
+        position: "Chauffeur - Responsable transfert",
+        description: "En charge des transferts clients, je m'assure que chaque déplacement soit confortable, sécurisé et ponctuel pour une expérience de voyage optimale.",
+        photo: "assets/images/team/default-avatar.jpg"
+    },
+    {
+        name: "SALL",
+        position: "Agent de voyage",
+        description: "Spécialiste en billetterie et réservations, je vous accompagne dans tous vos besoins : billets d'avion, assurances voyage et auto, réservations d'hôtel et plus encore.",
+        photo: "assets/images/team/default-avatar.jpg"
+    },
+    {
+        name: "EMILIENNE CHADIA BAMPOKI",
+        position: "RESPONSABLE TOURISME",
+        description: "Experte en création de produits touristiques, je conçois des expériences de voyage uniques et mémorables. Mon expertise comprend la sélection minutieuse des destinations, l'organisation d'activités enrichissantes, la négociation avec les meilleurs hébergements et l'optimisation des solutions de transport pour garantir des voyages inoubliables à nos clients.",
+        photo: "assets/images/team/default-avatar.jpg"
+    }
+];
 
+// Fonction pour afficher les membres de l'équipe
 function updateTeamDisplay() {
     const teamGrid = document.getElementById('team-members');
     if (!teamGrid) return;
 
-    teamGrid.innerHTML = teamMembers.map(member => `
+    teamGrid.innerHTML = teamMembers.map((member, index) => `
         <div class="team-member">
-            <img src="${member.photo}" alt="${member.name}" class="member-image">
+            <div class="member-image-container">
+                <img src="${member.photo}" alt="${member.name}" class="member-image">
+            </div>
             <div class="member-info">
                 <h3>${member.name}</h3>
-                <div class="position">${member.position}</div>
-                <p>${member.description}</p>
-                <div class="social-links">
-                    ${member.linkedin ? `<a href="${member.linkedin}" target="_blank"><i class="fab fa-linkedin"></i></a>` : ''}
-                    ${member.twitter ? `<a href="${member.twitter}" target="_blank"><i class="fab fa-twitter"></i></a>` : ''}
-                    ${member.instagram ? `<a href="${member.instagram}" target="_blank"><i class="fab fa-instagram"></i></a>` : ''}
-                </div>
+                <p class="position">${member.position}</p>
+                <p class="description" id="description-${index}">${member.description}</p>
+                <button class="read-more-btn" onclick="toggleDescription(${index})">Voir plus</button>
             </div>
         </div>
     `).join('');
+}
+
+// Fonction pour basculer l'affichage de la description
+function toggleDescription(index) {
+    const description = document.getElementById(`description-${index}`);
+    const button = description.nextElementSibling;
+    
+    if (description.classList.contains('expanded')) {
+        description.classList.remove('expanded');
+        button.textContent = 'Voir plus';
+    } else {
+        description.classList.add('expanded');
+        button.textContent = 'Voir moins';
+    }
 }
 
 // Initialiser l'affichage quand le document est chargé

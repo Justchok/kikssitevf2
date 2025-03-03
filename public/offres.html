@@ -3,178 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiks Travel Tours - Offres</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Offres - Kiks Travel Tours</title>
+    <link rel="icon" type="image/png" href="assets/images/kikslogo.png">
+    <link rel="stylesheet" href="css/min/styles.min.css">
+    <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/language-switcher.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Style pour le modal */
+        /* Styles généraux */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #4b382c;
+        }
+
+        /* Header et Logo */
+        .header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            justify-content: space-between;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo img {
+            height: 50px; /* Taille réduite du logo */
+            width: auto;
+        }
+
+        /* Conteneur principal */
+        .main-container {
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 0 20px;
+        }
+
+        /* Titre de la page */
+        .page-title {
+            text-align: center;
+            color: #4b382c;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        /* Grille des offres */
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        /* Carte d'offre */
+        .offer-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .offer-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .offer-content {
+            padding: 1.5rem;
+        }
+
+        .offer-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #4b382c;
+        }
+
+        .offer-price {
+            font-size: 1.5rem;
+            color: #d45a3d;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .offer-description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .book-button {
+            background-color: #d45a3d;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .book-button:hover {
+            background-color: #c04a2d;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 500px;
+            width: 90%;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 2rem;
+            border-radius: 12px;
             position: relative;
-            animation: modalSlideIn 0.3s ease-out;
+            animation: slideIn 0.3s ease;
         }
 
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        .close {
+        @keyframes slideIn {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
             position: absolute;
-            right: 20px;
-            top: 10px;
-            font-size: 28px;
-            font-weight: bold;
+            right: 1.5rem;
+            top: 1rem;
+            font-size: 1.5rem;
             cursor: pointer;
-            color: #aaa;
+            color: #4b382c;
+            transition: color 0.3s ease;
         }
 
-        .close:hover {
-            color: #333;
+        .close-modal:hover {
+            color: #d45a3d;
         }
 
-        .modal h2 {
-            margin-bottom: 20px;
-            color: #333;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                margin-top: 100px;
+                padding: 0 10px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .offers-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 1.5rem;
+            }
         }
 
-        .modal .form-group {
-            margin-bottom: 15px;
+        /* Navigation */
+        nav {
+            background-color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .modal label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-        }
-
-        .modal input,
-        .modal textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .modal textarea {
-            height: 100px;
-            resize: vertical;
-        }
-
-        .modal button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        .modal button:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-reserve {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-            transition: background-color 0.3s;
-            width: 100%;
-        }
-
-        .btn-reserve:hover {
-            background-color: #0056b3;
-        }
-
-        .offer-card {
-            position: relative;
-            padding-bottom: 60px; /* Espace pour le bouton */
-        }
-
-        /* Ajout de SweetAlert */
-        .swal2-popup {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* Styles pour le header et le sélecteur de langue */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px;
+        .nav-links {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+            gap: 2rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .logo {
-            width: 100px;
-            height: auto;
+        .nav-links a {
+            color: #4b382c;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
-        .logo img {
-            width: 100%;
-            height: auto;
+        .nav-links a:hover {
+            color: #d45a3d;
         }
 
-        /* Style pour le sélecteur de langue */
         .language-switcher {
             position: relative;
             margin-left: auto;
         }
 
         .language-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             background: none;
             border: none;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .language-btn:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            padding: 8px;
         }
 
         .language-btn img {
@@ -183,289 +245,112 @@
             border-radius: 50%;
         }
 
-        .language-menu {
+        .language-dropdown {
             display: none;
             position: absolute;
             top: 100%;
             right: 0;
             background: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 5px 0;
-            margin-top: 5px;
-            z-index: 1000;
-        }
-
-        .language-menu.show {
-            display: block;
-        }
-
-        .language-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .language-option:hover {
-            background-color: #f5f5f5;
-        }
-
-        .language-option img {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-
-        /* Ajustement pour le contenu principal */
-        main {
-            padding-top: 100px; /* Pour compenser le header fixe */
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .header {
-                padding: 10px;
-            }
-
-            .logo {
-                width: 80px;
-            }
-        }
-
-        /* Navigation pour grands écrans */
-        .desktop-nav {
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .desktop-nav .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .desktop-nav .nav-links a {
-            color: #333;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .desktop-nav .nav-links a:hover {
-            color: #007bff;
-        }
-
-        .desktop-nav .language-switcher {
-            margin-left: 20px;
-        }
-
-        .desktop-nav .language-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 5px 0;
-            margin-top: 5px;
-            z-index: 1000;
-        }
-
-        .desktop-nav .language-dropdown.show {
-            display: block;
-        }
-
-        .desktop-nav .lang-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .desktop-nav .lang-option:hover {
-            background-color: #f5f5f5;
-        }
-
-        .desktop-nav .lang-option img {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-
-        @media (min-width: 768px) {
-            .desktop-nav {
-                display: flex;
-            }
-            .mobile-nav {
-                display: none;
-            }
-        }
-
-        /* Style pour les cartes d'offres au survol */
-        .offer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Style pour le modal de flyer complet */
-        .full-flyer-modal .swal2-popup {
-            padding: 0;
-            background: #f8f9fa;
-        }
-
-        .full-flyer-modal .swal2-title {
-            padding: 1rem;
-            margin: 0;
-            background: #007bff;
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .full-flyer-modal .swal2-close {
-            color: white;
-            right: 1rem;
-        }
-
-        .full-flyer-modal .swal2-html-container {
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Style pour les prix */
-        .price-list {
-            background: #f8f9fa;
-            padding: 1rem;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 8px 0;
+            min-width: 150px;
+            z-index: 1000;
         }
 
-        .price-list li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #dee2e6;
+        .language-dropdown.show {
+            display: block;
         }
 
-        .price-list li:last-child {
-            border-bottom: none;
-        }
-
-        /* Style pour les caractéristiques */
-        .features-list li {
+        .lang-option {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #4b382c;
+            transition: background-color 0.3s;
         }
 
-        .features-list li i {
-            color: #007bff;
+        .lang-option:hover {
+            background-color: #f8f9fa;
         }
 
-        /* Style pour le modal en plein écran */
-        .fullscreen-image-modal .swal2-popup {
-            padding: 0;
-            background: black;
-        }
-
-        .fullscreen-image-modal .swal2-title {
-            color: white;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.5);
-            margin: 0;
-            padding: 1rem;
-            font-size: 1.2rem;
-            z-index: 1;
-        }
-
-        .fullscreen-image-modal .swal2-close {
-            color: white;
-            position: absolute;
-            right: 1rem;
-            top: 1rem;
-            z-index: 2;
-        }
-
-        .fullscreen-image-modal .swal2-html-container {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Style pour l'effet de zoom au survol */
-        .full-flyer-modal img:hover {
-            cursor: zoom-in;
-        }
-
-        /* Style pour le conteneur d'image en plein écran */
-        .fullscreen-image-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: black;
-        }
-
-        .fullscreen-image-container img {
-            max-width: 100%;
-            max-height: 100vh;
-            object-fit: contain;
+        .lang-option img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <a href="/" class="logo">
-            <img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo">
-        </a>
+        <div class="logo">
+            <a href="index.html">
+                <img src="assets/images/kikslogo.png" alt="Kiks Travel Tours Logo">
+            </a>
+        </div>
         <div class="language-switcher">
-            <button class="language-btn" onclick="toggleLanguageMenu()">
-                <img src="/assets/images/icons/iconefr.jpeg" alt="Français" id="currentFlag">
-                <span id="currentLang">FR</span>
-            </button>
-            <div class="language-menu" id="languageMenu">
-                <div class="language-option" onclick="changeLanguage('fr')">
-                    <img src="/assets/images/icons/iconefr.jpeg" alt="Français">
-                    FR
+            <div class="selected-language">
+                <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag" id="current-language-flag">
+                <span class="language-name" id="current-language-name">Français</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="language-options">
+                <div class="lang-option" data-lang="fr">
+                    <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag">
+                    <span>Français</span>
                 </div>
-                <div class="language-option" onclick="changeLanguage('en')">
-                    <img src="/assets/images/icons/iconeeng.jpeg" alt="English">
-                    EN
+                <div class="lang-option" data-lang="en">
+                    <img src="assets/images/icons/iconeeng.jpeg" alt="English" class="language-flag">
+                    <span>English</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <nav class="nav-menu">
-        <a href="/" data-i18n="menuHome">Accueil</a>
-        <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
-        <a href="/offres.html" class="active" data-i18n="menuOffers">Offres</a>
-        <a href="/apropos.html" data-i18n="menuAbout">À propos</a>
-        <a href="/contact.html" data-i18n="menuContact">Contact</a>
+    <nav class="nav-menu mobile-nav">
+        <a href="index.html" data-i18n="menuHome">Accueil</a>
+        <a href="destinations.html" data-i18n="menuDestinations">Destinations</a>
+        <a href="reservations.html" data-i18n="menuBooking">Réservations</a>
+        <a href="offres.html" data-i18n="menuOffers">Offres</a>
+        <a href="about.html" data-i18n="menuAbout">À propos</a>
+        <a href="contact.html" data-i18n="menuContact">Contact</a>
     </nav>
 
-    <main>
-        <section class="offers-section">
-            <div class="section-header" style="text-align: center; padding: 2rem;">
-                <h1 data-i18n="offersTitle">Nos Offres Spéciales</h1>
-                <p data-i18n="offersDesc">Découvrez nos offres exclusives pour des voyages exceptionnels</p>
-            </div>
-            <!-- Le conteneur des offres sera injecté ici par offres.js -->
-        </section>
+    <main class="main-container">
+        <div class="page-title" data-i18n="offersTitle">Nos Offres Spéciales</div>
+        <div class="offers-grid">
+            <!-- Le contenu des offres sera injecté ici par offres.js -->
+        </div>
     </main>
+
+    <nav class="nav-menu">
+        <a href="index.html">
+            <i class="fas fa-home"></i>
+            <span data-i18n="menuHome">Accueil</span>
+        </a>
+        <a href="destinations.html">
+            <i class="fas fa-map-marker-alt"></i>
+            <span data-i18n="menuDestinations">Destinations</span>
+        </a>
+        <a href="reservations.html">
+            <i class="fas fa-ticket-alt"></i>
+            <span data-i18n="menuReservation">Réservations</span>
+        </a>
+        <a href="offres.html" class="active">
+            <i class="fas fa-percentage"></i>
+            <span data-i18n="menuOffers">Offres</span>
+        </a>
+        <a href="apropos.html">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="menuAbout">À propos</span>
+        </a>
+        <a href="contact.html">
+            <i class="fas fa-envelope"></i>
+            <span data-i18n="menuContact">Contact</span>
+        </a>
+    </nav>
 
     <footer class="footer">
         <div class="footer-content">
@@ -482,8 +367,8 @@
             <div class="footer-section">
                 <h3 data-i18n="followUs">Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/kikstraveltours" target="_blank"><i class="fab fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/kikstraveltours" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/kikstravel" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/kikstours/" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.linkedin.com/company/kiks-travel-tours" target="_blank"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
@@ -496,92 +381,93 @@
     <!-- Modal de réservation -->
     <div id="reservationModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Réserver <span id="offerTitle"></span></h2>
+            <span class="close-modal">&times;</span>
+            <h2>Réserver cette offre</h2>
             <form id="offerForm">
                 <div class="form-group">
                     <label for="name">Nom complet</label>
-                    <input type="text" id="name" name="name" required>
+                    <input type="text" id="name" name="name" required placeholder="Votre nom complet">
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" required placeholder="votre@email.com">
                 </div>
                 <div class="form-group">
                     <label for="phone">Téléphone</label>
-                    <input type="tel" id="phone" name="phone" required>
+                    <input type="tel" id="phone" name="phone" required placeholder="Ex: +221 77 200 44 32">
                 </div>
-                <input type="hidden" id="offerDestination" name="offerDestination">
-                <button type="submit">Envoyer la demande</button>
+                <div class="form-group">
+                    <label for="date">Date souhaitée</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message (optionnel)</label>
+                    <textarea id="message" name="message" placeholder="Vos préférences ou questions..."></textarea>
+                </div>
+                <button type="submit" class="book-button">Envoyer la demande</button>
             </form>
         </div>
     </div>
 
-    <script src="js/translations.js"></script>
     <script src="js/language-switcher.js"></script>
     <script src="js/offres.js"></script>
+    <script src="js/navigation.js"></script>
     <script>
-        // Fonction pour ouvrir le modal avec le titre et la destination de l'offre
-        function openReservationModal(offerTitle, destination) {
-            document.getElementById('offerTitle').textContent = offerTitle;
-            document.getElementById('offerDestination').value = destination;
-            document.getElementById('reservationModal').style.display = 'block';
-        }
+        // Gestionnaire du modal
+        const modal = document.getElementById('reservationModal');
+        const closeBtn = document.querySelector('.close-modal');
 
-        // Fermer le modal quand on clique sur X
-        document.querySelector('.close').onclick = function() {
-            document.getElementById('reservationModal').style.display = 'none';
+        // Fermer le modal quand on clique sur le X
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
         }
 
         // Fermer le modal quand on clique en dehors
         window.onclick = function(event) {
-            if (event.target == document.getElementById('reservationModal')) {
-                document.getElementById('reservationModal').style.display = 'none';
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
         }
 
-        // Gérer la soumission du formulaire
+        // Gestionnaire du formulaire
         document.getElementById('offerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                offerTitle: document.getElementById('offerTitle').textContent,
-                offerDestination: document.getElementById('offerDestination').value
-            };
-
+            const formData = new FormData(this);
+            const reservationData = Object.fromEntries(formData.entries());
+            
             try {
                 const response = await fetch('/api/public/book-offer', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(reservationData)
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    Swal.fire({
-                        title: 'Succès!',
-                        text: 'Votre demande a été envoyée avec succès. Nous vous contacterons bientôt.',
-                        icon: 'success',
-                        confirmButtonColor: '#007bff'
-                    });
-                    document.getElementById('reservationModal').style.display = 'none';
-                    document.getElementById('offerForm').reset();
+                    alert('Votre demande de réservation a été envoyée avec succès ! Vous recevrez un email de confirmation.');
+                    modal.style.display = "none";
+                    this.reset();
                 } else {
-                    throw new Error(result.message || 'Une erreur est survenue');
+                    alert('Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.');
                 }
             } catch (error) {
-                Swal.fire({
-                    title: 'Erreur!',
-                    text: error.message || 'Une erreur est survenue lors de l\'envoi de votre demande',
-                    icon: 'error',
-                    confirmButtonColor: '#007bff'
-                });
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.');
+            }
+        });
+
+        // Validation de la date
+        document.getElementById('date').addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            
+            if (selectedDate < today) {
+                alert('La date sélectionnée ne peut pas être dans le passé.');
+                this.value = '';
             }
         });
     </script>

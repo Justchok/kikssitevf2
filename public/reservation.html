@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réservation - Kiks Travel Tours</title>
+    <link rel="icon" type="image/png" href="assets/images/kikslogo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .reservation-container {
+            max-width: 800px;
+            margin: 6rem auto;
+            padding: 2rem;
+        }
+
+        .reservation-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-header h1 {
+            color: #4b382c;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #4b382c;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input[type="date"] {
+            padding: 10px 12px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #d45a3d;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 90, 61, 0.1);
+        }
+
+        .passengers-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .passengers-section h3 {
+            color: #4b382c;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .number-input {
+            width: 80px !important;
+        }
+
+        .cabin-selection {
+            margin: 2rem 0;
+        }
+
+        .cabin-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .cabin-option {
+            position: relative;
+        }
+
+        .cabin-option input[type="radio"] {
+            display: none;
+        }
+
+        .cabin-option label {
+            display: block;
+            padding: 1rem;
+            text-align: center;
+            background: #f8f9fa;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cabin-option input[type="radio"]:checked + label {
+            border-color: #d45a3d;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(212, 90, 61, 0.1);
+        }
+
+        .submit-btn {
+            background-color: #d45a3d;
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .submit-btn:hover {
+            background-color: #c04d32;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 90, 61, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .reservation-form {
+                padding: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reservation-container">
+        <form class="reservation-form">
+            <div class="form-header">
+                <h1>Réservez Votre Voyage</h1>
+                <p>Planifiez votre prochaine aventure avec nous. Remplissez le formulaire ci-dessous pour commencer votre voyage.</p>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Nom complet</label>
+                    <input type="text" id="name" name="name" required placeholder="Entrez votre nom complet">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Votre adresse email">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Téléphone</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="Votre numéro de téléphone">
+                </div>
+                <div class="form-group">
+                    <label for="origin">Ville de départ</label>
+                    <input type="text" id="origin" name="origin" required placeholder="Ville ou pays d'origine">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" name="destination" required placeholder="Ville ou pays de destination">
+                </div>
+                <div class="form-group">
+                    <label for="escale">Escale (optionnel)</label>
+                    <input type="text" id="escale" name="escale" placeholder="Ville d'escale">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departure">Date de départ</label>
+                    <input type="date" id="departure" name="departure" required>
+                </div>
+                <div class="form-group">
+                    <label for="return">Date de retour</label>
+                    <input type="date" id="return" name="return" required>
+                </div>
+            </div>
+
+            <div class="passengers-section">
+                <h3>Nombre de passagers</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="adults">Adultes (12+ ans)</label>
+                        <input type="number" id="adults" name="adults" class="number-input" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="children">Enfants (2-11 ans)</label>
+                        <input type="number" id="children" name="children" class="number-input" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="infants">Bébés (0-2 ans)</label>
+                    <input type="number" id="infants" name="infants" class="number-input" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="cabin-selection">
+                <label>Classe de voyage</label>
+                <div class="cabin-options">
+                    <div class="cabin-option">
+                        <input type="radio" id="economy" name="cabin" value="economy" checked>
+                        <label for="economy">Économique</label>
+                    </div>
+                    <div class="cabin-option">
+                        <input type="radio" id="business" name="cabin" value="business">
+                        <label for="business">Affaires</label>
+                    </div>
+                    <div class="cabin-option">
+                        <input type="radio" id="first" name="cabin" value="first">
+                        <label for="first">Première</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="airline">Compagnie aérienne souhaitée (optionnel)</label>
+                <input type="text" id="airline" name="airline" placeholder="Ex: Air France, Turkish Airlines">
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message (optionnel)</label>
+                <textarea id="message" name="message" rows="4" placeholder="Informations complémentaires pour votre réservation"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Envoyer la demande</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.reservation-form');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Ici, vous pouvez ajouter la logique d'envoi du formulaire
+                alert('Votre demande de réservation a été envoyée avec succès ! Nous vous contacterons rapidement.');
+            });
+
+            // Validation des dates
+            const departureInput = document.getElementById('departure');
+            const returnInput = document.getElementById('return');
+
+            departureInput.addEventListener('change', function() {
+                returnInput.min = this.value;
+            });
+
+            // Définir la date minimum à aujourd'hui
+            const today = new Date().toISOString().split('T')[0];
+            departureInput.min = today;
+            returnInput.min = today;
+        });
+    </script>
+</body>
+</html>

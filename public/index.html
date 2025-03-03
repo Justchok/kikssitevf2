@@ -19,6 +19,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/min/styles.min.css">
+    <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <link rel="preload" as="image" href="assets/images/kikslogo.webp" type="image/webp">
     <link rel="preload" as="script" href="js/min/main.min.js">
@@ -31,9 +32,11 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         .nav-bar {
@@ -83,17 +86,29 @@
             width: 100%;
         }
 
+        .logo {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .logo img {
+            width: 150px;
+            height: auto;
+        }
+
         .video-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-image: url('assets/images/dubai.jpg');
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000;
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
+            z-index: -1;
         }
 
         .video-container::after {
@@ -148,18 +163,6 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        .logo {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-        }
-
-        .logo img {
-            width: 150px;
-            height: auto;
-        }
-
         .content {
             position: absolute;
             top: 50%;
@@ -167,7 +170,9 @@
             transform: translate(-50%, -50%);
             text-align: center;
             color: white;
-            z-index: 1;
+            z-index: 10;
+            width: 100%;
+            padding: 0 20px;
         }
 
         .content h1 {
@@ -262,23 +267,113 @@
                 transform: rotate(-45deg);
             }
         }
+
+        .language-switcher {
+            position: relative;
+            display: inline-block;
+            margin-left: auto;
+        }
+
+        .selected-language {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .selected-language img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .selected-language span {
+            margin-left: 8px;
+        }
+
+        .selected-language i {
+            margin-left: 8px;
+        }
+
+        .language-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .language-options.show {
+            display: block;
+        }
+
+        .lang-option {
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .lang-option:hover {
+            background-color: #f5f5f5;
+        }
+
+        .lang-option img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border-radius: 50%;
+        }
+
+        .lang-option span {
+            color: #333;
+        }
     </style>
 </head>
-<body>
-    <nav class="nav-bar">
-        <button class="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        <ul class="nav-links">
-            <li><a href="index.html">Accueil</a></li>
-            <li><a href="destinations.html">Destinations</a></li>
-            <li><a href="offres.html">Offres</a></li>
-            <li><a href="apropos.html">A propos</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-    </nav>
+<body class="home">
+    <header>
+        <nav class="desktop-nav">
+            <div class="logo">
+                <a href="/">
+                    <img src="assets/images/kikslogo.png" alt="Kiks Travel Logo">
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" data-i18n="menuHome">Accueil</a>
+                <a href="destinations.html" data-i18n="menuDestinations">Destinations</a>
+                <a href="offres.html" data-i18n="menuOffers">Offres</a>
+                <a href="reservations.html" data-i18n="menuReservation">Réservation</a>
+                <a href="apropos.html" data-i18n="menuAbout">À propos</a>
+                <a href="contact.html" data-i18n="menuContact">Contact</a>
+            </div>
+            <div class="language-switcher">
+                <div class="selected-language">
+                    <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag" id="current-language-flag">
+                    <span class="language-name" id="current-language-name">Français</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="language-options">
+                    <div class="lang-option" data-lang="fr">
+                        <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag">
+                        <span>Français</span>
+                    </div>
+                    <div class="lang-option" data-lang="en">
+                        <img src="assets/images/icons/iconeeng.jpeg" alt="English" class="language-flag">
+                        <span>English</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </nav>
+    </header>
 
     <div class="video-container">
         <div class="loading-spinner"></div>
@@ -293,28 +388,38 @@
         </video>
     </div>
 
-    <a href="/" class="logo">
-        <img src="assets/images/kikslogo.png" alt="Kiks Travel Logo">
-    </a>
-
     <div class="content">
-        <h1>Kiks Travel Tours</h1>
-        <p>Votre partenaire de confiance pour des voyages inoubliables</p>
-        <a href="reservations.html" class="btn">Réserver maintenant</a>
-    </div>
-
-    <div class="footer-section">
-        <h3>Suivez-nous</h3>
-        <div class="social-links">
-            <a href="https://www.facebook.com/kikstraveltours" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.instagram.com/kikstraveltours" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.linkedin.com/company/kiks-travel-tours" target="_blank"><i class="fab fa-linkedin"></i></a>
-        </div>
+        <h1 data-i18n="homeTitle">Voyagez avec Kiks Travel</h1>
+        <p data-i18n="homeSubtitle">Découvrez des destinations exceptionnelles</p>
+        <a href="reservations.html" class="btn" data-i18n="bookNow">Réserver maintenant</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-    <script src="js/min/main.min.js" defer></script>
+    <script src="js/language-switcher.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const resetButton = document.createElement('button');
+            resetButton.textContent = 'Réinitialiser la langue (FR)';
+            resetButton.style.position = 'fixed';
+            resetButton.style.bottom = '10px';
+            resetButton.style.right = '10px';
+            resetButton.style.zIndex = '9999';
+            resetButton.style.padding = '10px';
+            resetButton.style.backgroundColor = '#d45a3d';
+            resetButton.style.color = 'white';
+            resetButton.style.border = 'none';
+            resetButton.style.borderRadius = '5px';
+            resetButton.style.cursor = 'pointer';
+            
+            resetButton.addEventListener('click', function() {
+                localStorage.removeItem('preferredLanguage');
+                location.reload();
+            });
+            
+            document.body.appendChild(resetButton);
+        });
+        
+        console.log('Index.html script loading...');
         // Gestion optimisée du chargement de la vidéo
         const videoContainer = document.querySelector('.video-container');
         const video = document.getElementById('background-video');
@@ -363,12 +468,13 @@
                 entries.forEach(entry => {
                     if (!entry.isIntersecting && isVideoLoaded) {
                         video.pause();
-                    } else if (isVideoLoaded) {
-                        video.play().catch(() => {});
+                    } else if (entry.isIntersecting && isVideoLoaded) {
+                        video.play().catch(() => {
+                            console.log('Lecture automatique impossible après intersection');
+                        });
                     }
                 });
-            }, { threshold: 0.1 });
-
+            });
             observer.observe(video);
         }
 
@@ -408,6 +514,19 @@
                 document.querySelector('.nav-links').classList.remove('active');
             }
         });
+
+        // Gestion du menu de langue
+        function toggleLanguageMenu() {
+            const languageMenu = document.querySelector('.language-options');
+            languageMenu.classList.toggle('show');
+        }
+
+        function changeLanguage(lang) {
+            // Code pour changer la langue
+        }
     </script>
+    
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
 </body>
 </html>

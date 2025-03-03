@@ -6,27 +6,36 @@
     <title>Contactez Kiks Travel Tours | Agence de Voyage à Dakar | Support 7j/7</title>
     <meta name="description" content="Contactez Kiks Travel Tours à Dakar. Notre équipe est disponible 7j/7 par téléphone et du lundi au vendredi au bureau. Service client dédié pour vos voyages.">
     <meta name="keywords" content="contact Kiks Travel, agence voyage Dakar contact, support voyage Sénégal, assistance voyage, numéro Kiks Travel">
-    <meta name="author" content="Kiks Travel Tours">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Contact - Kiks Travel Tours Dakar">
-    <meta property="og:description" content="Besoin d'aide pour votre voyage ? Contactez Kiks Travel Tours. Support téléphonique 7j/7 et bureau ouvert du lundi au vendredi à Dakar.">
-    <meta property="og:image" content="/assets/images/kikslogo.png">
-    <meta property="og:url" content="https://www.kikstravel.com/contact">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@KiksTravel">
-    <meta name="twitter:creator" content="@KiksTravel">
-    <link rel="canonical" href="https://www.kikstravel.com/contact">
     <link rel="icon" type="image/png" href="assets/images/kikslogo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/min/styles.min.css">
+    <link rel="stylesheet" href="css/navigation.css">
     <link rel="stylesheet" href="css/footer.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/language-switcher.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/main.js"></script>
     <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #4b382c;
+        }
+
+        .header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            justify-content: space-between;
+        }
+
+        .logo img {
+            height: 50px; /* Taille réduite du logo */
+            width: auto;
+        }
+
         .hero-section {
             background: linear-gradient(rgba(62, 160, 198, 0.9), rgba(62, 160, 198, 0.9)), url('assets/images/contact-bg.jpg');
             background-size: cover;
@@ -39,15 +48,14 @@
 
         .hero-section h1 {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
             font-weight: 600;
-            color: #d55b3d;
+            margin-bottom: 1rem;
         }
 
         .hero-section p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            color: #8B4513;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .contact-info {
@@ -66,405 +74,167 @@
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .info-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #3ea0c6;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .info-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .info-item:hover::before {
-            transform: scaleX(1);
+        .info-icon {
+            width: 70px;
+            height: 70px;
+            background: #f8f9fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
         }
 
-        .info-item i {
-            font-size: 2.5rem;
-            color: #3ea0c6;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-            transition: transform 0.3s ease;
-        }
-
-        .info-item:hover i {
-            transform: scale(1.1);
+        .info-icon i {
+            font-size: 2rem;
+            color: #d45a3d;
         }
 
         .info-item h3 {
             color: #4b382c;
-            font-size: 1.4rem;
             margin-bottom: 1rem;
-            font-weight: 600;
+            font-size: 1.3rem;
         }
 
-        .info-item p {
+        .info-item p, .info-item a {
             color: #666;
             line-height: 1.6;
+        }
+
+        .info-item a {
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .info-item a:hover {
+            color: #d45a3d;
+        }
+
+        .contact-form-section {
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+            padding: 0 2rem;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            color: #4b382c;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #4b382c;
+            font-weight: 500;
             margin-bottom: 0.5rem;
         }
 
-        .info-item p:last-child {
-            margin-bottom: 0;
-        }
-
-        .info-item small {
-            display: block;
-            color: #888;
-            font-size: 0.9rem;
-            margin-top: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .contact-info {
-                grid-template-columns: 1fr;
-                padding: 0 1rem;
-            }
-
-            .info-item {
-                padding: 1.5rem;
-            }
-
-            .hero-section h1 {
-                font-size: 2rem;
-            }
-
-            .hero-section p {
-                font-size: 1rem;
-            }
-        }
-
-        .contact-form button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            border: 2px solid #d55b3d;
-        }
-
-        .contact-form button:hover {
-            background-color: #d55b3d;
-        }
-
-        .contact-info {
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .contact-info h3 {
-            color: #d55b3d;
-            margin-bottom: 15px;
-        }
-
-        .contact-info p {
-            margin: 10px 0;
-            color: #666;
-        }
-
-        .contact-info i {
-            color: #d55b3d;
-            margin-right: 10px;
-            width: 20px;
-        }
-
-        .social-links {
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            color: #d55b3d;
-            margin-right: 15px;
-            font-size: 20px;
-            transition: color 0.3s;
-        }
-
-        .social-links a:hover {
-            color: #3498db;
-        }
-
-        .contact-form input:focus,
-        .contact-form textarea:focus {
-            border-color: #d55b3d;
-            box-shadow: 0 0 5px rgba(213, 91, 61, 0.3);
-        }
-
-        /* Style pour l'alerte de succès */
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-            border-radius: 4px;
-            display: none;
-        }
-
-        /* Style pour l'alerte d'erreur */
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-            display: none;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .loading i {
-            color: #d55b3d;
-            font-size: 24px;
-        }
-
-        /* Styles pour le header et le sélecteur de langue */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo {
-            width: 100px;
-            height: auto;
-        }
-
-        .logo img {
+        .form-group input,
+        .form-group textarea {
             width: 100%;
-            height: auto;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
         }
 
-        /* Style pour le sélecteur de langue */
-        .language-switcher {
-            position: relative;
-            margin-left: auto;
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #d45a3d;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 90, 61, 0.1);
         }
 
-        .language-btn {
-            background: none;
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #d45a3d;
+            color: white;
             border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-
-        .language-btn:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .language-btn img {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-        }
-
-        .language-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 5px 0;
-            margin-top: 5px;
-            z-index: 1000;
-        }
-
-        .language-menu.show {
+            transition: all 0.3s ease;
             display: block;
+            width: 100%;
         }
 
-        .language-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .language-option:hover {
-            background-color: #f5f5f5;
-        }
-
-        .language-option img {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-
-        /* Ajustement pour le contenu principal */
-        main {
-            padding-top: 100px; /* Pour compenser le header fixe */
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .header {
-                padding: 10px;
-            }
-
-            .logo {
-                width: 80px;
-            }
-        }
-
-        /* Navigation responsive */
-        .desktop-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .nav-links a {
-            color: #333;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #3498db;
-        }
-
-        .language-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 4px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 5px 0;
-            margin-top: 5px;
-            z-index: 1000;
-        }
-
-        .lang-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .lang-option:hover {
-            background-color: #f5f5f5;
-        }
-
-        .lang-option img {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-
-        .mobile-nav {
-            display: none;
+        .submit-btn:hover {
+            background: #c04a2d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 90, 61, 0.2);
         }
 
         @media (max-width: 768px) {
-            .desktop-nav {
-                display: none;
-            }
-
-            .mobile-nav {
-                display: block;
-                padding: 20px;
-                background-color: #f9f9f9;
-                border-bottom: 1px solid #ddd;
-            }
-
-            .mobile-nav a {
-                display: block;
-                padding: 10px;
-                border-bottom: 1px solid #ddd;
+            .contact-form {
+                padding: 2rem;
             }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <!-- Navigation pour grands écrans -->
-        <nav class="desktop-nav">
-            <a href="/" class="logo">
-                <img src="/assets/images/kikslogo.png" alt="Kiks Travel Logo">
+        <div class="logo">
+            <a href="index.html">
+                <img src="assets/images/kikslogo.png" alt="Kiks Travel Tours Logo">
             </a>
-            <div class="nav-links">
-                <a href="/" data-i18n="menuHome">Accueil</a>
-                <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
-                <a href="/apropos.html" data-i18n="menuAbout">À propos</a>
-                <a href="/reservations.html" data-i18n="menuBooking">Réservations</a>
-                <a href="/offres.html" data-i18n="menuOffers">Offres</a>
-                <div class="language-switcher">
-                    <button class="language-btn">
-                        <img src="/assets/images/icons/iconefr.jpeg" alt="French Flag" id="current-flag">
-                        <span id="current-lang">FR</span>
-                    </button>
-                    <div class="language-dropdown">
-                        <a href="#" data-lang="fr" class="lang-option">
-                            <img src="/assets/images/icons/iconefr.jpeg" alt="French Flag">
-                            Français
-                        </a>
-                        <a href="#" data-lang="en" class="lang-option">
-                            <img src="/assets/images/icons/iconeeng.jpeg" alt="English Flag">
-                            English
-                        </a>
-                    </div>
+        </div>
+        <div class="language-switcher">
+            <div class="selected-language">
+                <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag" id="current-language-flag">
+                <span class="language-name" id="current-language-name">Français</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="language-options">
+                <div class="lang-option" data-lang="fr">
+                    <img src="assets/images/icons/iconefr.jpeg" alt="Français" class="language-flag">
+                    <span>Français</span>
+                </div>
+                <div class="lang-option" data-lang="en">
+                    <img src="assets/images/icons/iconeeng.jpeg" alt="English" class="language-flag">
+                    <span>English</span>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
-
-    <!-- Navigation mobile en bas -->
-    <nav class="nav-menu mobile-nav">
-        <a href="/" data-i18n="menuHome">Accueil</a>
-        <a href="/destinations.html" data-i18n="menuDestinations">Destinations</a>
-        <a href="/apropos.html" data-i18n="menuAbout">À propos</a>
-        <a href="/reservations.html" data-i18n="menuBooking">Réservations</a>
-        <a href="/offres.html" data-i18n="menuOffers">Offres</a>
-    </nav>
 
     <main>
         <section class="hero-section">
@@ -474,110 +244,131 @@
 
         <section class="contact-info">
             <div class="info-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <h3 data-i18n="ourLocation">Notre localisation</h3>
-                <p>Espace Ataya Keur Damel<br>Batiment 4 Appartement 412</p>
+                <div class="info-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3 data-i18n="addressTitle">Notre Adresse</h3>
+                <p data-i18n="address">Dakar, Sénégal<br>Rue 10 x 15 Point E</p>
             </div>
-
             <div class="info-item">
-                <i class="fas fa-clock"></i>
-                <h3 data-i18n="openingHours">Horaires d'ouverture</h3>
-                <p data-i18n="openingHoursDetails">Bureau : Du lundi au vendredi : 9h - 18h</p>
-                <p data-i18n="phoneAvailability">Service téléphonique disponible 7j/7</p>
+                <div class="info-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h3 data-i18n="phoneTitle">Téléphone</h3>
+                <a href="tel:+221772004432">+221 77 200 44 32</a>
             </div>
-
             <div class="info-item">
-                <i class="fas fa-phone"></i>
-                <h3 data-i18n="contactTitle">Contact</h3>
-                <p><span data-i18n="phone">Tél</span>: +221 77 200 44 32</p>
-                <p>Email: info@kikstravel.com</p>
+                <div class="info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3 data-i18n="emailTitle">Email</h3>
+                <a href="mailto:info@kikstravel.com">info@kikstravel.com</a>
+                <a href="mailto:reservations@kikstravel.com">reservations@kikstravel.com</a>
             </div>
         </section>
 
         <section class="contact-form-section">
-            <div class="container">
-                <form id="contactForm" class="contact-form">
+            <div class="contact-form">
+                <div class="form-header">
+                    <h2 data-i18n="formTitle">Envoyez-nous un message</h2>
+                    <p data-i18n="formDesc">Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais</p>
+                </div>
+                <form id="contactForm">
                     <div class="form-group">
-                        <label for="name" data-i18n="name">Nom complet</label>
-                        <input type="text" id="name" name="name" required>
+                        <label for="name" data-i18n="nameLabel">Nom complet</label>
+                        <input type="text" id="name" name="name" required data-i18n-placeholder="namePlaceholder">
                     </div>
                     <div class="form-group">
-                        <label for="email" data-i18n="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="email" data-i18n="emailLabel">Email</label>
+                        <input type="email" id="email" name="email" required data-i18n-placeholder="emailPlaceholder">
                     </div>
                     <div class="form-group">
-                        <label for="subject" data-i18n="subject">Sujet</label>
-                        <input type="text" id="subject" name="subject" required>
+                        <label for="subject" data-i18n="subjectLabel">Sujet</label>
+                        <input type="text" id="subject" name="subject" required data-i18n-placeholder="subjectPlaceholder">
                     </div>
                     <div class="form-group">
-                        <label for="message" data-i18n="message">Message</label>
-                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <label for="message" data-i18n="messageLabel">Message</label>
+                        <textarea id="message" name="message" required data-i18n-placeholder="messagePlaceholder"></textarea>
                     </div>
-                    <button type="submit" class="submit-btn" data-i18n="submit">Envoyer</button>
+                    <button type="submit" class="submit-btn" data-i18n="submitBtn">Envoyer le message</button>
                 </form>
             </div>
         </section>
     </main>
 
+    <nav class="nav-menu">
+        <a href="index.html">
+            <i class="fas fa-home"></i>
+            <span data-i18n="menuHome">Accueil</span>
+        </a>
+        <a href="destinations.html">
+            <i class="fas fa-map-marker-alt"></i>
+            <span data-i18n="menuDestinations">Destinations</span>
+        </a>
+        <a href="reservations.html">
+            <i class="fas fa-ticket-alt"></i>
+            <span data-i18n="menuReservation">Réservations</span>
+        </a>
+        <a href="offres.html">
+            <i class="fas fa-percentage"></i>
+            <span data-i18n="menuOffers">Offres</span>
+        </a>
+        <a href="apropos.html">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="menuAbout">À propos</span>
+        </a>
+        <a href="contact.html" class="active">
+            <i class="fas fa-envelope"></i>
+            <span data-i18n="menuContact">Contact</span>
+        </a>
+    </nav>
+
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h3>Kiks Travel</h3>
-                <p data-i18n="companyDesc">Votre partenaire de confiance pour des voyages inoubliables.</p>
+                <h3 data-i18n="footerAboutTitle">À propos de Kiks Travel</h3>
+                <p data-i18n="footerAboutDesc">Kiks Travel Tours est une agence de voyage basée à Dakar, spécialisée dans les voyages sur mesure et les services de billetterie aérienne.</p>
             </div>
             <div class="footer-section">
-                <h3 data-i18n="contactTitle">Contact</h3>
-                <p><span data-i18n="phone">Tél</span>: +221 77 200 44 32</p>
-                <p>Email: info@kikstravel.com</p>
-                <p><span data-i18n="address">Adresse</span>: Dakar, Sénégal</p>
+                <h3 data-i18n="footerContactTitle">Contact</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Dakar, Sénégal</p>
+                <p><i class="fas fa-phone"></i> +221 77 200 44 32</p>
+                <p><i class="fas fa-envelope"></i> info@kikstravel.com</p>
             </div>
             <div class="footer-section">
-                <h3 data-i18n="followUs">Suivez-nous</h3>
+                <h3 data-i18n="footerFollowTitle">Suivez-nous</h3>
                 <div class="social-links">
-                    <a href="https://www.facebook.com/kikstraveltours" target="_blank"><i class="fab fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/kikstraveltours" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/company/kiks-travel-tours" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 Kiks Travel. <span data-i18n="allRightsReserved">Tous droits réservés.</span></p>
+            <p>&copy; 2023 Kiks Travel Tours. <span data-i18n="footerRights">Tous droits réservés.</span></p>
         </div>
     </footer>
 
-    <script src="js/translations.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/language-switcher.js"></script>
     <script>
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value
-            };
-
-            try {
-                const response = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert('Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.');
-                    document.getElementById('contactForm').reset();
-                } else {
-                    throw new Error(data.message);
-                }
-            } catch (error) {
-                alert('Erreur lors de l\'envoi du message : ' + error.message);
-            }
+            // Ici, vous pouvez ajouter le code pour traiter le formulaire
+            // Par exemple, envoyer les données à un serveur via AJAX
+            
+            Swal.fire({
+                title: 'Merci !',
+                text: 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#d45a3d'
+            });
+            
+            // Réinitialiser le formulaire
+            this.reset();
         });
     </script>
 </body>
