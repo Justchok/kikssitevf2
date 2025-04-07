@@ -1,19 +1,14 @@
 const express = require('express');
 const cors = require('cors');
-const { Resend } = require('resend');
 const fs = require('fs').promises;
 const path = require('path');
 require('dotenv').config({ path: './env.config' });
 
+// Importer la fonction d'envoi d'emails
+const { sendBookingConfirmation } = require('./email');
+
 const app = express();
 const port = process.env.PORT || 3000;
-
-// Configuration de Resend et des emails
-const resend = new Resend(process.env.RESEND_API_KEY);
-const EMAIL_CONFIG = {
-    from: 'Kiks Travel <onboarding@resend.dev>',
-    to: process.env.EMAIL_TO
-};
 
 // Configuration CORS
 const corsOptions = {
@@ -50,8 +45,8 @@ app.get('/api/vols', async (req, res) => {
     }
 });
 
-// Route pour obtenir les offres spéciales
-app.get('/api/offres-speciales', async (req, res) => {
+// Route pour obtenir les offres disponibles
+app.get('/api/offres', async (req, res) => {
     try {
         const data = await fs.readFile(path.join(__dirname, 'data', 'offres.json'), 'utf8');
         const offres = JSON.parse(data);
@@ -93,73 +88,23 @@ app.post('/api/booking', async (req, res) => {
             });
         }
 
-        // Email pour l'agence
+        // Envoi de l'email de confirmation
         try {
-            console.log('Envoi de l\'email à l\'agence...');
-            const agencyEmailResult = await resend.emails.send({
-                from: EMAIL_CONFIG.from,
-                to: EMAIL_CONFIG.to,
-                subject: 'Nouvelle réservation de voyage',
-                html: `
-                    <h2>Nouvelle réservation de voyage</h2>
-                    
-                    <h3>Coordonnées:</h3>
-                    <ul>
-                        <li>Nom: ${name}</li>
-                        <li>Email: ${email}</li>
-                        <li>Téléphone: ${phone || 'Non renseigné'}</li>
-                    </ul>
-
-                    <h3>Détails du voyage:</h3>
-                    <ul>
-                        <li>Départ: ${flightDetails.departure}</li>
-                        <li>Destination: ${flightDetails.destination}</li>
-                        <li>Escale: ${flightDetails.layover || 'Aucune'}</li>
-                        <li>Classe: ${flightDetails.travelClass}</li>
-                        <li>Date de départ: ${flightDetails.departureDate}</li>
-                        <li>Date de retour: ${flightDetails.returnDate || 'Non renseigné'}</li>
-                        <li>Nombre de passagers: ${flightDetails.passengers || '1'}</li>
-                    </ul>
-                `
+            const emailResult = await sendBookingConfirmation({
+                name,
+                email,
+                phone,
+                flightDetails
             });
-            console.log('Email agence envoyé avec succès:', agencyEmailResult);
+            
+            if (!emailResult.success) {
+                console.error('Erreur lors de l\'envoi de l\'email:', emailResult.error);
+            } else {
+                console.log('Emails envoyés avec succès');
+            }
         } catch (emailError) {
-            console.error('Erreur lors de l\'envoi de l\'email à l\'agence:', emailError);
-            // Ne pas arrêter le processus si l'email à l'agence échoue
-        }
-
-        // Email pour le client
-        try {
-            console.log('Envoi de l\'email au client...', email);
-            const clientEmailResult = await resend.emails.send({
-                from: EMAIL_CONFIG.from,
-                to: email,
-                subject: 'Confirmation de votre demande de réservation',
-                html: `
-                    <h2>Cher(e) ${name},</h2>
-                    
-                    <p>Nous avons bien reçu votre demande de réservation de voyage.</p>
-                    
-                    <h3>Récapitulatif de votre voyage :</h3>
-                    <ul>
-                        <li>Départ: ${flightDetails.departure}</li>
-                        <li>Destination: ${flightDetails.destination}</li>
-                        <li>Escale: ${flightDetails.layover || 'Aucune'}</li>
-                        <li>Date de départ: ${flightDetails.departureDate}</li>
-                        <li>Date de retour: ${flightDetails.returnDate || 'Non renseigné'}</li>
-                        <li>Classe: ${flightDetails.travelClass}</li>
-                        <li>Nombre de passagers: ${flightDetails.passengers || '1'}</li>
-                    </ul>
-
-                    <p>Notre équipe va traiter votre demande et vous recontactera dans les plus brefs délais.</p>
-
-                    <p>Cordialement,<br>L'équipe Kiks Travel</p>
-                `
-            });
-            console.log('Email client envoyé avec succès:', clientEmailResult);
-        } catch (emailError) {
-            console.error('Erreur lors de l\'envoi de l\'email au client:', emailError);
-            // Ne pas arrêter le processus si l'email au client échoue
+            console.error('Erreur lors de l\'envoi de l\'email de confirmation:', emailError);
+            // Ne pas arrêter le processus si l'email échoue
         }
 
         res.status(200).json({ 
@@ -169,8 +114,7 @@ app.post('/api/booking', async (req, res) => {
     } catch (error) {
         console.error('Erreur lors de la réservation:', error);
         res.status(500).json({ 
-            success: false,
-            message: 'Erreur lors de la réservation',
+            message: 'Erreur lors de l\'enregistrement de la réservation',
             error: error.message 
         });
     }

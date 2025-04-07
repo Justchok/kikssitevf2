@@ -1,8 +1,9 @@
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
+const path = require('path');
 
 // Charger les variables d'environnement
-dotenv.config({ path: '../env.config' });
+dotenv.config({ path: path.join(__dirname, '..', 'env.config') });
 
 // Configuration du transporteur SMTP Ionos
 const transporter = nodemailer.createTransport({
@@ -26,7 +27,7 @@ async function sendBookingConfirmation(bookingData) {
             return { success: false, error: 'Données de réservation incomplètes' };
         }
 
-        const { name, email, phone, flightDetails } = bookingData;
+        const { name, email, phone, flightDetails, travelers, additionalInfo } = bookingData;
         
         // Email pour le client
         const clientEmailData = {
@@ -49,6 +50,7 @@ async function sendBookingConfirmation(bookingData) {
                         <p><strong>Date de retour:</strong> ${flightDetails.returnDate || 'Non spécifiée'}</p>
                         <p><strong>Classe:</strong> ${flightDetails.travelClass}</p>
                         <p><strong>Nombre de passagers:</strong> ${flightDetails.passengers || '1'}</p>
+                        ${additionalInfo ? `<p><strong>Message:</strong> ${additionalInfo}</p>` : ''}
                     </div>
                     
                     <p>Notre équipe va étudier votre demande et vous contactera dans les plus brefs délais.</p>
@@ -57,6 +59,41 @@ async function sendBookingConfirmation(bookingData) {
                 </div>
             `
         };
+
+        // Générer la liste des passagers pour l'email de l'agence
+        let passengersHtml = '';
+        
+        if (travelers && travelers.length > 0) {
+            passengersHtml = `
+                <h3>Liste des passagers:</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <tr style="background-color: #f2f2f2;">
+                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Type</th>
+                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Prénom</th>
+                        <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Nom</th>
+                    </tr>
+            `;
+            
+            travelers.forEach(traveler => {
+                const travelerType = {
+                    'adult': 'Adulte',
+                    'child': 'Enfant',
+                    'infant': 'Bébé'
+                }[traveler.type] || traveler.type;
+                
+                passengersHtml += `
+                    <tr>
+                        <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${travelerType}</td>
+                        <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${traveler.firstName}</td>
+                        <td style="padding: 8px; text-align: left; border: 1px solid #ddd;">${traveler.lastName}</td>
+                    </tr>
+                `;
+            });
+            
+            passengersHtml += '</table>';
+        } else {
+            passengersHtml = '<p>Aucune information sur les passagers n\'a été fournie.</p>';
+        }
 
         // Email pour l'agence
         const agencyEmailData = {
@@ -81,9 +118,12 @@ async function sendBookingConfirmation(bookingData) {
                         <li><strong>Escale:</strong> ${flightDetails.layover || 'Aucune'}</li>
                         <li><strong>Classe:</strong> ${flightDetails.travelClass}</li>
                         <li><strong>Date de départ:</strong> ${flightDetails.departureDate}</li>
-                        <li><strong>Date de retour:</strong> ${flightDetails.returnDate || 'Non renseigné'}</li>
+                        <li><strong>Date de retour:</strong> ${flightDetails.returnDate || 'Non spécifiée'}</li>
                         <li><strong>Nombre de passagers:</strong> ${flightDetails.passengers || '1'}</li>
+                        ${additionalInfo ? `<li><strong>Message:</strong> ${additionalInfo}</li>` : ''}
                     </ul>
+                    
+                    ${passengersHtml}
                 </div>
             `
         };

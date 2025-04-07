@@ -410,6 +410,34 @@ body.home .nav-menu {
     margin-left: auto; /* Pousse le sélecteur de langue à droite */
 }
 
+/* Styles spécifiques pour le sélecteur de langue sur la page d'accueil */
+body.home .desktop-nav .language-switcher {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1001; /* S'assurer qu'il est au-dessus des autres éléments */
+}
+
+body.home .desktop-nav .language-switcher .selected-language {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 20px;
+    padding: 8px 15px;
+}
+
+body.home .desktop-nav .language-switcher .selected-language:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+body.home .desktop-nav .language-switcher .language-name {
+    color: white;
+}
+
+body.home .desktop-nav .language-switcher .fa-chevron-down {
+    color: white;
+}
+
 .selected-language {
     display: flex;
     align-items: center;

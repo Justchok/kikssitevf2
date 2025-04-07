@@ -477,13 +477,17 @@
                     <h3>Contact principal</h3>
                     <div class="form-row">
                         <div class="form-group">
+                            <label for="name">Nom</label>
+                            <input type="text" id="name" name="name" required placeholder="Votre nom">
+                        </div>
+                        <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" required placeholder="votre@email.com">
                         </div>
-                        <div class="form-group">
-                            <label for="phone">Téléphone</label>
-                            <input type="tel" id="phone" name="phone" required placeholder="Ex: +221 77 200 44 32">
-                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="Ex: +221 77 200 44 32">
                     </div>
                 </div>
 
@@ -657,19 +661,23 @@
 
             const formData = new FormData(this);
             const reservationData = {
-                origin: formData.get('origin'),
-                destination: formData.get('destination'),
-                stopover: formData.get('stopover'),
-                departureDate: formData.get('departureDate'),
-                returnDate: formData.get('returnDate'),
-                cabin: formData.get('cabin'),
+                name: formData.get('name'),
                 email: formData.get('email'),
                 phone: formData.get('phone'),
+                flightDetails: {
+                    departure: formData.get('origin'),
+                    destination: formData.get('destination'),
+                    layover: formData.get('stopover'),
+                    departureDate: formData.get('departureDate'),
+                    returnDate: formData.get('returnDate'),
+                    travelClass: formData.get('cabin'),
+                    passengers: travelers.adults + travelers.children + travelers.infants
+                },
                 travelers: travelersData
             };
 
             try {
-                const response = await fetch('/api/public/book-flight', {
+                const response = await fetch('/api/booking', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

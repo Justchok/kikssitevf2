@@ -100,41 +100,33 @@ function showFullFlyer(offerTitle) {
     Swal.fire({
         title: offer.title,
         html: `
-            <div style="max-width: 100%; margin: 0 auto;">
-                <img src="${offer.flyerImage || offer.image}" 
-                    style="width: 100%; max-height: 85vh; object-fit: contain; margin-bottom: 1rem; cursor: zoom-in;" 
-                    alt="${offer.title}"
-                    onclick="showImageFullscreen('${offer.flyerImage || offer.image}', '${offer.title}')"
-                >
-                <div style="text-align: left; padding: 1rem;">
-                    <h3 style="color: #333; margin-bottom: 1rem;">Description</h3>
-                    <p style="color: #666; margin-bottom: 1rem;">${offer.description}</p>
-                    
-                    <h3 style="color: #333; margin-bottom: 1rem;">Ce qui est inclus</h3>
-                    <ul style="list-style: none; padding: 0; margin-bottom: 1rem;">
-                        ${offer.features.map(feature => `
-                            <li style="margin-bottom: 0.5rem;">
-                                <span style="color: #007bff; margin-right: 0.5rem;">✓</span>
-                                ${feature}
-                            </li>
-                        `).join('')}
+            <div style="text-align: left; margin-bottom: 20px;">
+                <p><strong>Destination:</strong> ${offer.destination}</p>
+                <p>${offer.description}</p>
+                ${offer.prices ? `
+                    <p><strong>Prix par personne:</strong></p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li>Formule Confort: ${offer.prices.confort}</li>
+                        <li>Formule Confort+: ${offer.prices.confortPlus}</li>
                     </ul>
-                    
-                    ${offer.prices ? `
-                        <h3 style="color: #333; margin-bottom: 1rem;">Prix par personne</h3>
-                        <ul style="list-style: none; padding: 0; margin-bottom: 1rem;">
-                            <li style="margin-bottom: 0.5rem; font-weight: bold;">Formule Confort: ${offer.prices.confort}</li>
-                            <li style="margin-bottom: 0.5rem; font-weight: bold;">Formule Confort+: ${offer.prices.confortPlus}</li>
-                        </ul>
-                    ` : ''}
-                </div>
+                ` : ''}
+                <p><strong>Inclus dans l'offre:</strong></p>
+                <ul style="text-align: left;">
+                    ${offer.features.map(feature => `<li>${feature}</li>`).join('')}
+                </ul>
             </div>
         `,
-        width: '90%',
-        showCloseButton: true,
-        showConfirmButton: false,
-        customClass: {
-            container: 'full-flyer-modal'
+        imageUrl: offer.flyerImage,
+        imageAlt: offer.title,
+        imageHeight: 400,
+        confirmButtonText: 'Réserver maintenant',
+        confirmButtonColor: '#d45a3d',
+        showCancelButton: true,
+        cancelButtonText: 'Fermer',
+        cancelButtonColor: '#6c757d',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            openReservationModal(offer.title, offer.destination);
         }
     });
 }
@@ -142,24 +134,25 @@ function showFullFlyer(offerTitle) {
 function showImageFullscreen(imageSrc, title) {
     Swal.fire({
         title: title,
-        html: `
-            <div style="max-width: 100vw; max-height: 90vh; overflow: hidden;">
-                <img src="${imageSrc}" 
-                    style="width: 100%; height: 100%; object-fit: contain;" 
-                    alt="${title}"
-                >
-            </div>
-        `,
-        width: '100%',
-        padding: 0,
-        showCloseButton: true,
-        showConfirmButton: false,
-        background: '#000',
-        customClass: {
-            container: 'fullscreen-image-modal',
-            title: 'fullscreen-image-title'
-        }
+        imageUrl: imageSrc,
+        imageAlt: title,
+        width: '80%',
+        confirmButtonText: 'Fermer',
+        confirmButtonColor: '#d45a3d',
     });
+}
+
+// Fonction pour ouvrir le modal de réservation
+function openReservationModal(title, destination) {
+    const modal = document.getElementById('reservationModal');
+    const modalTitle = modal.querySelector('h2');
+    
+    // Définir le titre de l'offre dans le modal
+    modalTitle.textContent = `Réserver: ${title}`;
+    modalTitle.setAttribute('data-offer-title', title);
+    
+    // Afficher le modal
+    modal.style.display = 'block';
 }
 
 // Appeler la fonction quand le document est chargé

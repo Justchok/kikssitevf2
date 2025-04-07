@@ -281,6 +281,91 @@
             height: 20px;
             border-radius: 50%;
         }
+
+        /* Styles pour le formulaire */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4b382c;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            border-color: #d45a3d;
+            box-shadow: 0 0 0 2px rgba(212, 90, 61, 0.2);
+            outline: none;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .book-button {
+            background-color: #d45a3d;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .book-button:hover {
+            background-color: #c04a2d;
+        }
+
+        /* Styles pour le modal */
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 12px;
+            position: relative;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h2 {
+            color: #4b382c;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #4b382c;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #d45a3d;
+        }
     </style>
 </head>
 <body>
@@ -382,27 +467,23 @@
     <div id="reservationModal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h2>Réserver cette offre</h2>
+            <h2 data-offer-title="Offre spéciale">Réserver cette offre</h2>
             <form id="offerForm">
                 <div class="form-group">
                     <label for="name">Nom complet</label>
-                    <input type="text" id="name" name="name" required placeholder="Votre nom complet">
+                    <input type="text" id="name" name="name" required placeholder="Votre nom complet" class="form-input">
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required placeholder="votre@email.com">
+                    <input type="email" id="email" name="email" required placeholder="votre@email.com" class="form-input">
                 </div>
                 <div class="form-group">
                     <label for="phone">Téléphone</label>
-                    <input type="tel" id="phone" name="phone" required placeholder="Ex: +221 77 200 44 32">
+                    <input type="tel" id="phone" name="phone" required placeholder="Ex: +221 77 200 44 32" class="form-input">
                 </div>
                 <div class="form-group">
-                    <label for="date">Date souhaitée</label>
-                    <input type="date" id="date" name="date" required>
-                </div>
-                <div class="form-group">
-                    <label for="message">Message (optionnel)</label>
-                    <textarea id="message" name="message" placeholder="Vos préférences ou questions..."></textarea>
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" placeholder="Vos préférences ou questions..." class="form-textarea"></textarea>
                 </div>
                 <button type="submit" class="book-button">Envoyer la demande</button>
             </form>
@@ -436,6 +517,9 @@
             const formData = new FormData(this);
             const reservationData = Object.fromEntries(formData.entries());
             
+            // Ajouter le titre de l'offre sélectionnée
+            reservationData.offerTitle = document.querySelector('#reservationModal h2').getAttribute('data-offer-title') || 'Offre spéciale';
+            
             try {
                 const response = await fetch('/api/public/book-offer', {
                     method: 'POST',
@@ -448,28 +532,46 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    alert('Votre demande de réservation a été envoyée avec succès ! Vous recevrez un email de confirmation.');
+                    Swal.fire({
+                        title: 'Réservation envoyée !',
+                        text: 'Votre demande de réservation a été envoyée avec succès ! Vous recevrez un email de confirmation.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d45a3d'
+                    });
                     modal.style.display = "none";
                     this.reset();
                 } else {
-                    alert('Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.');
+                    Swal.fire({
+                        title: 'Erreur',
+                        text: 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d45a3d'
+                    });
                 }
             } catch (error) {
                 console.error('Erreur:', error);
-                alert('Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.');
+                Swal.fire({
+                    title: 'Erreur',
+                    text: 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#d45a3d'
+                });
             }
         });
 
         // Validation de la date
-        document.getElementById('date').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const today = new Date();
+        // document.getElementById('date').addEventListener('change', function() {
+        //     const selectedDate = new Date(this.value);
+        //     const today = new Date();
             
-            if (selectedDate < today) {
-                alert('La date sélectionnée ne peut pas être dans le passé.');
-                this.value = '';
-            }
-        });
+        //     if (selectedDate < today) {
+        //         alert('La date sélectionnée ne peut pas être dans le passé.');
+        //         this.value = '';
+        //     }
+        // });
     </script>
 </body>
 </html>
