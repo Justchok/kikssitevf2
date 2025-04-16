@@ -35,9 +35,9 @@ foreach ($required_fields as $field) {
 }
 
 // Envoi des emails avec PHPMailer
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
-require 'PHPMailer/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+require 'PHPMailer/src/Exception.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;

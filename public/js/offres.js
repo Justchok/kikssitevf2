@@ -1,3 +1,5 @@
+import config from './config.js';
+
 const offers = [
     {
         title: 'Hajj 2025',
@@ -154,6 +156,9 @@ function openReservationModal(title, destination) {
     // Afficher le modal
     modal.style.display = 'block';
 }
+
+// Exporter les fonctions nécessaires
+export { displayOffers, showFullFlyer, showImageFullscreen, openReservationModal };
 
 // Appeler la fonction quand le document est chargé
 document.addEventListener('DOMContentLoaded', displayOffers);

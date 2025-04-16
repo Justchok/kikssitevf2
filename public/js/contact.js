@@ -1,3 +1,5 @@
+import config from './config.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('contact-form');
     
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             try {
-                const response = await fetch('http://localhost:8000/api/send-contact.php', {
+                const response = await fetch(`${config.apiUrl}${config.endpoints.contact}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

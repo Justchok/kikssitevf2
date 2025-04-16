@@ -352,61 +352,6 @@
 
     <script src="js/navigation.js"></script>
     <script src="js/language-switcher.js"></script>
-    <script>
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Récupérer les données du formulaire
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value
-            };
-            
-            try {
-                // Envoi des données au serveur
-                const response = await fetch('/api/contact', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    Swal.fire({
-                        title: 'Merci !',
-                        text: 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#d45a3d'
-                    });
-                    
-                    // Réinitialiser le formulaire
-                    this.reset();
-                } else {
-                    Swal.fire({
-                        title: 'Erreur',
-                        text: 'Une erreur est survenue lors de l\'envoi de votre message. Veuillez réessayer.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#d45a3d'
-                    });
-                }
-            } catch (error) {
-                console.error('Erreur:', error);
-                Swal.fire({
-                    title: 'Erreur',
-                    text: 'Une erreur est survenue lors de l\'envoi de votre message. Veuillez réessayer.',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#d45a3d'
-                });
-            }
-        });
-    </script>
+    <script type="module" src="js/contact.js"></script>
 </body>
 </html>

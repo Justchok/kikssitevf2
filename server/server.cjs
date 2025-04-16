@@ -230,12 +230,12 @@ app.post('/api/contact', async (req, res) => {
 
             // Envoi de l'email
             const transporter = nodemailer.createTransport({
-                host: 'smtp.ionos.fr',
+                host: process.env.SMTP_HOST,
                 port: 465,
                 secure: true,
                 auth: {
-                    user: 'info@kikstravel.com',
-                    pass: process.env.SMTP_PASSWORD || 'Ktravel&tours1!'
+                    user: process.env.SMTP_USER,
+                    pass: process.env.SMTP_PASSWORD
                 }
             });
 

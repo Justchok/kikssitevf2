@@ -4,7 +4,7 @@ const fs = require('fs');
 const fsPromises = require('fs').promises;
 const path = require('path');
 const multer = require('multer');
-const { sendSpecialOfferEmail, sendFlightBookingEmail } = require('./emailService');
+const { sendSpecialOfferEmail, sendFlightBookingEmail, sendContactEmail } = require('./emailService');
 
 const app = express();
 const PORT = 5002;
@@ -22,7 +22,7 @@ const upload = multer({ storage: storage });
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5000', 'http://localhost:3000', 'http://localhost:8080', 'http://localhost:8000'], 
+  origin: ['http://localhost:5173', 'http://localhost:5000', 'http://localhost:3000', 'http://localhost:8080', 'http://localhost:8081', 'http://localhost:8000'], 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
@@ -224,6 +224,39 @@ app.post('/api/public/book-flight', async (req, res) => {
         });
     } catch (error) {
         console.error('Erreur lors de la réservation de vol:', error);
+        res.status(500).json({ 
+            error: 'Erreur lors de l\'envoi des emails',
+            details: error.message
+        });
+    }
+});
+
+// Route pour le formulaire de contact
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+
+        if (!name || !email || !subject || !message) {
+            return res.status(400).json({
+                error: 'Données manquantes',
+                details: 'Tous les champs du formulaire doivent être remplis'
+            });
+        }
+
+        // Envoyer les emails
+        const emailResult = await sendContactEmail({
+            name,
+            email,
+            subject,
+            message
+        });
+
+        res.json({ 
+            success: true, 
+            emailIds: emailResult
+        });
+    } catch (error) {
+        console.error('Erreur lors de l\'envoi du message de contact:', error);
         res.status(500).json({ 
             error: 'Erreur lors de l\'envoi des emails',
             details: error.message

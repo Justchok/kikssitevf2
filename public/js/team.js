@@ -49,13 +49,13 @@ const teamMembers = [
         name: "Raki Hawa KANE",
         position: "Directrice",
         description: "En tant que Directrice, je coordonne l'ensemble des activités de l'agence pour assurer une expérience de voyage exceptionnelle à nos clients.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Raki.JPG"
     },
     {
         name: "Ndeye Deguene GAYE",
         position: "Chef d'agence",
         description: "En tant que Chef d'agence, je supervise les opérations quotidiennes et coordonne l'équipe pour garantir un service de qualité. Je m'assure que chaque client reçoive une attention personnalisée et que toutes les demandes soient traitées avec professionnalisme.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Deguene.JPG"
     },
     {
         name: "Atta Diouf DIEYE",
@@ -67,43 +67,43 @@ const teamMembers = [
         name: "Maimouna Mounira KANE",
         position: "Chef de comptoir - Aide comptable",
         description: "Responsable de la gestion du portefeuille client et des opérations financières de l'entreprise. Je veille à la bonne gestion de la caisse et des transactions bancaires.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Maimouna.png"
     },
     {
         name: "EMILIENNE CHADIA BAMPOKI",
-        position: "RESPONSABLE TOURISME",
+        position: "Responsable Receptif",
         description: "Experte en création de produits touristiques, je conçois des expériences de voyage uniques et mémorables. Mon expertise comprend la sélection minutieuse des destinations, l'organisation d'activités enrichissantes, la négociation avec les meilleurs hébergements et l'optimisation des solutions de transport pour garantir des voyages inoubliables à nos clients.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Emilienne.JPG"
     },
     {
         name: "Marie Camara DAFFE",
         position: "Responsable Tourisme religieux",
         description: "Spécialiste du tourisme religieux, j'organise et coordonne des voyages spirituels vers des destinations sacrées. Mon expertise permet d'offrir des expériences enrichissantes qui respectent les traditions et pratiques religieuses de nos clients.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Marie.JPG"
     },
     {
         name: "Aliou Mamadou SALL",
         position: "Agent de voyage",
         description: "Spécialiste en billetterie et réservations, je vous accompagne dans tous vos besoins : billets d'avion, assurances voyage et auto, réservations d'hôtel et plus encore.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Sall.jpg"
     },
     {
         name: "Ibrahima DIALLO",
         position: "Coursier",
         description: "Responsable de la livraison des documents de voyage et des colis, j'assure un service rapide et fiable pour que nos clients reçoivent leurs billets et documents à temps pour leur départ.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Ibrahima.JPG"
     },
     {
         name: "Adama Diallo FATY",
         position: "Chauffeur - Responsable transfert",
         description: "En charge des transferts clients, je m'assure que chaque déplacement soit confortable, sécurisé et ponctuel pour une expérience de voyage optimale.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Adama.JPG"
     },
     {
         name: "Ousmane DEME",
         position: "Chauffeur",
         description: "En tant que chauffeur, je garantis des déplacements sûrs et confortables pour nos clients. Ma connaissance approfondie des routes et des destinations permet d'offrir une expérience de transport agréable et ponctuelle.",
-        photo: "assets/images/team/default-avatar.jpg"
+        photo: "assets/images/team/Ousmane.jpg"
     }
 ];
 

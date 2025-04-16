@@ -7,12 +7,12 @@ dotenv.config({ path: path.join(__dirname, '..', 'env.config') });
 
 // Configuration du transporteur SMTP Ionos
 const transporter = nodemailer.createTransport({
-    host: 'smtp.ionos.fr',
+    host: process.env.SMTP_HOST,
     port: 465,
     secure: true, // true pour 465, false pour les autres ports
     auth: {
-        user: 'info@kikstravel.com',
-        pass: process.env.SMTP_PASSWORD || 'Ktravel&tours1!'
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD
     }
 });
 

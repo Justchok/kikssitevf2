@@ -491,87 +491,11 @@
     </div>
 
     <script src="js/language-switcher.js"></script>
-    <script src="js/offres.js"></script>
     <script src="js/navigation.js"></script>
-    <script>
-        // Gestionnaire du modal
-        const modal = document.getElementById('reservationModal');
-        const closeBtn = document.querySelector('.close-modal');
-
-        // Fermer le modal quand on clique sur le X
-        closeBtn.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // Fermer le modal quand on clique en dehors
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // Gestionnaire du formulaire
-        document.getElementById('offerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const reservationData = Object.fromEntries(formData.entries());
-            
-            // Ajouter le titre de l'offre sélectionnée
-            reservationData.offerTitle = document.querySelector('#reservationModal h2').getAttribute('data-offer-title') || 'Offre spéciale';
-            
-            try {
-                const response = await fetch('/api/public/book-offer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reservationData)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    Swal.fire({
-                        title: 'Réservation envoyée !',
-                        text: 'Votre demande de réservation a été envoyée avec succès ! Vous recevrez un email de confirmation.',
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#d45a3d'
-                    });
-                    modal.style.display = "none";
-                    this.reset();
-                } else {
-                    Swal.fire({
-                        title: 'Erreur',
-                        text: 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#d45a3d'
-                    });
-                }
-            } catch (error) {
-                console.error('Erreur:', error);
-                Swal.fire({
-                    title: 'Erreur',
-                    text: 'Une erreur est survenue lors de l\'envoi de votre demande. Veuillez réessayer.',
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#d45a3d'
-                });
-            }
-        });
-
-        // Validation de la date
-        // document.getElementById('date').addEventListener('change', function() {
-        //     const selectedDate = new Date(this.value);
-        //     const today = new Date();
-            
-        //     if (selectedDate < today) {
-        //         alert('La date sélectionnée ne peut pas être dans le passé.');
-        //         this.value = '';
-        //     }
-        // });
+    <script type="module">
+        import { displayOffers } from './js/offres.js';
+        document.addEventListener('DOMContentLoaded', displayOffers);
     </script>
+    <script type="module" src="js/reservation-form.js"></script>
 </body>
 </html>
