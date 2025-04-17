@@ -21,13 +21,18 @@ if (!$data) {
 }
 
 // Validation des champs requis
-$required_fields = ['name', 'email', 'phone', 'offerTitle', 'departureDate', 'passengers'];
+$required_fields = ['name', 'phone', 'offerTitle', 'departureDate', 'passengers'];
 foreach ($required_fields as $field) {
     if (empty($data[$field])) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champ manquant : ' . $field]);
         exit;
     }
+}
+
+// Email est recommandé mais pas obligatoire
+if (empty($data['email'])) {
+    $data['email'] = 'non-fourni@placeholder.com'; // Valeur par défaut pour éviter les erreurs
 }
 
 // Inclure le fichier de configuration

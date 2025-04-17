@@ -202,6 +202,13 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(212, 90, 61, 0.2);
         }
+        
+        .optional {
+            font-size: 0.8em;
+            color: #666;
+            font-weight: normal;
+            font-style: italic;
+        }
 
         @media (max-width: 768px) {
             .contact-form {
@@ -279,8 +286,12 @@
                         <input type="text" id="name" name="name" required data-i18n-placeholder="namePlaceholder">
                     </div>
                     <div class="form-group">
-                        <label for="email" data-i18n="emailLabel">Email</label>
-                        <input type="email" id="email" name="email" required data-i18n-placeholder="emailPlaceholder">
+                        <label for="phone" data-i18n="phoneLabel">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="+221 77 XXX XX XX">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" data-i18n="emailLabel">Email <span class="optional">(Recommandé)</span></label>
+                        <input type="email" id="email" name="email" data-i18n-placeholder="emailPlaceholder">
                     </div>
                     <div class="form-group">
                         <label for="subject" data-i18n="subjectLabel">Sujet</label>
@@ -353,5 +364,7 @@
     <script src="js/navigation.js"></script>
     <script src="js/language-switcher.js"></script>
     <script type="module" src="js/contact.js"></script>
+    <!-- Script pour rendre l'email optionnel -->
+    <script src="js/form-fix.js"></script>
 </body>
 </html>

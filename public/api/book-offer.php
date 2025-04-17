@@ -20,6 +20,19 @@ try {
     if (!$data) {
         throw new Exception('Données invalides');
     }
+    
+    // Validation des champs requis
+    $required_fields = ['name', 'phone', 'offerTitle'];
+    foreach ($required_fields as $field) {
+        if (empty($data[$field])) {
+            throw new Exception('Champ manquant : ' . $field);
+        }
+    }
+    
+    // Email est recommandé mais pas obligatoire
+    if (empty($data['email'])) {
+        $data['email'] = 'non-fourni@placeholder.com'; // Valeur par défaut pour éviter les erreurs
+    }
 
     // Créer l'instance de PHPMailer
     $mail = new PHPMailer(true);
@@ -47,6 +60,18 @@ try {
     $message = "
         <h2>Nouvelle demande de réservation</h2>
         <p><strong>Offre:</strong> {$data['offerTitle']}</p>
+        
+        <h3>Informations de voyage</h3>
+        <p><strong>Date de départ:</strong> " . (isset($data['departureDate']) ? $data['departureDate'] : 'Non spécifiée') . "</p>
+        <p><strong>Date de retour:</strong> " . (isset($data['returnDate']) ? $data['returnDate'] : 'Non spécifiée') . "</p>
+        
+        <h3>Passagers</h3>
+        <p><strong>Adultes (12+ ans):</strong> " . (isset($data['adultsCount']) ? $data['adultsCount'] : '1') . "</p>
+        <p><strong>Enfants (2-11 ans):</strong> " . (isset($data['childrenCount']) ? $data['childrenCount'] : '0') . "</p>
+        <p><strong>Bébés (0-2 ans):</strong> " . (isset($data['infantsCount']) ? $data['infantsCount'] : '0') . "</p>
+        <p><strong>Classe de voyage:</strong> " . (isset($data['cabin']) ? ucfirst($data['cabin']) : 'Économique') . "</p>
+        
+        <h3>Contact</h3>
         <p><strong>Nom:</strong> {$data['name']}</p>
         <p><strong>Email:</strong> {$data['email']}</p>
         <p><strong>Téléphone:</strong> {$data['phone']}</p>
@@ -77,19 +102,67 @@ try {
     $clientMail->Subject = "Confirmation de votre demande - {$data['offerTitle']}";
     
     $clientMessage = "
-        <h2>Confirmation de votre demande de réservation</h2>
-        <p>Cher(e) {$data['name']},</p>
-        <p>Nous avons bien reçu votre demande de réservation pour l'offre \"{$data['offerTitle']}\".</p>
-        <p>Notre équipe va étudier votre demande et vous recontactera dans les plus brefs délais.</p>
-        <p>Récapitulatif de votre demande :</p>
-        <ul>
-            <li>Offre : {$data['offerTitle']}</li>
-            <li>Nom : {$data['name']}</li>
-            <li>Email : {$data['email']}</li>
-            <li>Téléphone : {$data['phone']}</li>
-            <li>Message : {$data['message']}</li>
-        </ul>
-        <p>Cordialement,<br>L'équipe Kiks Travel</p>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .confirmation { background: #f9f9f9; padding: 20px; border-radius: 5px; }
+                .recap { margin-top: 20px; }
+                .section { margin-top: 15px; }
+                .footer { margin-top: 30px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='confirmation'>
+                <h2>Confirmation de votre demande de réservation</h2>
+                <p>Cher(e) {$data['name']},</p>
+                <p>Nous avons bien reçu votre demande de réservation pour l'offre '{$data['offerTitle']}'.</p>
+                <p>Notre équipe va étudier votre demande et vous recontactera dans les plus brefs délais.</p>
+                
+                <div class='recap'>
+                    <h3>Récapitulatif de votre demande :</h3>
+                    
+                    <div class='section'>
+                        <h4>Offre</h4>
+                        <p>{$data['offerTitle']}</p>
+                    </div>
+                    
+                    <div class='section'>
+                        <h4>Dates</h4>
+                        <p><strong>Départ:</strong> " . (isset($data['departureDate']) ? $data['departureDate'] : 'Non spécifiée') . "</p>
+                        <p><strong>Retour:</strong> " . (isset($data['returnDate']) ? $data['returnDate'] : 'Non spécifiée') . "</p>
+                    </div>
+                    
+                    <div class='section'>
+                        <h4>Passagers</h4>
+                        <p><strong>Adultes (12+ ans):</strong> " . (isset($data['adultsCount']) ? $data['adultsCount'] : '1') . "</p>
+                        <p><strong>Enfants (2-11 ans):</strong> " . (isset($data['childrenCount']) ? $data['childrenCount'] : '0') . "</p>
+                        <p><strong>Bébés (0-2 ans):</strong> " . (isset($data['infantsCount']) ? $data['infantsCount'] : '0') . "</p>
+                        <p><strong>Classe de voyage:</strong> " . (isset($data['cabin']) ? ucfirst($data['cabin']) : 'Économique') . "</p>
+                    </div>
+                    
+                    <div class='section'>
+                        <h4>Contact</h4>
+                        <p><strong>Nom:</strong> {$data['name']}</p>
+                        <p><strong>Email:</strong> {$data['email']}</p>
+                        <p><strong>Téléphone:</strong> {$data['phone']}</p>
+                    </div>
+                    
+                    " . (!empty($data['message']) ? "<div class='section'>
+                        <h4>Message</h4>
+                        <p>{$data['message']}</p>
+                    </div>" : "") . "
+                </div>
+                
+                <div class='footer'>
+                    <p>Pour toute question, n'hésitez pas à nous contacter :</p>
+                    <p>Téléphone : +221 77 200 44 32<br>
+                    Email : info@kikstravel.com</p>
+                    <p>Cordialement,<br>L'équipe Kiks Travel</p>
+                </div>
+            </div>
+        </body>
+        </html>
     ";
     
     $clientMail->Body = $clientMessage;

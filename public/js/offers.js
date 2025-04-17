@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <input type="text" id="name" class="swal2-input" placeholder="Votre nom" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" class="swal2-input" placeholder="Votre email" required>
+                        <label for="email" style="text-align: left; display: block; margin-bottom: 5px; font-size: 14px;">Email <span style="color: #6c757d; font-size: 12px;">(Recommandé)</span></label>
+                        <input type="email" id="email" class="swal2-input" placeholder="Votre email">
                     </div>
                     <div class="form-group">
                         <input type="tel" id="phone" class="swal2-input" placeholder="Votre téléphone" required>

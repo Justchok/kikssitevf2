@@ -474,12 +474,12 @@
                     <input type="text" id="name" name="name" required placeholder="Votre nom complet" class="form-input">
                 </div>
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required placeholder="votre@email.com" class="form-input">
-                </div>
-                <div class="form-group">
                     <label for="phone">Téléphone</label>
                     <input type="tel" id="phone" name="phone" required placeholder="Ex: +221 77 200 44 32" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email <span class="optional">(Recommandé)</span></label>
+                    <input type="email" id="email" name="email" placeholder="votre@email.com" class="form-input">
                 </div>
                 <div class="form-group">
                     <label for="message">Message</label>
@@ -513,5 +513,7 @@
             });
         });
     </script>
+    <!-- Script pour rendre l'email optionnel -->
+    <script src="js/form-fix.js"></script>
 </body>
 </html>
