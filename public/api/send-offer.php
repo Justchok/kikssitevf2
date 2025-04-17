@@ -8,11 +8,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Configuration SMTP IONOS
-$smtp_host = 'smtp.ionos.fr';
-$smtp_port = 465;
-$smtp_username = 'info@kikstravel.com';
-$smtp_password = 'Ktravel&tours1!';
+// Les informations SMTP sont maintenant dans config.php
 
 // Récupération des données du formulaire
 $rawData = file_get_contents('php://input');
@@ -34,10 +30,13 @@ foreach ($required_fields as $field) {
     }
 }
 
+// Inclure le fichier de configuration
+require_once 'config.php';
+
 // Envoi des emails avec PHPMailer
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
-require 'PHPMailer/Exception.php';
+require_once 'PHPMailer/src/PHPMailer.php';
+require_once 'PHPMailer/src/SMTP.php';
+require_once 'PHPMailer/src/Exception.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -47,12 +46,12 @@ try {
     // Email pour l'administrateur
     $mail = new PHPMailer(true);
     $mail->isSMTP();
-    $mail->Host = $smtp_host;
+    $mail->Host = $config['smtp_host'];
     $mail->SMTPAuth = true;
-    $mail->Username = $smtp_username;
-    $mail->Password = $smtp_password;
+    $mail->Username = $config['smtp_user'];
+    $mail->Password = $config['smtp_password'];
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail->Port = $smtp_port;
+    $mail->Port = 465;
     $mail->CharSet = 'UTF-8';
 
     $mail->setFrom('info@kikstravel.com', 'Kiks Travel');
@@ -91,12 +90,12 @@ try {
     // Email de confirmation pour le client
     $mail_client = new PHPMailer(true);
     $mail_client->isSMTP();
-    $mail_client->Host = $smtp_host;
+    $mail_client->Host = $config['smtp_host'];
     $mail_client->SMTPAuth = true;
-    $mail_client->Username = $smtp_username;
-    $mail_client->Password = $smtp_password;
+    $mail_client->Username = $config['smtp_user'];
+    $mail_client->Password = $config['smtp_password'];
     $mail_client->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail_client->Port = $smtp_port;
+    $mail_client->Port = 465;
     $mail_client->CharSet = 'UTF-8';
 
     $mail_client->setFrom('info@kikstravel.com', 'Kiks Travel');

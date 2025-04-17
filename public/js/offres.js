@@ -4,8 +4,8 @@ const offers = [
     {
         title: 'Hajj 2025',
         description: 'Un voyage spirituel unique à La Mecque. Vivez une expérience inoubliable pendant le pèlerinage du Hajj.',
-        image: '/assets/images/destinations/hajj.jpg',
-        flyerImage: '/assets/images/flyers/hajj2025.jpg',
+        image: './assets/images/destinations/hajj.jpg',
+        flyerImage: './assets/images/flyers/hajj2025.jpg',
         prices: {
             confort: '5 500 000 FCFA',
             confortPlus: '10 500 000 FCFA'
@@ -44,7 +44,7 @@ function displayOffers() {
             overflow: hidden;
             transition: transform 0.3s ease;
             cursor: pointer;
-        " onclick="showFullFlyer('${offer.title}')">
+        " data-offer-title="${offer.title}">
             <img src="${offer.image}" alt="${offer.title}" style="
                 width: 100%;
                 height: 200px;
@@ -70,8 +70,10 @@ function displayOffers() {
                         </ul>
                     </div>
                 ` : ''}
-                <button onclick="event.stopPropagation(); openReservationModal('${offer.title}', '${offer.destination}')" 
+                <button 
                     class="btn-reserve" 
+                    data-offer-title="${offer.title}" 
+                    data-destination="${offer.destination}"
                     style="
                         background-color: #007bff;
                         color: white;
@@ -160,5 +162,33 @@ function openReservationModal(title, destination) {
 // Exporter les fonctions nécessaires
 export { displayOffers, showFullFlyer, showImageFullscreen, openReservationModal };
 
+// Rendre les fonctions disponibles globalement
+window.showFullFlyer = showFullFlyer;
+window.openReservationModal = openReservationModal;
+window.showImageFullscreen = showImageFullscreen;
+
 // Appeler la fonction quand le document est chargé
-document.addEventListener('DOMContentLoaded', displayOffers);
+document.addEventListener('DOMContentLoaded', () => {
+    displayOffers();
+    
+    // Ajouter des écouteurs d'événements après que le contenu est chargé
+    setTimeout(() => {
+        // Pour les cartes d'offres
+        document.querySelectorAll('.offer-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const offerTitle = this.getAttribute('data-offer-title');
+                showFullFlyer(offerTitle);
+            });
+        });
+        
+        // Pour les boutons de réservation
+        document.querySelectorAll('.btn-reserve').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); // Empêcher le déclenchement du click sur la carte
+                const offerTitle = this.getAttribute('data-offer-title');
+                const destination = this.getAttribute('data-destination');
+                openReservationModal(offerTitle, destination);
+            });
+        });
+    }, 100);
+});

@@ -1,23 +1,22 @@
 import config from './config.js';
 
-// Gestionnaire du modal
-const modal = document.getElementById('reservationModal');
-const closeBtn = document.querySelector('.close-modal');
-
-// Fermer le modal quand on clique sur le X
-closeBtn.onclick = function() {
-    modal.style.display = "none";
-}
-
-// Fermer le modal quand on clique en dehors
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+// Attendre que le DOM soit chargé
+document.addEventListener('DOMContentLoaded', function() {
+    // Gestionnaire du formulaire de réservation
+    const modal = document.getElementById('reservationModal');
+    if (!modal) {
+        console.error('Modal de réservation non trouvé');
+        return;
     }
-}
 
-// Gestionnaire du formulaire
-document.getElementById('offerForm').addEventListener('submit', async function(e) {
+    // Gestionnaire du formulaire
+    const offerForm = document.getElementById('offerForm');
+    if (!offerForm) {
+        console.error('Formulaire de réservation non trouvé');
+        return;
+    }
+    
+    offerForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const formData = new FormData(this);
@@ -66,4 +65,5 @@ document.getElementById('offerForm').addEventListener('submit', async function(e
             confirmButtonColor: '#d45a3d'
         });
     }
+    });
 });

@@ -20,9 +20,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/min/styles.min.css">
     <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/mobile-fix.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <link rel="preload" as="image" href="assets/images/kikslogo.webp" type="image/webp">
     <link rel="preload" as="script" href="js/min/main.min.js">
+    <script src="js/mobile-menu.js" defer></script>
     <style>
         * {
             margin: 0;
@@ -49,6 +51,12 @@
             display: flex;
             justify-content: flex-end;
             align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-bar {
+                padding: 1rem;
+            }
         }
 
         .nav-links {
@@ -96,6 +104,12 @@
         .logo img {
             width: 150px;
             height: auto;
+        }
+        
+        @media (max-width: 480px) {
+            .logo img {
+                width: 120px;
+            }
         }
 
         .video-container {
@@ -173,6 +187,14 @@
             z-index: 10;
             width: 100%;
             padding: 0 20px;
+            max-width: 100vw; /* Empêcher le débordement horizontal */
+            overflow-wrap: break-word; /* Permettre la césure des mots longs */
+            word-wrap: break-word;
+            pointer-events: none; /* Permettre de cliquer à travers le contenu pour atteindre les éléments en dessous */
+        }
+        
+        .content .btn {
+            pointer-events: auto; /* Réactiver les événements pour le bouton */
         }
 
         .content h1 {
@@ -184,6 +206,22 @@
         .content p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content h1 {
+                font-size: 2rem;
+            }
         }
 
         .btn {
@@ -225,27 +263,42 @@
         }
 
         @media (max-width: 768px) {
+            body.menu-open {
+                overflow: hidden; /* Empêcher le défilement du body quand le menu est ouvert */
+            }
+            
             .hamburger {
                 display: flex;
-                margin-left: auto;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 2000; /* Valeur très élevée pour être au-dessus de tout */
+                background-color: rgba(0, 0, 0, 0.5);
+                padding: 10px;
+                border-radius: 5px;
             }
 
             .nav-links {
                 position: fixed;
                 top: 0;
-                right: -100%;
-                height: 100vh;
+                left: 0;
                 width: 100%;
-                max-width: 300px;
-                background: rgba(0, 0, 0, 0.9);
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.95);
+                display: flex;
                 flex-direction: column;
-                padding: 80px 20px 20px;
+                justify-content: center;
+                align-items: center;
                 gap: 2rem;
-                transition: right 0.3s ease-in-out;
+                z-index: 1500;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
             }
 
             .nav-links.active {
-                right: 0;
+                opacity: 1;
+                visibility: visible;
             }
 
             .nav-links a {
@@ -272,6 +325,19 @@
             position: relative;
             display: inline-block;
             margin-left: auto;
+            z-index: 1001; /* Assurer que le sélecteur de langue reste au-dessus */
+        }
+        
+        @media (max-width: 768px) {
+            .language-switcher {
+                position: fixed;
+                top: 20px;
+                right: 80px; /* Positionner à droite du hamburger */
+                z-index: 2000; /* Même z-index que le hamburger */
+                background-color: rgba(0, 0, 0, 0.5);
+                padding: 5px;
+                border-radius: 5px;
+            }
         }
 
         .selected-language {
@@ -343,7 +409,10 @@
                 </a>
             </div>
             <div class="nav-links">
-                <a href="index.html" data-i18n="menuHome">Accueil</a>
+                <div class="mobile-logo">
+                    <img src="assets/images/kikslogo.png" alt="Kiks Travel Logo">
+                </div>
+                <a href="index.html" data-i18n="menuHome" class="active">Accueil</a>
                 <a href="destinations.html" data-i18n="menuDestinations">Destinations</a>
                 <a href="offres.html" data-i18n="menuOffers">Offres</a>
                 <a href="reservations.html" data-i18n="menuReservation">Réservation</a>
@@ -367,10 +436,11 @@
                     </div>
                 </div>
             </div>
+            <!-- Hamburger menu -->
             <div class="hamburger">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
             </div>
         </nav>
     </header>
@@ -398,6 +468,7 @@
     <script src="js/language-switcher.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Bouton de réinitialisation de la langue
             const resetButton = document.createElement('button');
             resetButton.textContent = 'Réinitialiser la langue (FR)';
             resetButton.style.position = 'fixed';
@@ -417,6 +488,25 @@
             });
             
             document.body.appendChild(resetButton);
+            
+            // Gestion du menu mobile
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('.nav-links');
+            
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                document.body.classList.toggle('menu-open');
+            });
+            
+            // Fermer le menu quand on clique sur un lien
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    document.body.classList.remove('menu-open');
+                });
+            });
         });
         
         console.log('Index.html script loading...');
@@ -493,11 +583,7 @@
             console.log('Erreur de chargement de la vidéo');
         });
 
-        // Menu hamburger existant
-        document.querySelector('.hamburger').addEventListener('click', function() {
-            this.classList.toggle('active');
-            document.querySelector('.nav-links').classList.toggle('active');
-        });
+        // Le menu hamburger est maintenant géré par mobile-menu.js
 
         // Fermer le menu quand on clique sur un lien
         document.querySelectorAll('.nav-links a').forEach(link => {
@@ -528,5 +614,28 @@
     
     <script src="js/main.js"></script>
     <script src="js/navigation.js"></script>
+    <!-- Navigation mobile par onglets -->
+    <div class="mobile-tab-nav">
+        <a href="index.html" class="active">
+            <i class="fas fa-home"></i>
+            <span data-i18n="menuHome">Accueil</span>
+        </a>
+        <a href="destinations.html">
+            <i class="fas fa-globe-americas"></i>
+            <span data-i18n="menuDestinations">Destinations</span>
+        </a>
+        <a href="offres.html">
+            <i class="fas fa-tag"></i>
+            <span data-i18n="menuOffers">Offres</span>
+        </a>
+        <a href="reservations.html">
+            <i class="fas fa-calendar-check"></i>
+            <span data-i18n="menuReservation">Réservation</span>
+        </a>
+        <a href="apropos.html">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="menuAbout">À propos</span>
+        </a>
+    </div>
 </body>
 </html>
