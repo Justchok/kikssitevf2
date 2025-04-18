@@ -1,19 +1,22 @@
-FROM node:18-alpine
+FROM php:8.1-apache
 
-WORKDIR /app
+# Installation des extensions PHP nécessaires
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Installation des dépendances
-COPY package*.json ./
-RUN npm install
+# Activation du module rewrite d'Apache
+RUN a2enmod rewrite
+
+# Définition du répertoire de travail
+WORKDIR /var/www/html
 
 # Copie des fichiers du projet
-COPY . .
+COPY . /var/www/html/
 
-# Construction du projet
-RUN npm run build
+# Configuration pour servir depuis le dossier public
+RUN sed -i 's/\/var\/www\/html/\/var\/www\/html\/public/g' /etc/apache2/sites-available/000-default.conf
 
 # Exposition du port
-EXPOSE 3000
+EXPOSE 80
 
-# Démarrage du serveur
-CMD ["node", "server.js"]
+# Démarrage du serveur Apache
+CMD ["apache2-foreground"]
