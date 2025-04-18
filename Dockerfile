@@ -1,12 +1,7 @@
 FROM php:8.1-apache
 
-# Installation des extensions PHP nécessaires
-RUN apt-get update && apt-get install -y \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql
+# Installation des extensions PHP essentielles
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Activation des modules Apache nécessaires
 RUN a2enmod rewrite headers
@@ -17,11 +12,15 @@ WORKDIR /var/www/html
 # Copie des fichiers du projet
 COPY . /var/www/html/
 
-# Création d'un fichier de vérification d'état simple
-RUN echo '<?php header("Content-Type: application/json"); echo json_encode(["status" => "ok", "timestamp" => time()]); ?>' > /var/www/html/public/health-check.php
+# Créer un fichier index.php simple dans le dossier racine pour le health check
+RUN echo '<?php echo "OK"; ?>' > /var/www/html/index.php
 
-# Configuration pour servir depuis le dossier public
-RUN sed -i 's/\/var\/www\/html/\/var\/www\/html\/public/g' /etc/apache2/sites-available/000-default.conf
+# Permissions
+RUN chown -R www-data:www-data /var/www/html
+
+# Configuration pour servir depuis le dossier racine (pas public)
+# Nous utiliserons un lien symbolique pour rediriger vers public
+RUN ln -sf /var/www/html/public/* /var/www/html/
 
 # Exposition du port
 EXPOSE 80

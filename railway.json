@@ -5,9 +5,8 @@
     "buildCommand": "echo 'Build complete'"
   },
   "deploy": {
-    "startCommand": "php -S 0.0.0.0:$PORT -t public",
-    "healthcheckPath": "/health-check.php",
-    "healthcheckTimeout": 300,
+    "healthcheckPath": "/index.php",
+    "healthcheckTimeout": 60,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
