@@ -1,0 +1,11 @@
+# Environment variables
+.env
+
+# Composer dependencies
+/vendor/
+
+# PHPMailer cache
+.phpmailer/
+
+# Logs
+*.log

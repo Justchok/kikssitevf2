@@ -1,17 +1,63 @@
 <?php
+require_once 'email-helper.php';
+
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
+
+// Set CORS headers - dynamically use the current domain or allow Railway domain
+$allowed_origins = [
+    'https://kikstravel.com',
+    'http://localhost:3000',
+    'https://kikssitevf2-production.up.railway.app' // Ajoutez ici votre domaine Railway
+];
+
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+
+if (in_array($origin, $allowed_origins)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+}
+header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Récupération des données du formulaire
-$data = json_decode(file_get_contents('php://input'), true);
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
-// Configuration des en-têtes pour l'email
-$headers = "MIME-Version: 1.0\r\n";
-$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-$headers .= "From: Kiks Travel <info@kikstravel.com>\r\n";
-$headers .= "Reply-To: {$data['email']}\r\n";
+// Only allow POST requests
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit();
+}
+
+// Récupération des données du formulaire
+$raw_data = file_get_contents('php://input');
+if (!$raw_data) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'No data received']);
+    exit();
+}
+
+$data = json_decode($raw_data, true);
+if (!$data) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+    exit();
+}
+
+// Validate required fields
+$required_fields = ['name', 'email', 'phone', 'departure', 'destination', 'departureDate', 'returnDate', 'passengers'];
+foreach ($required_fields as $field) {
+    if (empty($data[$field])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Missing required field: ' . $field]);
+        exit();
+    }
+}
+
+// Sanitize all inputs to prevent XSS
+$data = EmailHelper::sanitize($data);
 
 // Message pour l'administrateur
 $admin_message = "
@@ -56,25 +102,35 @@ $client_message = "
 </body>
 </html>";
 
-// Envoi des emails
-$admin_sent = mail(
-    "info@kikstravel.com",
+// Initialize email helper
+$emailHelper = new EmailHelper();
+
+// Send email to admin
+$admin_result = $emailHelper->sendEmail(
+    $config['email_to'],
     "Nouvelle réservation de voyage - {$data['name']}",
     $admin_message,
-    $headers
+    $data['email'],
+    $data['name']
 );
 
-$client_sent = mail(
+// Send confirmation email to client
+$client_result = $emailHelper->sendEmail(
     $data['email'],
     "Confirmation de votre demande de réservation - Kiks Travel",
-    $client_message,
-    $headers
+    $client_message
 );
 
-if ($admin_sent && $client_sent) {
+// Return response
+if ($admin_result['success'] && $client_result['success']) {
     echo json_encode(['success' => true, 'message' => 'Emails envoyés avec succès']);
 } else {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'envoi des emails']);
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Erreur lors de l\'envoi des emails',
+        'admin_error' => $admin_result['success'] ? null : $admin_result['message'],
+        'client_error' => $client_result['success'] ? null : $client_result['message']
+    ]);
 }
 ?>

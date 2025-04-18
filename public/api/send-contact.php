@@ -1,25 +1,50 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Inclure le fichier d'aide pour les emails
+require_once 'email-helper.php';
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST');
+
+// Set CORS headers - dynamically use the current domain or allow Railway domain
+$allowed_origins = [
+    'https://kikstravel.com',
+    'http://localhost:3000',
+    'https://kikssitevf2-production.up.railway.app' // Ajoutez ici votre domaine Railway
+];
+
+$origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+
+if (in_array($origin, $allowed_origins)) {
+    header('Access-Control-Allow-Origin: ' . $origin);
+}
+header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Inclure le fichier de configuration
-require_once 'config.php';
-// Les informations SMTP sont maintenant dans config.php
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Only allow POST requests
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit();
+}
 
 // Récupération des données du formulaire
 $rawData = file_get_contents('php://input');
-$data = json_decode($rawData, true);
+if (!$rawData) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'No data received']);
+    exit();
+}
 
+$data = json_decode($rawData, true);
 if (!$data) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Données invalides']);
-    exit;
+    exit();
 }
 
 // Validation des champs requis
@@ -28,7 +53,7 @@ foreach ($required_fields as $field) {
     if (empty($data[$field])) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Champ manquant : ' . $field]);
-        exit;
+        exit();
     }
 }
 
@@ -37,33 +62,13 @@ if (empty($data['email'])) {
     $data['email'] = 'non-fourni@placeholder.com'; // Valeur par défaut pour éviter les erreurs
 }
 
-// Envoi des emails avec PHPMailer
-require_once 'PHPMailer/src/PHPMailer.php';
-require_once 'PHPMailer/src/SMTP.php';
-require_once 'PHPMailer/src/Exception.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+// Sanitize all inputs to prevent XSS
+$data = EmailHelper::sanitize($data);
 
 try {
-    // Email pour l'administrateur
-    $mail = new PHPMailer(true);
-    $mail->isSMTP();
-    $mail->Host = $config['smtp_host'];
-    $mail->SMTPAuth = true;
-    $mail->Username = $config['smtp_user'];
-    $mail->Password = $config['smtp_password'];
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail->Port = 465;
-    $mail->CharSet = 'UTF-8';
-
-    $mail->setFrom('info@kikstravel.com', 'Kiks Travel');
-    $mail->addAddress('info@kikstravel.com');
-    $mail->addReplyTo($data['email'], $data['name']);
+    // Initialize email helper
+    $emailHelper = new EmailHelper();
     
-    $mail->Subject = "Nouveau message de contact - {$data['name']}";
-    $mail->isHTML(true);
     
     $message = "
     <html>
@@ -98,25 +103,16 @@ try {
     </body>
     </html>";
     
-    $mail->Body = $message;
-    $mail->send();
-
-    // Email de confirmation pour le client
-    $mail_client = new PHPMailer(true);
-    $mail_client->isSMTP();
-    $mail_client->Host = $config['smtp_host'];
-    $mail_client->SMTPAuth = true;
-    $mail_client->Username = $config['smtp_user'];
-    $mail_client->Password = $config['smtp_password'];
-    $mail_client->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail_client->Port = 465;
-    $mail_client->CharSet = 'UTF-8';
-
-    $mail_client->setFrom('info@kikstravel.com', 'Kiks Travel');
-    $mail_client->addAddress($data['email'], $data['name']);
+    // Send email to admin
+    $admin_result = $emailHelper->sendEmail(
+        $config['email_to'],
+        "Nouveau message de contact - {$data['name']}",
+        $message,
+        $data['email'],
+        $data['name']
+    );
     
-    $mail_client->Subject = "Confirmation de réception de votre message - Kiks Travel";
-    $mail_client->isHTML(true);
+    // Prepare confirmation email for client
     
     // Ne pas envoyer d'email de confirmation si l'email n'est pas fourni
     if ($data['email'] !== 'non-fourni@placeholder.com') {
@@ -145,19 +141,31 @@ try {
         </body>
         </html>";
         
-        $mail_client->Body = $client_message;
-        $mail_client->send();
+        // Send confirmation email to client
+        $client_result = $emailHelper->sendEmail(
+            $data['email'],
+            "Confirmation de réception de votre message - Kiks Travel",
+            $client_message
+        );
     }
     
-    // L'envoi de l'email de confirmation est déjà géré dans la condition ci-dessus
-
-    echo json_encode(['success' => true, 'message' => 'Message envoyé avec succès']);
+    // Check if admin email was sent successfully
+    if ($admin_result['success']) {
+        echo json_encode(['success' => true, 'message' => 'Message envoyé avec succès']);
+    } else {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false, 
+            'message' => "Une erreur est survenue lors de l'envoi du message",
+            'error' => $admin_result['message']
+        ]);
+    }
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
         'success' => false, 
         'message' => "Une erreur est survenue lors de l'envoi du message",
-        'debug' => $e->getMessage()
+        'error' => $e->getMessage()
     ]);
 }
 ?>
