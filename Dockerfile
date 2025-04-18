@@ -1,29 +1,19 @@
-FROM php:8.1-apache
+FROM node:18-alpine
 
-# Installation des extensions PHP essentielles
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+WORKDIR /app
 
-# Activation des modules Apache nécessaires
-RUN a2enmod rewrite headers
-
-# Définition du répertoire de travail
-WORKDIR /var/www/html
+# Installation des dépendances
+COPY package*.json ./
+RUN npm install
 
 # Copie des fichiers du projet
-COPY . /var/www/html/
+COPY . .
 
-# Créer un fichier index.php simple dans le dossier racine pour le health check
-RUN echo '<?php echo "OK"; ?>' > /var/www/html/index.php
-
-# Permissions
-RUN chown -R www-data:www-data /var/www/html
-
-# Configuration pour servir depuis le dossier racine (pas public)
-# Nous utiliserons un lien symbolique pour rediriger vers public
-RUN ln -sf /var/www/html/public/* /var/www/html/
+# Construction du projet
+RUN npm run build
 
 # Exposition du port
-EXPOSE 80
+EXPOSE 3000
 
-# Démarrage du serveur Apache
-CMD ["apache2-foreground"]
+# Démarrage du serveur
+CMD ["node", "server.js"]
